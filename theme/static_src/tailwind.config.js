@@ -6,6 +6,7 @@
  */
 
 module.exports = {
+    darkMode: 'media',
     content: [
         /**
          * HTML. Paths to Django template files that will contain Tailwind CSS classes.
@@ -43,6 +44,13 @@ module.exports = {
     ],
     theme: {
         extend: {},
+        colors: {
+            'dark-main': '#18191A',
+            'dark-second': '#242526',
+            'dark-third': '#3A3B3C',
+            'dark-txt': '#B8BBBF',
+            'white': '#FFFFFF',
+        }
     },
     plugins: [
         /**
@@ -54,5 +62,6 @@ module.exports = {
         require('@tailwindcss/typography'),
         require('@tailwindcss/line-clamp'),
         require('@tailwindcss/aspect-ratio'),
+        require('flowbite/plugin'),
     ],
 }
