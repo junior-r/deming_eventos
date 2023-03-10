@@ -93,8 +93,12 @@ WSGI_APPLICATION = 'eventos_deming.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'Eventos_Deming',
+        'USER': 'postgres',
+        'PASSWORD': '31064049',  # In Junior´s PC, set PASSWORD to C.L.
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
