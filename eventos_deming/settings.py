@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-k)j&r&8b#6tng!5v5lts67hib+n!imkr(@x)xya8$*r3le%6*q
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
@@ -44,10 +44,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Apps.Home.apps.HomeConfig',
+    'Apps.Users.apps.UsersConfig',
+    'Apps.Eventos.apps.EventosConfig',
 
     'tailwind',
     'theme',
     'django_browser_reload',
+    'crispy_forms',
+    'django_countries',
 ]
 
 TAILWIND_APP_NAME = 'theme'
@@ -96,11 +100,13 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'Eventos_Deming',
         'USER': 'postgres',
-        'PASSWORD': '31064049',  # In Junior´s PC, set PASSWORD to C.L.
+        'PASSWORD': 'DemingPostgresql',  # In Junior´s PC, set PASSWORD to C.L.
         'HOST': 'localhost',
         'PORT': '5432',
     }
 }
+
+AUTH_USER_MODEL = 'Users.User'
 
 PASSWORD_HASHERS = [
     # https://docs.djangoproject.com/en/dev/topics/auth/passwords/#using-argon2-with-django
