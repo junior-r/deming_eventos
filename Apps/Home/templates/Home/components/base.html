@@ -9,7 +9,9 @@
     <link rel="icon" href="{% static 'Home/images/logo_deming2.png' %}" type="image/png"/>
     {% block title %}
     {% endblock %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.2/flowbite.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="{% static 'Home/css/DataTables.css' %}">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     {% block styles %}
     {% endblock %}
@@ -51,8 +53,14 @@
 
 <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.2/flowbite.min.js"></script>
+<!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!-- DataTable -->
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{% static 'Home/js/darkMode.js' %}"></script>
+<script src="{% static 'Home/js/dataTables.js' %}"></script>
 {% if messages %}
     {% for m in messages %}
         <script>

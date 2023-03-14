@@ -1,7 +1,8 @@
 from django.urls import path, include
-from Apps.Eventos.views import eventos
+from Apps.Eventos.views import events, careers
 
 
 urlpatterns = [
-    path('', eventos, name='eventos'),
+    path('', events, name='eventos'),
+    path('careers/', careers, name='careers'),
 ]
