@@ -28,7 +28,7 @@ def participant_directory_file_path(instance, filename):
 
 
 def event_directory_user_file_path(instance, filename):
-    file_name = 'Events/Events/PersonInChange/Docs/{0}/curriculum.pdf'.format(instance)
+    file_name = 'Events/Events/PersonInChange/Docs/{0}/{1}'.format(instance, filename)
     full_path = os.path.join(settings.MEDIA_ROOT, file_name)
     if os.path.exists(full_path):
         os.remove(full_path)
@@ -37,7 +37,7 @@ def event_directory_user_file_path(instance, filename):
 
 
 def event_directory_planning_file_path(instance, filename):
-    file_name = 'Events/Events/Planning/Docs/{0}/planning.pdf'.format(instance)
+    file_name = 'Events/Events/Planning/Docs/{0}/{1}'.format(instance, filename)
     full_path = os.path.join(settings.MEDIA_ROOT, file_name)
     if os.path.exists(full_path):
         os.remove(full_path)
@@ -90,9 +90,9 @@ class Event(models.Model):
     alternative_phone = models.BigIntegerField(null=True, blank=True)
     email = models.EmailField(unique=False, null=False, blank=False)
     alternative_email = models.EmailField(unique=False, null=True, blank=True)
-    curriculum_user = models.FileField(upload_to=event_directory_user_file_path,
+    curriculum_user = models.FileField(upload_to=event_directory_user_file_path, max_length=255,
                                        validators=[FileExtensionValidator(['pdf'])], blank=False, null=False)
-    event_planning = models.FileField(upload_to=event_directory_planning_file_path,
+    event_planning = models.FileField(upload_to=event_directory_planning_file_path, max_length=255,
                                       validators=[FileExtensionValidator(['pdf'])], blank=False, null=False)
     link_video = models.URLField(null=True, blank=True)
     date_created = models.DateTimeField(default=timezone.now)
@@ -111,7 +111,12 @@ class Event(models.Model):
         if self.logo:
             return '{}{}'.format(settings.MEDIA_URL, self.logo)
         else:
-            return None
+            return '{}{}'.format(settings.MEDIA_URL, 'event_image_placeholder.png')
+
+    def get_short_name(self):
+        if len(self.title) > 12:
+            return self.title[:12] + '...'
+        return self.title
 
     def delete(self, *args, **kwargs):
         try:

@@ -15,7 +15,233 @@
 {% endblock %}
 
 {% block content %}
-    hola
+
+
+    <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
+        <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="myEventsTab"
+            data-tabs-toggle="#EventsTabContent"
+            role="tablist">
+            <li class="mr-2" role="presentation">
+                <button class="inline-block p-4 border-b-2 rounded-t-lg" id="table-events-tab"
+                        data-tabs-target="#events"
+                        type="button" role="tab" aria-controls="profile" aria-selected="false">Profile
+                </button>
+            </li>
+
+            <li class="mr-2" role="presentation">
+                <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+                        id="cards-events-tab" data-tabs-target="#card-events" type="button" role="tab"
+                        aria-controls="card-events" aria-selected="false">Dashboard
+                </button>
+            </li>
+        </ul>
+    </div>
+    <div id="EventsTabContent">
+        <div class="hidden rounded-lg bg-gray-50 dark:bg-gray-800" id="events" role="tabpanel"
+             aria-labelledby="table-events-tab">
+
+            <div class="mt-6 relative overflow-x-auto shadow-md sm:rounded-lg p-4">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400" id="datatable_accounts">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">
+                            <input id="checkbox-all-search" type="checkbox"
+                                   class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Responsable
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Nombre
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Lugar
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Precio
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Fecha de Inicio
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Fecha de Cierre
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Teléfono
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Email
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Activo
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Opciones
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for event in events %}
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+
+                            <th scope="row"
+                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                <input id="checkbox-all-search" type="checkbox"
+                                       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                            </th>
+                            <td class="px-6 py-4">
+                                {{ event.user.username }}
+                            </td>
+                            <td class="px-6 py-4" data-popover-target="popover-title-event-{{ event.id }}">
+                                <div data-popover id="popover-title-event-{{ event.id }}" role="tooltip"
+                                     class="absolute z-10 invisible inline-block w-64 text-sm font-light text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
+                                    <div class="px-3 py-2">
+                                        <p>{{ event.title }}</p>
+                                    </div>
+                                    <div data-popper-arrow></div>
+                                </div>
+                                {{ event.get_short_name }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ event.place }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ event.price }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="bg-blue-100 text-blue-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
+                                    <svg fill="none" class="w-3 h-3 mr-1" stroke="currentColor" stroke-width="1.5"
+                                         viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z"></path>
+                                    </svg>
+                                  {{ event.start_date }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="bg-blue-100 text-blue-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
+                                    <svg fill="none" class="w-3 h-3 mr-1" stroke="currentColor" stroke-width="1.5"
+                                         viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z"></path>
+                                    </svg>
+                                  {{ event.final_date }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ event.get_full_number_phone }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ event.email }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {% if event.active %}
+                                    <span class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Activo</span>
+                                {% else %}
+                                    <span class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Inactivo</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4">
+                                <a href="{% url 'view_event' event.id %}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                                    <svg fill="none" class="w-5 h-5 mr-1" stroke="currentColor" stroke-width="1.5"
+                                         viewBox="0 0 24 24"
+                                         xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="card-events" role="tabpanel"
+             aria-labelledby="cards-events-tab">
+
+            <div class="content-cards flex gap-4 wrap">
+                {% for event in events %}
+                    <div class="w-full relative max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                        {% if event.active %}
+                            <span class="absolute top-2 left-2 bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Activo</span>
+                        {% else %}
+                            <span class="absolute top-2 left-2 bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Inactivo</span>
+                        {% endif %}
+                        <a href="#">
+                            <img class="p-8 rounded-t-lg" src="{{ event.get_logo }}" alt="product image"/>
+                        </a>
+                        <div class="px-5 pb-5">
+                            <a href="#" class="mb-4 block">
+                                <h5 class="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
+                                    {{ event.title.capitalize }}
+                                </h5>
+                            </a>
+                            <div class="dates mb-4 flex gap-2 items-center">
+                                <div class="start_date">
+                                    <p class="dark:text-white">
+                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
+                                        <svg fill="none" class="w-3 h-3 mr-1" stroke="currentColor" stroke-width="1.5"
+                                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z"></path>
+                                        </svg>
+                                      {{ event.start_date.isoformat }}
+                                    </span>
+                                    </p>
+                                </div>
+
+                                <svg fill="none" class="w-5 h-5 mr-1" stroke="white" stroke-width="1.5" viewBox="0 0 24 24"
+                                     xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"></path>
+                                </svg>
+
+                                <div class="final_date">
+                                    <p class="dark:text-white">
+                                    <span class="bg-blue-100 text-blue-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
+                                        <svg fill="none" class="w-3 h-3 mr-1" stroke="currentColor" stroke-width="1.5"
+                                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z"></path>
+                                        </svg>
+                                      {{ event.final_date.isoformat }}
+                                    </span>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="description">
+                                <p class="dark:text-gray-400">
+                                    {{ event.addressed_to }}
+                                </p>
+                            </div>
+
+                            <div class="flex items-center justify-between">
+                                <span class="text-3xl font-bold text-gray-900 dark:text-white">{{ event.price }}</span>
+                                <a href="{% url 'view_event' event.id %}"
+                                   class="text-white flex bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                    Ver más
+                                    <svg fill="none" class="w-5 h-5 mr-1" stroke="white" stroke-width="1.5" viewBox="0 0 24 24"
+                                         xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+
+
     <div class="fixed right-6 bottom-6">
         <button type="button" data-modal-target="events-form-modal" data-modal-toggle="events-form-modal"
                 class="flex items-center justify-center text-white bg-blue-700 rounded-full w-14 h-14 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:focus:ring-blue-800">

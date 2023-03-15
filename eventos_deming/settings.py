@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-k)j&r&8b#6tng!5v5lts67hib+n!imkr(@x)xya8$*r3le%6*q'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'Apps.Home.apps.HomeConfig',
     'Apps.Users.apps.UsersConfig',
     'Apps.Eventos.apps.EventosConfig',

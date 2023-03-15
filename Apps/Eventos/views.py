@@ -4,13 +4,16 @@ from Apps.Eventos.forms import CareerForm, EventForm, EventParticipantForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.forms import ValidationError
+from django.core.mail import EmailMultiAlternatives
 
 
-def events(request):
+def view_events(request):
     global get_career
+    events = Event.objects.all()
 
     data = {
         'form': EventForm,
+        'events': events,
     }
 
     if request.method == 'POST':
@@ -33,6 +36,9 @@ def events(request):
             event_planning = request.FILES.get('event_planning')
             link_video = request.POST.get('link_video')
             career = request.POST.get('career')
+
+            if not alternative_phone:
+                alternative_phone = None
 
             try:
                 get_career = Career.objects.get(id=career)
@@ -57,6 +63,38 @@ def events(request):
             messages.error(request, 'Ocurrió un error. Intente de nuevo.')
 
     return render(request, 'Eventos/index.html', data)
+
+
+def view_event(request, id_event):
+    event = Event.objects.get(id=id_event)
+
+    data = {
+        'event': event,
+    }
+
+    return render(request, 'Eventos/view_event.html', data)
+
+
+def send_email_event(request, id_event):
+    from_email = request.POST.get('user_email')
+    subject = request.POST.get('subject')
+    message = request.POST.get('message')
+    event = Event.objects.get(id=id_event)
+    email_1 = event.email
+    email_2 = event.alternative_email
+    emails = [email_1]
+    if email_2 is not None:
+        emails.append(email_2)
+
+    print(from_email, subject, message)
+
+    msg = EmailMultiAlternatives(subject=subject, body=message, from_email=from_email, to=emails)
+    try:
+        msg.send()
+        messages.success(request, 'Mensaje enviado exitosamente')
+    except:
+        messages.error(request, 'No se pudo enviar el mensaje. Intenta de nuevo más tarde')
+    return redirect('view_event', id_event)
 
 
 @login_required
