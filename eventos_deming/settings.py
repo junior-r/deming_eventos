@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django_browser_reload',
     'crispy_forms',
     'django_countries',
+    'naomi',
 ]
 
 TAILWIND_APP_NAME = 'theme'
@@ -160,9 +161,18 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Email config
+if DEBUG:
+    EMAIL_BACKEND = "naomi.mail.backends.naomi.NaomiBackend"
+    EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'tmp')
+EMAIL_HOST = 'smtp.googlemail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'deming.instituto2023@gmail.com'
+EMAIL_HOST_PASSWORD = 'esiuqldaimapqbce'
+EMAIL_USE_TLS = True

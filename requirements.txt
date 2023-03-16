@@ -19,8 +19,10 @@ sqlparse==0.4.3
 asgiref==3.6.0
 pytz==2022.7.1
 mutagen==1.46.0
+django-naomi
 
 pandas~=1.5.3
 numpy~=1.24.2
 openpyxl~=3.1.0
 phonenumbers~=8.13.7
+requests
