@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-k)j&r&8b#6tng!5v5lts67hib+n!imkr(@x)xya8$*r3le%6*q'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -31,7 +31,7 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
-CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8000/']
+CSRF_TRUSTED_ORIGINS = ['https://d54f-186-4-252-8.ngrok.io']
 
 
 # Application definition
@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django_countries',
     'naomi',
+    'paypal.standard.ipn',
 ]
 
 TAILWIND_APP_NAME = 'theme'
@@ -176,3 +177,7 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'deming.instituto2023@gmail.com'
 EMAIL_HOST_PASSWORD = 'esiuqldaimapqbce'
 EMAIL_USE_TLS = True
+
+# Paypal Settings
+PAYPAL_TEST = True
+PAYPAL_RECEIVER_EMAIL = 'businessjunior@gmail.com'

@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from Apps.Eventos.models import Career, Event, EventParticipant
 from Apps.Eventos.forms import CareerForm, EventForm, EventParticipantForm
 from django.contrib import messages
@@ -10,6 +11,10 @@ from django.template.loader import get_template
 from django.utils import timezone
 import phonenumbers
 import requests
+from paypal.standard.forms import PayPalPaymentsForm
+import uuid
+
+from Apps.Users.models import User
 
 
 def view_events(request):
@@ -71,10 +76,33 @@ def view_events(request):
 
 
 def view_event(request, id_event):
+
     event = Event.objects.get(id=id_event)
+
+    host = request.get_host()
+
+    paypal_dict = {
+        'business': settings.PAYPAL_RECEIVER_EMAIL,
+        'amount': event.price,
+        'item_name': event.title,
+        'invoice': str(uuid.uuid4()),
+        'currency_code': 'USD',
+        'notify_url': f"http://{host}{reverse('paypal-ipn')}",
+        'return_url': f"http://{host}{reverse('paypal_return', kwargs={'id_event': id_event})}",
+        'cancel_return': f"http://{host}{reverse('paypal_cancel', kwargs={'id_event': id_event})}",
+    }
+
+    form_paypal = PayPalPaymentsForm(initial=paypal_dict)
+    instance_participant = None
+    try:
+        instance_participant = EventParticipant.objects.get(user_id=request.user.id)
+    except EventParticipant.DoesNotExist:
+        pass
 
     data = {
         'event': event,
+        'form_paypal': form_paypal,
+        'form_participant': EventParticipantForm(instance=instance_participant),
     }
 
     if request.method == 'POST':
@@ -83,6 +111,50 @@ def view_event(request, id_event):
         return redirect('view_event', event.id)
 
     return render(request, 'Eventos/view_event.html', data)
+
+
+@login_required
+def validate_participant_event(request, id_event):
+    event = Event.objects.get(id=id_event)
+    if request.method == 'POST':
+        form = EventParticipantForm(request.POST, request.FILES)
+        if form.is_valid():
+            profile_image = request.FILES.get('profile_image')
+            curriculum = request.FILES.get('curriculum')
+
+            first_name = request.POST.get('first_name')
+            last_name = request.POST.get('last_name')
+            country_of_birth = request.POST.get('country_of_birth')
+            dni = request.POST.get('dni')
+            passport_number = request.POST.get('passport_number') if request.POST.get('passport_number') else None
+            gender = request.POST.get('gender')
+            birthdate = request.POST.get('birthdate')
+            current_country = request.POST.get('current_country')
+            address = request.POST.get('address')
+            phone = request.POST.get('phone')
+            email = request.POST.get('email')
+            alternative_email = request.POST.get('alternative_email') if request.POST.get('alternative_email') else None
+            profession = request.POST.get('profession')
+            object = request.POST.get('object')
+
+            participant = EventParticipant.objects.create(
+                user_id=request.user.id, profile_image=profile_image, first_name=first_name, last_name=last_name,
+                dni=dni, country_of_birth=country_of_birth, passport_number=passport_number, gender=gender,
+                birthdate=birthdate, current_country=current_country, address=address, phone=phone, email=email,
+                alternative_email=alternative_email, profession=profession, object=object, curriculum=curriculum
+            )
+            participant.save()
+            participant.event.add(event)
+
+
+def paypal_return(request, id_event):
+    messages.success(request, 'Pago realizado exitosamente')
+    return redirect('view_event', id_event)
+
+
+def paypal_cancel(request, id_event):
+    messages.error(request, 'Tu compra fué cancelada')
+    return redirect('view_event', id_event)
 
 
 def send_email_event(request, event, template):

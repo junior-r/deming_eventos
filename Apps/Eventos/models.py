@@ -113,6 +113,12 @@ class Event(models.Model):
         else:
             return '{}{}'.format(settings.MEDIA_URL, 'event_image_placeholder.png')
 
+    def get_planning_event(self) -> object:
+        if self.event_planning:
+            return '{}{}'.format(settings.MEDIA_URL, self.event_planning)
+        else:
+            return None
+
     def get_short_name(self):
         if len(self.title) > 12:
             return self.title[:12] + '...'
@@ -143,6 +149,8 @@ class Event(models.Model):
 
 
 class EventParticipant(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    event = models.ManyToManyField(Event, db_table='EventParticipant')
     profile_image = models.ImageField(upload_to=participant_directory_image_path, blank=True, null=True,
                                       default="user_profile_placeholder.jpg")
     first_name = models.CharField(max_length=150, blank=False, null=False)

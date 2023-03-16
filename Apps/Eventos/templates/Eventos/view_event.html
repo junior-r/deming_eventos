@@ -17,12 +17,12 @@
 
 {% block content %}
 
-    <div class="content-event-info relative grid gap-4 grid-cols-2 grid-rows-2 p-4 items-center">
+    <div class="content-event-info mt-6 relative grid gap-4 grid-cols-2 grid-rows-2 p-4 items-center">
         <div class="info flex flex-col gap-4">
             {% if event.active %}
-                <span class="absolute top-6 bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Activo</span>
+                <span class="absolute top-2 bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Activo</span>
             {% else %}
-                <span class="absolute top-6 bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Inactivo</span>
+                <span class="absolute top-2 bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Inactivo</span>
             {% endif %}
             <h1 class="text-5xl tracking-wide font-sans font-bold tracking-tight text-gray-700 dark:text-white">
                 {{ event.title.capitalize }} <span class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">{{ event.date_created.date.year }}</span>
@@ -113,6 +113,19 @@
                 <p class="ml-2 text-sm font-medium text-gray-500 dark:text-gray-400">4.95 out of 5</p>
             </div>
 
+            {% if request.user.is_authenticated %}
+                {% if user.eventparticipant %}
+                    <button type="button" data-modal-target="paypalFormModal" data-modal-toggle="paypalFormModal" style="width: max-content" class="text-gray-900 bg-[#F7BE38] hover:bg-[#F7BE38]/90 focus:ring-4 focus:outline-none focus:ring-[#F7BE38]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#F7BE38]/50 mr-2">
+                          <svg class="w-4 h-4 mr-2 -ml-1" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="paypal" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M111.4 295.9c-3.5 19.2-17.4 108.7-21.5 134-.3 1.8-1 2.5-3 2.5H12.3c-7.6 0-13.1-6.6-12.1-13.9L58.8 46.6c1.5-9.6 10.1-16.9 20-16.9 152.3 0 165.1-3.7 204 11.4 60.1 23.3 65.6 79.5 44 140.3-21.5 62.6-72.5 89.5-140.1 90.3-43.4 .7-69.5-7-75.3 24.2zM357.1 152c-1.8-1.3-2.5-1.8-3 1.3-2 11.4-5.1 22.5-8.8 33.6-39.9 113.8-150.5 103.9-204.5 103.9-6.1 0-10.1 3.3-10.9 9.4-22.6 140.4-27.1 169.7-27.1 169.7-1 7.1 3.5 12.9 10.6 12.9h63.5c8.6 0 15.7-6.3 17.4-14.9 .7-5.4-1.1 6.1 14.4-91.3 4.6-22 14.3-19.7 29.3-19.7 71 0 126.4-28.8 142.9-112.3 6.5-34.8 4.6-71.4-23.8-92.6z"></path></svg>
+                          ¡Inscríbete Ya! Solo por ${{ event.price }}
+                    </button>
+                {% else %}
+                    <button type="button" data-modal-target="participantFormModal" data-modal-toggle="participantFormModal" style="width: max-content" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                        ¡Regístrate Ya! Solo por ${{ event.price }}
+                    </button>
+                {% endif %}
+            {% endif %}
+
             <div class="contact row-span-1 col-span-2 flex gap-4 px-2 py-4">
                 <button type="button" data-modal-target="emailFormModal" data-modal-toggle="emailFormModal" class="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 mr-2 mb-2">
                     <svg class="w-4 h-4 mr-2 -ml-1" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512"><path fill="currentColor" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"></path></svg>
@@ -124,6 +137,14 @@
                     </svg> &nbsp;
                     WhatsApp
                 </button>
+
+                <a href="{{ event.get_planning_event }}" download="" class="text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 mr-2 mb-2">
+                    <svg fill="none" class="w-4 h-4 mr-2 -ml-1" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m.75 12l3 3m0 0l3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path>
+                    </svg>
+                    Descargar Contenido
+                </a>
+
             </div>
 
         </div>
@@ -179,7 +200,6 @@
             </div>
         </div>
     </div>
-
 
     <!-- WhatsApp modal -->
     <div id="whatsappFormModal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full">
@@ -243,6 +263,167 @@
         </div>
     </div>
 
+    {% if request.user.is_authenticated %}
+    <!-- Paypal modal -->
+    <div id="paypalFormModal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full">
+        <div class="relative w-full h-full max-w-2xl md:h-auto">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <!-- Modal header -->
+                <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        ¡Envíanos un Mensaje!
+                    </h3>
+                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="paypalFormModal">
+                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="p-6 space-y-6" id="modalPaypal">
+                    {{ form_paypal.render }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Register User modal -->
+    <div id="participantFormModal" tabindex="-1" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full">
+        <div class="relative w-full h-full max-w-7xl md:h-auto">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <!-- Modal header -->
+                <div class="flex items-center justify-between p-5 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+                        ¡Regístrate en este evento!
+                    </h3>
+                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="participantFormModal">
+                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="p-6 space-y-6">
+                    <form action="" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="grid md:grid-cols-2 md:gap-6">
+                            <div class="relative z-0 w-full mb-6 group">
+                                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="{{ form_participant.profile_image.id_for_label }}">
+                                    Imágen de perfil</label>
+                                {{ form_participant.profile_image }}
+                            </div>
+                            <div class="relative z-0 w-full mb-6 group">
+                                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="{{ form_participant.curriculum.id_for_label }}">
+                                    Hoja de vida</label>
+                                {{ form_participant.curriculum }}
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-3 md:gap-6">
+                            <div class="relative z-0 w-full mb-6 group">
+                                <label for="{{ form_participant.first_name.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Nombres</label>
+                                {{ form_participant.first_name }}
+                            </div>
+                            <div class="relative z-0 w-full mb-6 group">
+                                <label for="{{ form_participant.last_name.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Apellidos</label>
+                                {{ form_participant.last_name }}
+                            </div>
+                            <div class="relative z-0 w-full mb-6 group">
+                                <label for="{{ form_participant.gender.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Género</label>
+                                {{ form_participant.gender }}
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-3 md:gap-6">
+                            <div class="relative z-0 w-full mb-6 group">
+                                {% get_countries as countries %}
+                                <label for="{{ form_participant.country_of_birth.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">País de nacimiento</label>
+                                <select id="{{ form_participant.country_of_birth.id_for_label }}" name="{{ form_participant.country_of_birth.name }}" required
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 mb-6 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    {% for country in countries %}
+                                        <option value="{{ country.code }}">{{ country.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="relative z-0 w-full mb-6 group">
+                                <label for="{{ form_participant.dni.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Numéro de identificación nacional</label>
+                                {{ form_participant.dni }}
+                            </div>
+                            <div class="relative z-0 w-full mb-6 group">
+                                <label for="{{ form_participant.birthdate.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Fecha de nacimiento</label>
+                                {{ form_participant.birthdate }}
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-3 md:gap-6">
+                            <div class="relative z-0 w-full mb-6 group">
+                                {% get_countries as countries %}
+                                <label for="{{ form_participant.current_country.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">País actual</label>
+                                <select id="{{ form_participant.current_country.id_for_label }}" name="{{ form_participant.current_country.name }}" required
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 mb-6 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    {% for country in countries %}
+                                        <option value="{{ country.code }}">{{ country.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <p id="{{ form_participant.current_country.id_for_label }}" class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                    Es país seleccionado se utilizará para conocer el código internacional de número de teléfono
+                                </p>
+                            </div>
+                            <div class="relative z-0 w-full mb-6 group">
+                                <label for="{{ form_participant.passport_number.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Número de pasaporte</label>
+                                {{ form_participant.passport_number }}
+                            </div>
+                            <div class="relative z-0 w-full mb-6 group">
+                                <label for="{{ form_participant.phone.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Número de teléfono</label>
+                                {{ form_participant.phone }}
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-3 md:gap-6">
+                            <div class="relative z-0 w-full mb-6 group">
+                                <label for="{{ form_participant.email.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Email</label>
+                                {{ form_participant.email }}
+                            </div>
+                            <div class="relative z-0 w-full mb-6 group">
+                                <label for="{{ form_participant.alternative_email.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Email alternativo</label>
+                                {{ form_participant.alternative_email }}
+                            </div>
+                            <div class="relative z-0 w-full mb-6 group">
+                                <label for="{{ form_participant.profession.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Profesión</label>
+                                {{ form_participant.profession }}
+                            </div>
+                        </div>
+
+                        <div class="relative z-0 w-full mb-6 group">
+                            <label for="{{ form_participant.address.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Dirección</label>
+                            {{ form_participant.address }}
+                        </div>
+
+                        <div class="relative z-0 w-full mb-6 group">
+                            <label for="{{ form_participant.object.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                ¿Porqué desea participar en el evento?</label>
+                            {{ form_participant.object }}
+                        </div>
+
+                        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
 
 {% endblock %}
 
@@ -262,5 +443,10 @@
         navbarEventos.setAttribute('aria-current', 'page');
 
         navbarEventos.className = 'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white';
+    </script>
+    <script>
+        const inputImagen = document.querySelector('#modalPaypal form input[type="image"]');
+        inputImagen.src = 'https://www.paypalobjects.com/webstatic/mktg/merchant_portal/button/buynow.es.png';
+        inputImagen.width = 230;
     </script>
 {% endblock %}
