@@ -1,5 +1,6 @@
 from django import forms
-from Apps.Eventos.models import Event, EventParticipant, Career
+
+from Apps.Eventos.models import Event, Career, Participant
 from django_countries.fields import CountryField
 from django.utils import timezone
 from django.forms import ValidationError
@@ -113,13 +114,13 @@ class EventForm(forms.ModelForm):
 
     class Meta:
         model = Event
-        exclude = ['user', 'date_created', 'active']
+        exclude = ['user', 'date_created', 'active', 'participants']
         help_texts = {
             'country_phone': 'Este país será utilizado para saber el código de marcación correspondiente a número de teléfono',
         }
 
 
-class EventParticipantForm(forms.ModelForm):
+class ParticipantForm(forms.ModelForm):
     profile_image = forms.ImageField(widget=forms.FileInput(attrs={
         'accept': 'image/jpeg, image/jpg',
         'class': 'block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400',
@@ -176,22 +177,21 @@ class EventParticipantForm(forms.ModelForm):
     }))
     object = forms.CharField(max_length=256, required=True, widget=forms.Textarea(attrs={
         'placeholder': 'I want to be at the event, because...',
-        'rows': 3,
+        'rows': 2,
         'class': 'block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
     }))
 
     def clean_birthdate(self):
         birthdate = self.cleaned_data.get('birthdate')
-        birthdate = timezone.make_aware(birthdate)
         today = timezone.now()
         age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
-        if age < 18:
-            raise ValidationError('Debes ser mayor de edad para registrarte en uno de nuestros eventos')
+        if age < 15:
+            raise ValidationError('Debes tener al menos 15 años de edad.')
         return birthdate
 
     class Meta:
-        model = EventParticipant
-        exclude = ['date_created', 'active', 'user']
+        model = Participant
+        exclude = ['date_created', 'active', 'user', 'event', 'pay']
 
 
 class DateInput(forms.DateInput):

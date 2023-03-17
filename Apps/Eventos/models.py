@@ -69,6 +69,67 @@ class Career(models.Model):
         return '{}'.format(self.name)
 
 
+class Participant(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    profile_image = models.ImageField(upload_to=participant_directory_image_path, blank=True, null=True,
+                                      default="user_profile_placeholder.jpg")
+    first_name = models.CharField(max_length=150, blank=False, null=False)
+    last_name = models.CharField(max_length=150, blank=False, null=False)
+    country_of_birth = CountryField(blank=False, null=False)
+    dni = models.BigIntegerField(unique=True, blank=False, null=False, error_messages={
+        'unique': 'Ya exíste un participante con este número de identificación',
+    })
+    passport_number = models.BigIntegerField(unique=True, blank=True, null=True, error_messages={
+        'unique': 'Ya exíste un participante con este pasaporte',
+    })
+    gender = models.CharField(max_length=15, choices=gender_options, blank=False, null=False)
+    birthdate = models.DateField(blank=False, null=False)
+    current_country = CountryField(blank=False, null=False)
+    address = models.TextField(max_length=400, blank=False, null=False)
+    phone = models.BigIntegerField(blank=False, null=False)
+    email = models.EmailField(unique=True, blank=False, null=False, error_messages={
+        'unique': 'Ya esxite un participante con este email',
+    })
+    alternative_email = models.EmailField(unique=True, blank=True, null=True, error_messages={
+        'unique': 'Ya esxite un participante con este email alternativo',
+    })
+    profession = models.CharField(max_length=100, blank=False, null=False)
+    curriculum = models.FileField(upload_to=participant_directory_file_path,
+                                  validators=[FileExtensionValidator(['pdf'])], blank=False, null=False)
+    object = models.TextField(max_length=256, blank=False, null=False)
+    date_created = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        db_table = 'Participants'
+
+    def __str__(self):
+        return '{0}_{1}'.format(self.first_name, self.dni)
+
+    def get_full_number_phone(self):
+        phone_number_info = phonenumbers.parse(f'{self.phone}', self.current_country.__str__())
+        return '+{0}{1}'.format(phone_number_info.country_code, phone_number_info.national_number)
+
+    def get_inter_dialling_code(self):
+        phone_number_info = phonenumbers.parse(f'{self.phone}', self.current_country.__str__())
+        return '+{}'.format(phone_number_info.country_code)
+
+    def delete(self, *args, **kwargs):
+        try:
+            if self.curriculum:
+                os.remove(self.curriculum.path)
+                self.curriculum.delete(False)
+
+            if self.profile_image:
+                os.remove(self.profile_image.path)
+                self.profile_image.delete(False)
+        except ValueError:
+            pass
+        except WindowsError:
+            pass
+        finally:
+            super(Participant, self).delete(*args, **kwargs)
+
+
 class Event(models.Model):
     modality_options = [
         ('Presencial', 'Presencial'),
@@ -76,6 +137,7 @@ class Event(models.Model):
         ('Online y Presencial', 'Online y Presencial'),
     ]
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=False)
+    participants = models.ManyToManyField(Participant, through='EventParticipant')
     logo = models.ImageField(upload_to=event_directory_logo_path, blank=True, null=True,
                              validators=[FileExtensionValidator(['jpeg', 'jpg'])])
     title = models.CharField(max_length=150, null=False, blank=False, unique=True)
@@ -143,58 +205,34 @@ class Event(models.Model):
         finally:
             super(Event, self).delete(*args, **kwargs)
 
+    class Meta:
+        db_table = 'Events'
 
     def __str__(self):
         return '{}_{}_to_{}'.format(self.title, self.start_date, self.final_date)
 
 
 class EventParticipant(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    event = models.ManyToManyField(Event, db_table='EventParticipant')
-    profile_image = models.ImageField(upload_to=participant_directory_image_path, blank=True, null=True,
-                                      default="user_profile_placeholder.jpg")
-    first_name = models.CharField(max_length=150, blank=False, null=False)
-    last_name = models.CharField(max_length=150, blank=False, null=False)
-    country_of_birth = CountryField(blank=False, null=False)
-    dni = models.BigIntegerField(blank=False, null=False)
-    passport_number = models.BigIntegerField(blank=True, null=True)
-    gender = models.CharField(max_length=15, choices=gender_options, blank=False, null=False)
-    birthdate = models.DateField(blank=False, null=False)
-    current_country = CountryField(blank=False, null=False)
-    address = models.TextField(max_length=400, blank=False, null=False)
-    phone = models.BigIntegerField(blank=False, null=False)
-    email = models.EmailField(unique=True, blank=False, null=False)
-    alternative_email = models.EmailField(unique=True, blank=True, null=True)
-    profession = models.CharField(max_length=100, blank=False, null=False)
-    curriculum = models.FileField(upload_to=participant_directory_file_path,
-                                  validators=[FileExtensionValidator(['pdf'])], blank=False, null=False)
-    object = models.TextField(max_length=256, blank=False, null=False)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
+    active = models.BooleanField(default=False)
+    pay = models.BooleanField(default=False)
     date_created = models.DateTimeField(default=timezone.now)
-    active = models.BooleanField(default=True)
+
+    def get_active_state(self):
+        if self.active:
+            return '<svg fill="none" class="w-4 h-4 mr-2 -ml-1" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path> </svg>'
+        else:
+            return '<svg fill="none" class="w-4 h-4 mr-2 -ml-1" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path> </svg>'
+
+    def get_pay_state(self):
+        if self.pay:
+            return '<svg fill="none" class="w-4 h-4 mr-2 -ml-1" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path> </svg>'
+        else:
+            return '<svg fill="none" class="w-4 h-4 mr-2 -ml-1" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path> </svg>'
+
+    class Meta:
+        db_table = 'EventParticipants'
 
     def __str__(self):
-        return '{0}_{1}'.format(self.first_name, self.dni)
-
-    def get_full_number_phone(self):
-        phone_number_info = phonenumbers.parse(f'{self.phone}', self.current_country.__str__())
-        return '+{0}{1}'.format(phone_number_info.country_code, phone_number_info.national_number)
-
-    def get_inter_dialling_code(self):
-        phone_number_info = phonenumbers.parse(f'{self.phone}', self.current_country.__str__())
-        return '+{}'.format(phone_number_info.country_code)
-
-    def delete(self, *args, **kwargs):
-        try:
-            if self.curriculum:
-                os.remove(self.curriculum.path)
-                self.curriculum.delete(False)
-
-            if self.profile_image:
-                os.remove(self.profile_image.path)
-                self.profile_image.delete(False)
-        except ValueError:
-            pass
-        except WindowsError:
-            pass
-        finally:
-            super(EventParticipant, self).delete(*args, **kwargs)
+        return 'Participante_{} Evento_{}'.format(self.participant.id, self.event.id)

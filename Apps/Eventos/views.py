@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from Apps.Eventos.models import Career, Event, EventParticipant
-from Apps.Eventos.forms import CareerForm, EventForm, EventParticipantForm
+from Apps.Eventos.models import Career, Event, EventParticipant, Participant
+from Apps.Eventos.forms import CareerForm, EventForm, ParticipantForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.forms import ValidationError
@@ -75,8 +75,8 @@ def view_events(request):
     return render(request, 'Eventos/index.html', data)
 
 
+@login_required
 def view_event(request, id_event):
-
     event = Event.objects.get(id=id_event)
 
     host = request.get_host()
@@ -93,31 +93,34 @@ def view_event(request, id_event):
     }
 
     form_paypal = PayPalPaymentsForm(initial=paypal_dict)
-    instance_participant = None
+    participants = event.eventparticipant_set.filter(active=True)
+
     try:
-        instance_participant = EventParticipant.objects.get(user_id=request.user.id)
+        participant = EventParticipant.objects.get(participant__user_id=request.user.id, event=id_event)
     except EventParticipant.DoesNotExist:
-        pass
+        participant = None
 
     data = {
         'event': event,
         'form_paypal': form_paypal,
-        'form_participant': EventParticipantForm(instance=instance_participant),
+        'participant': participant,
+        'participants': participants,
+        'form_participant': ParticipantForm(instance=participant.participant if participant.participant else request.user),
+        'template_name_email_event': 'Eventos/contact_event_email.html',
     }
 
     if request.method == 'POST':
-        template = get_template('Eventos/contact_event_email.html')
-        send_email_event(request, event, template)
-        return redirect('view_event', event.id)
+        validate_participant_event(request, id_event, data)
+        return redirect('view_event', id_event)
 
     return render(request, 'Eventos/view_event.html', data)
 
 
 @login_required
-def validate_participant_event(request, id_event):
+def validate_participant_event(request, id_event, data):
     event = Event.objects.get(id=id_event)
     if request.method == 'POST':
-        form = EventParticipantForm(request.POST, request.FILES)
+        form = ParticipantForm(request.POST, request.FILES)
         if form.is_valid():
             profile_image = request.FILES.get('profile_image')
             curriculum = request.FILES.get('curriculum')
@@ -137,14 +140,56 @@ def validate_participant_event(request, id_event):
             profession = request.POST.get('profession')
             object = request.POST.get('object')
 
-            participant = EventParticipant.objects.create(
-                user_id=request.user.id, profile_image=profile_image, first_name=first_name, last_name=last_name,
+            participant = Participant(
+                user=request.user, profile_image=profile_image, first_name=first_name, last_name=last_name,
                 dni=dni, country_of_birth=country_of_birth, passport_number=passport_number, gender=gender,
                 birthdate=birthdate, current_country=current_country, address=address, phone=phone, email=email,
-                alternative_email=alternative_email, profession=profession, object=object, curriculum=curriculum
+                alternative_email=alternative_email, profession=profession, object=object, curriculum=curriculum,
             )
-            participant.save()
-            participant.event.add(event)
+            try:
+                participant.save()
+                event.participants.add(participant, through_defaults={'active': True})
+                messages.success(request, '¡Te haz regístrado exitosamente!')
+            except Exception as e:
+                print(e)
+        else:
+            print(form.errors)
+            messages.error(request, 'Ocurrió un error. Intenta de nuevo')
+            data['form_participant'] = form
+
+
+@login_required
+def set_active_participant(request, id_participant, id_event):
+    event = Event.objects.get(id=id_event)
+    participant = Participant.objects.get(id=id_participant)
+    exists_participant = event.eventparticipant_set.filter(participant=participant.id)
+
+    if exists_participant.exists():
+        participant = exists_participant.get()
+        if participant.active:
+            try:
+                participant.active = False
+                participant.save()
+                messages.success(request, '¡Fuíste elíminado de la lista de participantes exitosamente!')
+            except Exception as e:
+                messages.error(request,
+                               'No se pudo eliminar de la lista de participantes. Contactenos por medio de un Email o un WhatsApp')
+            finally:
+                return redirect('view_event', id_event)
+        else:
+            try:
+                participant.active = True
+                participant.save()
+                messages.success(request, '¡Fuíste añadido a la lista de participantes exitosamente!')
+            except Exception as e:
+                messages.error(request,
+                               'No se pudo añadir a la lista de participantes. Contactenos por medio de un Email o un WhatsApp')
+            finally:
+                return redirect('view_event', id_event)
+    else:
+        event.participants.add(participant, through_defaults={'active': True})
+        messages.success(request, '¡Fuíste añadido a la lista de participantes exitosamente!')
+        return redirect('view_event', id_event)
 
 
 def paypal_return(request, id_event):
@@ -157,7 +202,11 @@ def paypal_cancel(request, id_event):
     return redirect('view_event', id_event)
 
 
-def send_email_event(request, event, template):
+def send_email_event(request, id_event, template_route: str):
+    template_route = template_route.replace(' ', '/', 1)
+    template_route = template_route + '.html'
+    template = get_template(template_route)
+    event = Event.objects.get(id=id_event)
     user_names = request.POST.get('user_name')
     user_email = request.POST.get('user_email')
     subject = request.POST.get('subject')
@@ -188,6 +237,8 @@ def send_email_event(request, event, template):
         print(e)
         messages.error(request, 'No se pudo enviar el mensaje. Intenta de nuevo más tarde')
 
+    return redirect('view_event', id_event)
+
 
 def send_whatsapp_event(request, id_event):
     event = Event.objects.get(id=id_event)
@@ -203,7 +254,7 @@ def send_whatsapp_event(request, id_event):
 
         url = "https://api.ultramsg.com/instance40328/messages/chat"
 
-        payload = "token=attq6dkxmwdgvqvm&to={0}&body=*{1}* \n\nLe escribe: *{2}* | Télefono: *{3}* | " \
+        payload = "token=xlvb1wg94yvs92mu&to={0}&body=*{1}* \n\nLe escribe: *{2}* | Télefono: *{3}* | " \
                   "Correo: {4} \n\n_{5}_ \n\nFecha: *{6} {7}:{8}*".format(
                     event.get_full_number_phone(), event.title.upper(), user_name, full_number,
                     user_email, message, timezone.now().date(), timezone.now().time().hour,
