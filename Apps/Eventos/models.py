@@ -1,12 +1,13 @@
 import os
+
+import phonenumbers
 from django.conf import settings
-from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 from django.db import models
-from django_countries.fields import CountryField
-from Apps.Users.models import User
 from django.utils import timezone
-import phonenumbers
+from django_countries.fields import CountryField
+
+from Apps.Users.models import User
 
 
 def participant_directory_image_path(instance, filename):

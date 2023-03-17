@@ -1,20 +1,20 @@
-from django.shortcuts import render, redirect
-from django.urls import reverse
-from Apps.Eventos.models import Career, Event, EventParticipant, Participant
-from Apps.Eventos.forms import CareerForm, EventForm, ParticipantForm
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.forms import ValidationError
-from django.core.mail import EmailMultiAlternatives
-from django.conf import settings
-from django.template.loader import get_template
-from django.utils import timezone
-import phonenumbers
-import requests
-from paypal.standard.forms import PayPalPaymentsForm
 import uuid
 
-from Apps.Users.models import User
+import phonenumbers
+import requests
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required, permission_required
+from django.core.mail import EmailMultiAlternatives
+from django.forms import ValidationError
+from django.shortcuts import render, redirect
+from django.template.loader import get_template
+from django.urls import reverse
+from django.utils import timezone
+from paypal.standard.forms import PayPalPaymentsForm
+
+from Apps.Eventos.forms import CareerForm, EventForm, ParticipantForm
+from Apps.Eventos.models import Career, Event, EventParticipant, Participant
 
 
 def view_events(request):
@@ -116,6 +116,7 @@ def view_event(request, id_event):
     return render(request, 'Eventos/view_event.html', data)
 
 
+@permission_required('event.add_event')
 @login_required
 def validate_participant_event(request, id_event, data):
     event = Event.objects.get(id=id_event)

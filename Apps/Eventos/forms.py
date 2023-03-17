@@ -1,9 +1,9 @@
 from django import forms
+from django.forms import ValidationError
+from django.utils import timezone
+from django_countries.fields import CountryField
 
 from Apps.Eventos.models import Event, Career, Participant
-from django_countries.fields import CountryField
-from django.utils import timezone
-from django.forms import ValidationError
 
 gender_options = [
     ('Masculino', 'Masculino'),

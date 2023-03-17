@@ -1,7 +1,7 @@
-from django.urls import path, include
-from Apps.Eventos.views import view_events, careers, view_event, send_whatsapp_event, paypal_return, paypal_cancel,\
-    send_email_event, set_active_participant
+from django.urls import path
 
+from Apps.Eventos.views import view_events, careers, view_event, send_whatsapp_event, paypal_return, paypal_cancel, \
+    send_email_event, set_active_participant
 
 urlpatterns = [
     path('', view_events, name='eventos'),
