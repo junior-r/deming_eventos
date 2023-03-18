@@ -47,7 +47,9 @@
                             {{ career.date_created }}
                         </td>
                         <td class="px-6 py-4">
-                            <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                            {% if perms.Eventos.add_career %}
+                                <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}
@@ -56,6 +58,7 @@
     </div>
 
 
+    {% if perms.Eventos.add_career %}
 
     <div class="fixed right-6 bottom-6">
         <button type="button" data-modal-target="career-form-modal" data-modal-toggle="career-form-modal"
@@ -124,6 +127,7 @@
         </div>
     </div>
 
+    {% endif %}
 {% endblock %}
 
 {% block footer %}

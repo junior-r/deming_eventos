@@ -193,11 +193,13 @@ def set_active_participant(request, id_participant, id_event):
         return redirect('view_event', id_event)
 
 
+@login_required
 def paypal_return(request, id_event):
     messages.success(request, 'Pago realizado exitosamente')
     return redirect('view_event', id_event)
 
 
+@login_required
 def paypal_cancel(request, id_event):
     messages.error(request, 'Tu compra fué cancelada')
     return redirect('view_event', id_event)
@@ -283,18 +285,24 @@ def send_whatsapp_event(request, id_event):
 def careers(request):
     all_careers = Career.objects.all()
     data = {
-        'form': CareerForm,
+        'form': CareerForm(),
         'careers': all_careers,
     }
 
     if request.method == 'POST':
-        form = CareerForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            messages.success(request, '¡Carrera registrada exitosamente!')
-            return redirect('careers')
-        else:
-            data['form'] = form
-            messages.error(request, 'Ocurrió algún error. Intente de nuevo.')
+        create_careers(request, data)
+        return redirect('careers')
 
     return render(request, 'Eventos/carreras_universitarias.html', data)
+
+
+@permission_required('event.add_career')
+def create_careers(request, data):
+    form = CareerForm(request.POST, request.FILES)
+    if form.is_valid():
+        form.save()
+        messages.success(request, '¡Carrera registrada exitosamente!')
+    else:
+        data['form'] = form
+        messages.error(request, 'Ocurrió algún error. Intente de nuevo.')
+
