@@ -1,41 +1,55 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+from django.core.exceptions import ValidationError
 
 from Apps.Users.models import User
 
 
-class UserFrom(UserCreationForm):
+class UserForm(UserCreationForm):
     profile_image = forms.ImageField(label='Imagen de perfil', required=False, widget=forms.FileInput(
         attrs={
-            'class': '',
+            'class': 'inputfile inputfile-5',
+            'id': 'file-5',
+            'data-multiple-caption': '{count} archivos seleccionados',
         }
     ))
     username = forms.CharField(max_length=150, widget=forms.TextInput(
         attrs={
-            'class': ''
+            'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
         }
     ), label='Nombre de usuario')
+    email = forms.EmailField(max_length=150, widget=forms.EmailInput(
+        attrs={
+            'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
+        }
+    ), label='Dirección de correo eletrónico')
     first_name = forms.CharField(max_length=150, widget=forms.TextInput(
         attrs={
-            'class': ''
+            'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
         }
     ), label='Nombres')
     last_name = forms.CharField(max_length=150, widget=forms.TextInput(
         attrs={
-            'class': ''
+            'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
         }
     ), label='Apellidos')
 
     password1 = forms.CharField(min_length=8, widget=forms.PasswordInput(
         attrs={
-            'class': ''
+            'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
         }
     ), label='Contraseña')
     password2 = forms.CharField(min_length=8, widget=forms.PasswordInput(
         attrs={
-            'class': ''
+            'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
         }
     ), label='Contraseña (confirmación)')
+
+    def clean(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise ValidationError("Ya existe un usuario registrado con este email. Intente con otro.")
+        return email
 
     class Meta:
         model = User

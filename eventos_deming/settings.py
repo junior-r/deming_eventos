@@ -103,7 +103,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'Eventos_Deming',
         'USER': 'postgres',
-        'PASSWORD': 'DemingPostgresql',  # In Junior´s PC, set PASSWORD to C.L.
+        'PASSWORD': '31064049',  # In Junior´s PC, set PASSWORD to C.L.
         'HOST': 'localhost',
         'PORT': '5432',
     }
