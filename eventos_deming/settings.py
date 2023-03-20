@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django_countries',
     'naomi',
-    'paypal.standard.ipn',
+    'paypalcheckoutsdk',
 ]
 
 TAILWIND_APP_NAME = 'theme'
@@ -177,7 +177,3 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'deming.instituto2023@gmail.com'
 EMAIL_HOST_PASSWORD = 'esiuqldaimapqbce'
 EMAIL_USE_TLS = True
-
-# Paypal Settings
-PAYPAL_TEST = True
-PAYPAL_RECEIVER_EMAIL = 'businessjunior@gmail.com'

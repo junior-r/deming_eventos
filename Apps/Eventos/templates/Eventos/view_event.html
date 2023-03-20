@@ -9,6 +9,25 @@
 {% endblock %}
 
 {% block styles %}
+    <script>
+        function token(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        const csrftoken = token('csrftoken');
+    </script>
 {% endblock %}
 
 {% block navbar %}
@@ -149,7 +168,8 @@
 
             {% if request.user.is_authenticated %}
                 <div class="payment_buttons flex gap-4 items-baseline">
-                    {% if participant %}
+                    {% if participant.user or participant.event %}
+                        {% if not participant.pay %}
                         <button type="button" data-modal-target="paypalFormModal" data-modal-toggle="paypalFormModal"
                                 style="width: max-content"
                                 class="text-gray-900 bg-[#F7BE38] hover:bg-[#F7BE38]/90 focus:ring-4 focus:outline-none focus:ring-[#F7BE38]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#F7BE38]/50 mr-2">
@@ -160,9 +180,10 @@
                             </svg>
                             ¡Inscríbete Ya! Solo por ${{ event.price }}
                         </button>
+                        {% endif %}
                         {% if participant.active %}
                             <a href="#"
-                               onclick="cancel_participant('/eventos/set_active_participant/{{ participant.participant.id }}/{{ event.id }}/')"
+                               onclick="cancel_participant('/eventos/set_active_participant/{{ event.id }}/')"
                                style="width: max-content"
                                class="text-white flex items-center bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
                                 <svg fill="none" class="w-4 h-4 mr-2 -ml-1" stroke="currentColor" stroke-width="1.5"
@@ -173,11 +194,13 @@
                                 No voy a asistir
                             </a>
                         {% else %}
-                            <a href="{% url 'set_active_participant' participant.participant.id event.id %}"
+                            <a href="{% url 'set_active_participant' event.id %}"
                                style="width: max-content"
                                class="text-white flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                                <svg fill="none" class="w-4 h-4 mr-2 -ml-1" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                <svg fill="none" class="w-4 h-4 mr-2 -ml-1" stroke="currentColor" stroke-width="1.5"
+                                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                 </svg>
                                 Quiero asistir
                             </a>
@@ -269,7 +292,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for participant in participants %}
+                    {% for participant in actives_participants %}
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
 
                             <th scope="row"
@@ -304,7 +327,7 @@
                             <td class="px-6 py-4">
                                 {% if participant.participant.user.id == request.user.id %}
                                     <a href="#"
-                                        class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                       class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
                                 {% endif %}
                             </td>
                         </tr>
@@ -325,7 +348,7 @@
                 <!-- Modal header -->
                 <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                        ¡Ponte en Contacto con Nosotros!
+                        ¡Ponte en Contacto con los responsables del evento!
                     </h3>
                     <button type="button"
                             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -403,7 +426,7 @@
                 <!-- Modal header -->
                 <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                        ¡Envíanos un Mensaje!
+                        ¡Envíale un mensaje a los responsables del evento!
                     </h3>
                     <button type="button"
                             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -516,12 +539,13 @@
                     <!-- Modal body -->
                     <div class="p-6 space-y-6" id="modalPaypal">
                         {{ form_paypal.render }}
+                        <div id="paypal-button-container"></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Form Register User modal -->
+        <!-- Form Register Participant modal -->
         <div id="participantFormModal" tabindex="-1"
              class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full">
             <div class="relative w-full h-full max-w-7xl md:h-auto">
@@ -565,7 +589,11 @@
                                     <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                            for="{{ form_participant.curriculum.id_for_label }}">
                                         Hoja de vida</label>
-                                    {{ form_participant.curriculum }}
+                                    {% if participant.curriculum.path %}
+                                        <input id="{{ form_participant.curriculum.id_for_label }}" value="{{ participant.curriculum.url }}" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" type="file">
+                                    {% else %}
+                                        {{ form_participant.curriculum }}
+                                    {% endif %}
                                     {% if form_participant.curriculum.errors %}
                                         <p id="filled_error_help"
                                            class="mt-2 text-xs text-red-600 dark:text-red-400"><span
@@ -623,6 +651,10 @@
                                     <select id="{{ form_participant.country_of_birth.id_for_label }}"
                                             name="{{ form_participant.country_of_birth.name }}" required
                                             class="bg-gray-50 border border-gray-300 text-gray-900 mb-6 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                        {% if participant.country_of_birth %}
+                                            {% get_country participant.country_of_birth as country_of_birth %}
+                                            <option value="{{ country_of_birth.code }} selected">{{ country_of_birth.name }}</option>
+                                        {% endif %}
                                         {% for country in countries %}
                                             <option value="{{ country.code }}">{{ country.name }}</option>
                                         {% endfor %}
@@ -650,7 +682,11 @@
                                     <label for="{{ form_participant.birthdate.id_for_label }}"
                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                         Fecha de nacimiento</label>
-                                    {{ form_participant.birthdate }}
+                                    {% if participant.birthdate %}
+                                        <input type="date" id="{{ form_participant.birthdate.id_for_label }}" value="{{ participant.birthdate.isoformat }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required>
+                                    {% else %}
+                                        {{ form_participant.birthdate }}
+                                    {% endif %}
                                     {% if form_participant.birthdate.errors %}
                                         <p id="filled_error_help"
                                            class="mt-2 text-xs text-red-600 dark:text-red-400"><span
@@ -669,6 +705,10 @@
                                     <select id="{{ form_participant.current_country.id_for_label }}"
                                             name="{{ form_participant.current_country.name }}" required
                                             class="bg-gray-50 border border-gray-300 text-gray-900 mb-6 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                        {% if participant.current_country %}
+                                            {% get_country participant.current_country as current_country %}
+                                            <option value="{{ current_country.code }} selected">{{ current_country.name }}</option>
+                                        {% endif %}
                                         {% for country in countries %}
                                             <option value="{{ country.code }}">{{ country.name }}</option>
                                         {% endfor %}
@@ -794,6 +834,43 @@
 {% endblock %}
 
 {% block js %}
+    <script src="https://www.paypal.com/sdk/js?client-id=AZz1x8MxPQnQJ6KYko9_9Fqjyyvc-ufqz-aCQTzR7j0rO4rA4TkyMj1YxvRHLWQvXcRfKwyQBJNe34dy"> // Required. Replace SB_CLIENT_ID with your sandbox client ID.
+    </script>
+
+    {% if participant is not None %}
+
+    <script>
+        paypal.Buttons({
+            createOrder: function (data, actions) {
+                // This function sets up the details of the transaction, including the amount and line item details.
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: '{{ event.price.to_eng_string }}'
+                        }
+                    }]
+                });
+            },
+            onApprove: function (data) {
+                return fetch('{% url 'pago' event.id %}', {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json',
+                        'X-CSRFToken': csrftoken,
+                    },
+                    body: JSON.stringify({
+                        orderID: data.orderID
+                    })
+                }).then(function (res) {
+                    return res.json();
+                }).then(function (details) {
+                    alert(details.mensaje);
+                })
+            }
+        }).render('#paypal-button-container');
+        //This function displays Smart Payment Buttons on your web page.
+    </script>
+    {% endif %}
     <script>
         function cancel_participant(route) {
             Swal.fire({

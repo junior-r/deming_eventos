@@ -27,3 +27,4 @@ openpyxl~=3.1.0
 phonenumbers~=8.13.7
 requests
 django-paypal
+paypal-checkout-serversdk

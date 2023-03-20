@@ -45,7 +45,7 @@ class UserForm(UserCreationForm):
         }
     ), label='Contraseña (confirmación)')
 
-    def clean(self):
+    def clean_email(self):
         email = self.cleaned_data.get('email')
         if User.objects.filter(email=email).exists():
             raise ValidationError("Ya existe un usuario registrado con este email. Intente con otro.")

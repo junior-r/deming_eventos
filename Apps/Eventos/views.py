@@ -1,4 +1,5 @@
-import uuid
+import json
+import sys
 
 import phonenumbers
 import requests
@@ -7,11 +8,12 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.mail import EmailMultiAlternatives
 from django.forms import ValidationError
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.template.loader import get_template
-from django.urls import reverse
 from django.utils import timezone
-from paypal.standard.forms import PayPalPaymentsForm
+from paypalcheckoutsdk.core import PayPalHttpClient, SandboxEnvironment
+from paypalcheckoutsdk.orders import OrdersGetRequest, OrdersCaptureRequest
 
 from Apps.Eventos.forms import CareerForm, EventForm, ParticipantForm
 from Apps.Eventos.models import Career, Event, EventParticipant, Participant
@@ -22,7 +24,7 @@ def view_events(request):
     events = Event.objects.all()
 
     data = {
-        'form': EventForm,
+        'form': EventForm(),
         'events': events,
     }
 
@@ -41,13 +43,14 @@ def view_events(request):
             phone = request.POST.get('phone')
             alternative_phone = request.POST.get('alternative_phone')
             email = request.POST.get('email')
-            alternative_email = request.POST.get('alternative_email')
+            alternative_email = request.POST.get('alternative_email') if request.POST.get('alternative_email') != '' \
+                else None
             curriculum_user = request.FILES.get('curriculum_user')
             event_planning = request.FILES.get('event_planning')
             link_video = request.POST.get('link_video')
             career = request.POST.get('career')
 
-            if not alternative_phone:
+            if isinstance(alternative_phone, str):
                 alternative_phone = None
 
             try:
@@ -58,13 +61,13 @@ def view_events(request):
             if final_date < start_date:
                 raise ValidationError('La fecha final no puede ser menor a la fecha de inicio')
 
-            event = Event.objects.create(user_id=request.user.id, logo=logo, title=title, place=place,
-                                         addressed_to=addressed_to, price=price, start_date=start_date,
-                                         final_date=final_date, modality=modality, country_phone=country_phone,
-                                         phone=phone, alternative_phone=alternative_phone, email=email,
-                                         alternative_email=alternative_email, curriculum_user=curriculum_user,
-                                         event_planning=event_planning, link_video=link_video, career=get_career
-                                         )
+            event = Event(user_id=request.user.id, logo=logo, title=title, place=place,
+                          addressed_to=addressed_to, price=price, start_date=start_date,
+                          final_date=final_date, modality=modality, country_phone=country_phone,
+                          phone=phone, alternative_phone=alternative_phone, email=email,
+                          alternative_email=alternative_email, curriculum_user=curriculum_user,
+                          event_planning=event_planning, link_video=link_video, career=get_career
+                          )
             event.save()
             messages.success(request, 'Evento creado exitosamente')
             return redirect('eventos')
@@ -79,44 +82,35 @@ def view_events(request):
 def view_event(request, id_event):
     event = Event.objects.get(id=id_event)
 
-    host = request.get_host()
-
-    paypal_dict = {
-        'business': settings.PAYPAL_RECEIVER_EMAIL,
-        'amount': event.price,
-        'item_name': event.title,
-        'invoice': str(uuid.uuid4()),
-        'currency_code': 'USD',
-        'notify_url': f"http://{host}{reverse('paypal-ipn')}",
-        'return_url': f"http://{host}{reverse('paypal_return', kwargs={'id_event': id_event})}",
-        'cancel_return': f"http://{host}{reverse('paypal_cancel', kwargs={'id_event': id_event})}",
-    }
-
-    form_paypal = PayPalPaymentsForm(initial=paypal_dict)
-    participants = event.eventparticipant_set.filter(active=True)
+    participants = event.eventparticipant_set.all()
 
     try:
-        participant = EventParticipant.objects.get(participant__user_id=request.user.id, event=id_event)
-    except EventParticipant.DoesNotExist:
-        participant = None
+        if participants:
+            participant = participants.get(event=event)
+        else:
+            participant = Participant.objects.get(user_id=request.user.id)
+    except Exception:
+        participant = request.user
 
     data = {
         'event': event,
-        'form_paypal': form_paypal,
         'participant': participant,
         'participants': participants,
-        'form_participant': ParticipantForm(instance=participant.participant if participant.participant else request.user),
+        'actives_participants': participants.filter(active=True),
+        'form_participant': ParticipantForm(instance=participant),
         'template_name_email_event': 'Eventos/contact_event_email.html',
     }
 
     if request.method == 'POST':
-        validate_participant_event(request, id_event, data)
-        return redirect('view_event', id_event)
+        result = validate_participant_event(request, id_event, data)
+        if result == 'error':
+            pass
+        else:
+            return redirect('view_event', id_event)
 
     return render(request, 'Eventos/view_event.html', data)
 
 
-@permission_required('event.add_event')
 @login_required
 def validate_participant_event(request, id_event, data):
     event = Event.objects.get(id=id_event)
@@ -153,16 +147,18 @@ def validate_participant_event(request, id_event, data):
                 messages.success(request, '¡Te haz regístrado exitosamente!')
             except Exception as e:
                 print(e)
+                return 'exception'
         else:
             print(form.errors)
             messages.error(request, 'Ocurrió un error. Intenta de nuevo')
             data['form_participant'] = form
+            return 'error'
 
 
 @login_required
-def set_active_participant(request, id_participant, id_event):
+def set_active_participant(request, id_event):
     event = Event.objects.get(id=id_event)
-    participant = Participant.objects.get(id=id_participant)
+    participant = Participant.objects.get(user_id=request.user.id)
     exists_participant = event.eventparticipant_set.filter(participant=participant.id)
 
     if exists_participant.exists():
@@ -172,9 +168,10 @@ def set_active_participant(request, id_participant, id_event):
                 participant.active = False
                 participant.save()
                 messages.success(request, '¡Fuíste elíminado de la lista de participantes exitosamente!')
-            except Exception as e:
+            except Exception:
                 messages.error(request,
-                               'No se pudo eliminar de la lista de participantes. Contactenos por medio de un Email o un WhatsApp')
+                               'No se pudo eliminar de la lista de participantes. Contactenos por medio de un Email o '
+                               'un WhatsApp')
             finally:
                 return redirect('view_event', id_event)
         else:
@@ -182,9 +179,10 @@ def set_active_participant(request, id_participant, id_event):
                 participant.active = True
                 participant.save()
                 messages.success(request, '¡Fuíste añadido a la lista de participantes exitosamente!')
-            except Exception as e:
+            except Exception:
                 messages.error(request,
-                               'No se pudo añadir a la lista de participantes. Contactenos por medio de un Email o un WhatsApp')
+                               'No se pudo añadir a la lista de participantes. Contactenos por medio de un Email o un '
+                               'WhatsApp')
             finally:
                 return redirect('view_event', id_event)
     else:
@@ -194,15 +192,134 @@ def set_active_participant(request, id_participant, id_event):
 
 
 @login_required
-def paypal_return(request, id_event):
-    messages.success(request, 'Pago realizado exitosamente')
-    return redirect('view_event', id_event)
+def pago(request, id_event):
+    data = json.loads(request.body)
+    event = Event.objects.get(id=id_event)
+    participant = Participant.objects.get(user_id=request.user.id)
+    is_participant_registered = event.eventparticipant_set.filter(participant=participant.id)
+
+    if is_participant_registered.exists():
+        participant = is_participant_registered.get()
+        if not participant.pay:
+            event_name, event_price = event.title, event.price
+            order_id = data['orderID']
+            detail = GetOrder().get_order(order_id)
+            detail_price = float(detail.result.purchase_units[0].amount.value)
+
+            if detail_price == float(event_price):
+                transaction = CaptureOrder().capture_order(order_id, debug=True)
+                client_name = '{0} {1}'.format(transaction.result.payer.name.given_name,
+                                               transaction.result.payer.name.surname)
+
+                participant_buy = EventParticipant.objects.get(participant=participant.participant, event=event)
+                participant_buy.order_id = transaction.result.id
+                participant_buy.capture_id = transaction.result.purchase_units[0].payments.captures[0].id
+                participant_buy.client_name = client_name
+                participant_buy.client_email = transaction.result.payer.email_address
+                participant_buy.payer_id = transaction.result.payer.payer_id
+                participant_buy.total_buy = transaction.result.purchase_units[0].payments.captures[0].amount.value
+                participant_buy.status_buy = transaction.result.status
+                participant_buy.status_code = transaction.status_code
+                participant_buy.active = True
+                participant_buy.pay = True
+
+                participant_buy.save()
+
+                data = {
+                    "id": f"{transaction.result.id}",
+                    "nombre_cliente": f"{transaction.result.payer.name.given_name}",
+                    "mensaje": "=D"
+                }
+                print('todo bien')
+                return JsonResponse(data)
+            else:
+                print('precios no coinciden')
+
+                data = {
+                    "mensaje": "Error =("
+                }
+                return JsonResponse(data)
+        else:
+            print('ya realizó pago')
+            messages.error(request, 'Ya realizaste este pago. Contactanos si tienes problemas con el acceso')
+            return redirect('view_event', event.id)
+    else:
+        print('Debe llenar datos')
+        messages.error(request, 'Primero debes llenar tus datos de inscripción. Contactanos si tienes problemas con '
+                                'el acceso')
+        return redirect('view_event', event.id)
 
 
-@login_required
-def paypal_cancel(request, id_event):
-    messages.error(request, 'Tu compra fué cancelada')
-    return redirect('view_event', id_event)
+class PayPalClient:
+    def __init__(self):
+        self.client_id = "AZz1x8MxPQnQJ6KYko9_9Fqjyyvc-ufqz-aCQTzR7j0rO4rA4TkyMj1YxvRHLWQvXcRfKwyQBJNe34dy"
+        self.client_secret = "ENlL3ldBnYpU_PaJ2tZ5bGS0GRlhS_-mtbh7pN9EwA9b4jMc1Emr7ZwVOxM4Abr0tHxGpVQoAHKZ4VrF"
+
+        """Set up and return PayPal Python SDK environment with PayPal access credentials.
+           This sample uses SandboxEnvironment. In production, use LiveEnvironment."""
+
+        self.environment = SandboxEnvironment(client_id=self.client_id, client_secret=self.client_secret)
+
+        """ Returns PayPal HTTP client instance with environment that has access
+            credentials context. Use this instance to invoke PayPal APIs, provided the
+            credentials have access. """
+        self.client = PayPalHttpClient(self.environment)
+
+    def object_to_json(self, json_data):
+        """
+        Function to print all json data in an organized readable manner
+        """
+        result = {}
+        if sys.version_info[0] < 3:
+            itr = json_data.__dict__.iteritems()
+        else:
+            itr = json_data.__dict__.items()
+        for key, value in itr:
+            # Skip internal attributes.
+            if key.startswith("__"):
+                continue
+            result[key] = self.array_to_json_array(value) if isinstance(value, list) else \
+                self.object_to_json(value) if not self.is_primittive(value) else value
+        return result
+
+    def array_to_json_array(self, json_array):
+        result = []
+        if isinstance(json_array, list):
+            for item in json_array:
+                result.append(self.object_to_json(item) if not self.is_primittive(item)
+                              else self.array_to_json_array(item) if isinstance(item, list) else item)
+        return result
+
+    def is_primittive(self, data):
+        return isinstance(data, str) or isinstance(data, unicode) or isinstance(data, int)
+
+
+# Obtener los detalles de la transacción
+class GetOrder(PayPalClient):
+    # 2. Set up your server to receive a call from the client
+    """You can use this function to retrieve an order by passing order ID as an argument"""
+
+    def get_order(self, order_id):
+        """Method to get order"""
+        request = OrdersGetRequest(order_id)
+        # 3. Call PayPal to get the transaction
+        response = self.client.execute(request)
+        return response
+
+
+class CaptureOrder(PayPalClient):
+    # 2. Set up your server to receive a call from the client
+    """this sample function performs payment capture on the order.
+    Approved order ID should be passed as an argument to this function"""
+
+    def capture_order(self, order_id, debug=False):
+        """Method to capture order using order_id"""
+        request = OrdersCaptureRequest(order_id)
+        # 3. Call PayPal to capture an order
+        response = self.client.execute(request)
+        # 4. Save the capture ID to your database. Implement logic to save capture to your database for future
+        # reference.
+        return response
 
 
 def send_email_event(request, id_event, template_route: str):
@@ -259,10 +376,10 @@ def send_whatsapp_event(request, id_event):
 
         payload = "token=xlvb1wg94yvs92mu&to={0}&body=*{1}* \n\nLe escribe: *{2}* | Télefono: *{3}* | " \
                   "Correo: {4} \n\n_{5}_ \n\nFecha: *{6} {7}:{8}*".format(
-                    event.get_full_number_phone(), event.title.upper(), user_name, full_number,
-                    user_email, message, timezone.now().date(), timezone.now().time().hour,
-                    timezone.now().time().minute
-                    )
+            event.get_full_number_phone(), event.title.upper(), user_name, full_number,
+            user_email, message, timezone.now().date(), timezone.now().time().hour,
+            timezone.now().time().minute
+        )
 
         payload = payload.encode('utf8').decode('iso-8859-1')
         headers = {'content-type': 'application/x-www-form-urlencoded'}
@@ -305,4 +422,3 @@ def create_careers(request, data):
     else:
         data['form'] = form
         messages.error(request, 'Ocurrió algún error. Intente de nuevo.')
-

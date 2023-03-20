@@ -214,9 +214,17 @@ class Event(models.Model):
 
 
 class EventParticipant(models.Model):
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
+    order_id = models.CharField(unique=True, max_length=100, editable=False, null=True, blank=True)
+    capture_id = models.CharField(unique=True, max_length=100, editable=False, null=True, blank=True)
+    event = models.ForeignKey(Event, on_delete=models.SET_NULL, null=True)
+    participant = models.ForeignKey(Participant, on_delete=models.SET_NULL, null=True)
+    client_name = models.CharField(max_length=150, null=True)
+    client_email = models.EmailField(blank=True, null=True)
+    payer_id = models.CharField(max_length=100, editable=False, null=True, blank=True)
     active = models.BooleanField(default=False)
+    total_buy = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+    status_buy = models.CharField(max_length=15, default='')
+    status_code = models.CharField(max_length=100, default='')
     pay = models.BooleanField(default=False)
     date_created = models.DateTimeField(default=timezone.now)
 

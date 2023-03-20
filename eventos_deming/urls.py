@@ -24,7 +24,6 @@ from django.conf.urls import handler404
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("__reload__/", include("django_browser_reload.urls")),
-    path('paypal/', include('paypal.standard.ipn.urls')),
     path('', include('Apps.Home.urls')),
     path('users/', include('Apps.Users.urls')),
     path('eventos/', include('Apps.Eventos.urls')),

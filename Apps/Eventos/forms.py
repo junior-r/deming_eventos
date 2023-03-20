@@ -112,6 +112,12 @@ class EventForm(forms.ModelForm):
             raise ValidationError("La fecha final no puede ser menor que la fecha actual.")
         return final_date
 
+    def clean_alternative_phone(self):
+        alt_phone = self.cleaned_data.get('alternative_phone')
+        if isinstance(alt_phone, str):
+            alt_phone = None
+        return alt_phone
+
     class Meta:
         model = Event
         exclude = ['user', 'date_created', 'active', 'participants']
