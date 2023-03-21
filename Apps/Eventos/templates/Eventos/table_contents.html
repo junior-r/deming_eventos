@@ -1,0 +1,87 @@
+<tr>
+    <th scope="col" class="px-6 py-3">
+        <input id="checkbox-all-search" type="checkbox"
+               class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+    </th>
+    <th scope="col" class="px-6 py-3">
+        # Cédula
+    </th>
+    <th scope="col" class="px-6 py-3">
+        Nombre
+    </th>
+    <th scope="col" class="px-6 py-3">
+        Nacimiento
+    </th>
+    <th scope="col" class="px-6 py-3">
+        # Pasaporte
+    </th>
+    <th scope="col" class="px-6 py-3">
+        Email
+    </th>
+    <th scope="col" class="px-6 py-3">
+        Teléfono
+    </th>
+    <th scope="col" class="px-6 py-3">
+        ¿Activo?
+    </th>
+    <th scope="col" class="px-6 py-3">
+        ¿Pagó?
+    </th>
+    <th scope="col" class="px-6 py-3">
+        Opciones
+    </th>
+</tr>
+{% for participant in actives_participants %}
+    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+
+        <th scope="row"
+            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+            <input id="checkbox-all-search" type="checkbox"
+                   class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+        </th>
+        <td class="px-6 py-4">
+            {{ participant.participant.dni }}
+        </td>
+        <td class="px-6 py-4">
+            {{ participant.participant.first_name }} {{ participant.participant.last_name }}
+        </td>
+        <td class="px-6 py-4">
+            {{ participant.participant.birthdate }}
+        </td>
+        <td class="px-6 py-4">
+            {{ participant.participant.passport_number }}
+        </td>
+        <td class="px-6 py-4">
+            {{ participant.participant.email }}
+        </td>
+        <td class="px-6 py-4">
+            {{ participant.participant.get_full_number_phone }}
+        </td>
+        <td class="px-6 py-4">
+            {{ participant.get_active_state | safe }}
+        </td>
+        <td class="px-6 py-4">
+            {% if participant.pay %}
+                <a href="#" onclick="show_invoice()">
+                    <svg fill="none" class="w-6 h-6" stroke="currentColor" stroke-width="1.5"
+                         viewBox="0 0 24 24"
+                         xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0118 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3l1.5 1.5 3-3.75"></path>
+                    </svg>
+                </a>
+            {% else %}
+            {% endif %}
+        </td>
+        <td class="px-6 py-4">
+            {% if participant.participant.user.id == request.user.id %}
+                <a href="#"
+                   class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+            {% endif %}
+            {% if request.user.id == event.user.id or request.user.is_superuser %}
+                <a href="#"
+                   class="font-medium text-red-600 dark:text-red-500 hover:underline">Eliminar</a>
+            {% endif %}
+        </td>
+    </tr>
+{% endfor %}

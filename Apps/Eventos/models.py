@@ -223,6 +223,8 @@ class EventParticipant(models.Model):
     payer_id = models.CharField(max_length=100, editable=False, null=True, blank=True)
     active = models.BooleanField(default=False)
     total_buy = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+    discount_paypal = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+    net_price = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
     status_buy = models.CharField(max_length=15, default='')
     status_code = models.CharField(max_length=100, default='')
     pay = models.BooleanField(default=False)
@@ -230,15 +232,9 @@ class EventParticipant(models.Model):
 
     def get_active_state(self):
         if self.active:
-            return '<svg fill="none" class="w-4 h-4 mr-2 -ml-1" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path> </svg>'
+            return '<svg fill="none" class="w-6 h-6 mr-2 -ml-1" stroke="green" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path> </svg>'
         else:
-            return '<svg fill="none" class="w-4 h-4 mr-2 -ml-1" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path> </svg>'
-
-    def get_pay_state(self):
-        if self.pay:
-            return '<svg fill="none" class="w-4 h-4 mr-2 -ml-1" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path> </svg>'
-        else:
-            return '<svg fill="none" class="w-4 h-4 mr-2 -ml-1" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path> </svg>'
+            return '<svg fill="none" class="w-6 h-6 mr-2 -ml-1" stroke="red" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path> </svg>'
 
     class Meta:
         db_table = 'EventParticipants'

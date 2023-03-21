@@ -24,14 +24,14 @@
             <li class="mr-2" role="presentation">
                 <button class="inline-block p-4 border-b-2 rounded-t-lg" id="table-events-tab"
                         data-tabs-target="#events"
-                        type="button" role="tab" aria-controls="profile" aria-selected="false">Profile
+                        type="button" role="tab" aria-controls="profile" aria-selected="false">Lista
                 </button>
             </li>
 
             <li class="mr-2" role="presentation">
                 <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
                         id="cards-events-tab" data-tabs-target="#card-events" type="button" role="tab"
-                        aria-controls="card-events" aria-selected="false">Dashboard
+                        aria-controls="card-events" aria-selected="false">Items
                 </button>
             </li>
         </ul>
@@ -165,6 +165,7 @@
              aria-labelledby="cards-events-tab">
 
             <div class="content-cards flex gap-4 wrap">
+            {% if events %}
                 {% for event in events %}
                     <div class="w-full relative max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                         {% if event.active %}
@@ -237,7 +238,15 @@
                     </div>
                 {% endfor %}
             </div>
+            {% else %}
+                <div class="content flex justify-center items-center flex-col w-full p-4">
+                    <img src="{% static 'Eventos/images/icons/filter-circle-xmark-solid.svg' %}"
+                         style="width: 20rem" class="mb-4"
+                         alt="ícono de registros no encontrados">
+                    <h1 class="text-5xl font-extrabold dark:text-white">No hay eventos activos por ahora.</h1>
+                </div>
 
+            {% endif %}
         </div>
     </div>
 

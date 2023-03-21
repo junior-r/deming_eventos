@@ -1,5 +1,6 @@
 import json
 import sys
+import pprint
 
 import phonenumbers
 import requests
@@ -10,13 +11,14 @@ from django.core.mail import EmailMultiAlternatives
 from django.forms import ValidationError
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from django.template.loader import get_template
+from django.template.loader import get_template, render_to_string
 from django.utils import timezone
 from paypalcheckoutsdk.core import PayPalHttpClient, SandboxEnvironment
 from paypalcheckoutsdk.orders import OrdersGetRequest, OrdersCaptureRequest
 
 from Apps.Eventos.forms import CareerForm, EventForm, ParticipantForm
 from Apps.Eventos.models import Career, Event, EventParticipant, Participant
+from Apps.Users.models import User
 
 
 def view_events(request):
@@ -86,11 +88,11 @@ def view_event(request, id_event):
 
     try:
         if participants:
-            participant = participants.get(event=event)
+            participant = participants.get(participant__user_id=request.user.id)
         else:
             participant = Participant.objects.get(user_id=request.user.id)
     except Exception:
-        participant = request.user
+        participant = None
 
     data = {
         'event': event,
@@ -113,11 +115,13 @@ def view_event(request, id_event):
 
 @login_required
 def validate_participant_event(request, id_event, data):
+    user = User.objects.get(id=request.user.id)
     event = Event.objects.get(id=id_event)
     if request.method == 'POST':
         form = ParticipantForm(request.POST, request.FILES)
         if form.is_valid():
-            profile_image = request.FILES.get('profile_image')
+            profile_image = request.FILES.get('profile_image') if request.FILES.get('profile_image') else \
+                user.profile_image_user.url
             curriculum = request.FILES.get('curriculum')
 
             first_name = request.POST.get('first_name')
@@ -218,17 +222,24 @@ def pago(request, id_event):
                 participant_buy.client_email = transaction.result.payer.email_address
                 participant_buy.payer_id = transaction.result.payer.payer_id
                 participant_buy.total_buy = transaction.result.purchase_units[0].payments.captures[0].amount.value
+                participant_buy.discount_paypal = transaction.result.purchase_units[0].payments.captures[0].seller_receivable_breakdown.paypal_fee.value
+                participant_buy.net_price = transaction.result.purchase_units[0].payments.captures[0].seller_receivable_breakdown.net_amount.value
                 participant_buy.status_buy = transaction.result.status
                 participant_buy.status_code = transaction.status_code
                 participant_buy.active = True
                 participant_buy.pay = True
 
                 participant_buy.save()
+                sample_dict = dict(transaction.result.__dict__)
+                pprint.pprint(sample_dict)
 
                 data = {
-                    "id": f"{transaction.result.id}",
-                    "nombre_cliente": f"{transaction.result.payer.name.given_name}",
-                    "mensaje": "=D"
+                    "icon": f"success",
+                    "title": "¡Transacción exitosa!",
+                    "text": f"{transaction.result.payer.name.given_name} <br>"
+                            f"Total: {transaction.result.purchase_units[0].payments.captures[0].amount.value} <br>"
+                            f"Fecha: {timezone.now().date()} - {timezone.now().time()}",
+                    "footer": f"ID Compra {transaction.result.purchase_units[0].payments.captures[0].id}"
                 }
                 print('todo bien')
                 return JsonResponse(data)
@@ -236,17 +247,29 @@ def pago(request, id_event):
                 print('precios no coinciden')
 
                 data = {
-                    "mensaje": "Error =("
+                    "icon": f"error",
+                    "title": "¡Error de precios!",
+                    "text": f"El precio a pagar por paypal no es igual al precio del evento.",
+                    "footer": f"Paypal: {detail_price} - Precio real: {event_price}"
                 }
                 return JsonResponse(data)
         else:
             print('ya realizó pago')
-            messages.error(request, 'Ya realizaste este pago. Contactanos si tienes problemas con el acceso')
+            data = {
+                "icon": f"warning",
+                "title": "Pago ya realizado",
+                "text": f"Ya realizaste el pago a este evento",
+                "footer": f"Si continuas teniendo problemas, no dudes en contactarnos"
+            }
             return redirect('view_event', event.id)
     else:
         print('Debe llenar datos')
-        messages.error(request, 'Primero debes llenar tus datos de inscripción. Contactanos si tienes problemas con '
-                                'el acceso')
+        data = {
+            "icon": f"warning",
+            "title": "Falta Registro",
+            "text": f"Antes de pagar por el evento, llena tus datos de regístro o da click en el botón 'Quiero asistir'",
+            "footer": f"Si continuas teniendo problemas, no dudes en contactarnos"
+        }
         return redirect('view_event', event.id)
 
 

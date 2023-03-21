@@ -127,7 +127,7 @@ class EventForm(forms.ModelForm):
 
 
 class ParticipantForm(forms.ModelForm):
-    profile_image = forms.ImageField(widget=forms.FileInput(attrs={
+    profile_image = forms.ImageField(required=False, widget=forms.FileInput(attrs={
         'accept': 'image/jpeg, image/jpg',
         'class': 'block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400',
     }))
