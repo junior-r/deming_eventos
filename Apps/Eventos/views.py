@@ -1,6 +1,6 @@
 import json
-import sys
 import pprint
+import sys
 
 import phonenumbers
 import requests
@@ -11,7 +11,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.forms import ValidationError
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from django.template.loader import get_template, render_to_string
+from django.template.loader import get_template
 from django.utils import timezone
 from paypalcheckoutsdk.core import PayPalHttpClient, SandboxEnvironment
 from paypalcheckoutsdk.orders import OrdersGetRequest, OrdersCaptureRequest

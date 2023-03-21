@@ -3,6 +3,7 @@ from Apps.Users.models import User
 from Apps.Users.forms import UserForm
 from django.contrib.auth import login
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required, permission_required
 
 
 def sign_up(request):
@@ -40,3 +41,12 @@ def sign_up(request):
             data['form'] = form
 
     return render(request, 'registration/sign_up.html', data)
+
+
+@login_required
+def profile(request, username):
+    user = User.objects.get(id=request.user.id, username=username)
+    data = {
+        'user': user,
+    }
+    return render(request, 'Users/profile.html', data)

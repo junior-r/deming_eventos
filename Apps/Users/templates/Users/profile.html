@@ -32,16 +32,18 @@
               background-attachment: fixed;
               ">
 
-{% block navbar %}
-{% endblock %}
+<div class="super-container">
 
-<div class="flex gap-6" style="min-height: calc(100vh - 53px);">
-    {% block left-sidebar %}
-    {% endblock %}
+    <div class="flex gap-8 bg-gray-100 bg-opacity-50 dark:bg-gray-800 dark:bg-opacity-80" style="min-height: calc(100vh - 53px);">
+        {% block left-sidebar %}
+            {% include 'Users/components/sidebar.html' %}
+        {% endblock %}
 
-    <div class="container mx-auto w-full bg-gray-100 bg-opacity-50 dark:bg-gray-800 dark:bg-opacity-80">
-        {% block content %}
-        {% endblock content %}
+        <div class="container w-full py-6">
+            {% block content %}
+                holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+            {% endblock content %}
+        </div>
     </div>
 </div>
 
