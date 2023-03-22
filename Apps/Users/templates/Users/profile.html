@@ -46,8 +46,14 @@
         <div class="container w-full py-6 flex items-stretch flex-col gap-8 flex-wrap" id="content-info">
             {% block content %}
                 <div class="content-info w-full border py-4 px-6 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <h3 class="mb-6 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Información de
-                        cuenta</h3>
+                    <h3 class="mb-6 flex items-center gap-4 text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
+                        <span>Información de cuenta</span>
+                        <svg fill="none" class="w-8 h-8" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
+                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"></path>
+                        </svg>
+                    </h3>
                     <div class="info-user ml-4 flex flex-wrap gap-4">
                         <img class="rounded-full w-36 h-36" src="{{ user.get_picture_profile }}"
                              alt="Extra large avatar">
@@ -69,8 +75,14 @@
                 </div>
 
                 <div class="content-info border py-4 px-6 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <h3 class="mb-6 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Editar
-                        información</h3>
+                    <h3 class="mb-6 flex items-center gap-4 text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
+                        <span>Editar información</span>
+                        <svg fill="none" class="w-8 h-8" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
+                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"></path>
+                        </svg>
+                    </h3>
                     <div class="info-user ml-4 flex flex-col flex-wrap gap-4">
                         <form action="" method="post" enctype="multipart/form-data" style="max-width: 50%">
                             {% csrf_token %}
@@ -78,7 +90,9 @@
                             <div class="relative z-0 w-full mb-6 group">
                                 <div class="container-input">
                                     {% if user.get_picture_profile %}
-                                        <input type="file" name="profile_image" value="{{ user.get_picture_profile }}" accept="image/jpeg" class="inputfile inputfile-5" id="file-5" data-multiple-caption="{count} archivos seleccionados">
+                                        <input type="file" name="profile_image" value="{{ user.get_picture_profile }}"
+                                               accept="image/jpeg" class="inputfile inputfile-5" id="file-5"
+                                               data-multiple-caption="{count} archivos seleccionados">
                                         <label for="file-5">
                                             <figure>
                                                 <img src="{% static 'Home/images/user_profile_placeholder.jpg' %}"
@@ -183,7 +197,8 @@
                             </div>
 
                             <div class="buttons flex justify-end">
-                                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                                <button type="submit"
+                                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                                     Actualizar
                                 </button>
                             </div>
