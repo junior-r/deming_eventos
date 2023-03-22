@@ -97,8 +97,6 @@ def view_event(request, id_event):
     except Exception:
         participant = None
 
-    print(participant)
-
     data = {
         'event': event,
         'participant': participant,
