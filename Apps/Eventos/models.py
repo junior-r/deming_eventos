@@ -240,4 +240,4 @@ class EventParticipant(models.Model):
         db_table = 'EventParticipants'
 
     def __str__(self):
-        return 'Participante_{} Evento_{}'.format(self.participant.id, self.event.id)
+        return '{}'.format(self.id)

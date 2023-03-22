@@ -168,33 +168,48 @@
 
             {% if request.user.is_authenticated %}
                 <div class="payment_buttons flex gap-4 items-baseline">
-                    {% if participant.user or participant.event %}
-                        {% if not participant.pay %}
-                            <button type="button" data-modal-target="paypalFormModal"
-                                    data-modal-toggle="paypalFormModal"
-                                    style="width: max-content"
-                                    class="text-gray-900 bg-[#F7BE38] hover:bg-[#F7BE38]/90 focus:ring-4 focus:outline-none focus:ring-[#F7BE38]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#F7BE38]/50 mr-2">
-                                <svg class="w-4 h-4 mr-2 -ml-1" aria-hidden="true" focusable="false" data-prefix="fab"
-                                     data-icon="paypal" role="img" xmlns="http://www.w3.org/2000/svg"
-                                     viewBox="0 0 384 512">
-                                    <path fill="currentColor"
-                                          d="M111.4 295.9c-3.5 19.2-17.4 108.7-21.5 134-.3 1.8-1 2.5-3 2.5H12.3c-7.6 0-13.1-6.6-12.1-13.9L58.8 46.6c1.5-9.6 10.1-16.9 20-16.9 152.3 0 165.1-3.7 204 11.4 60.1 23.3 65.6 79.5 44 140.3-21.5 62.6-72.5 89.5-140.1 90.3-43.4 .7-69.5-7-75.3 24.2zM357.1 152c-1.8-1.3-2.5-1.8-3 1.3-2 11.4-5.1 22.5-8.8 33.6-39.9 113.8-150.5 103.9-204.5 103.9-6.1 0-10.1 3.3-10.9 9.4-22.6 140.4-27.1 169.7-27.1 169.7-1 7.1 3.5 12.9 10.6 12.9h63.5c8.6 0 15.7-6.3 17.4-14.9 .7-5.4-1.1 6.1 14.4-91.3 4.6-22 14.3-19.7 29.3-19.7 71 0 126.4-28.8 142.9-112.3 6.5-34.8 4.6-71.4-23.8-92.6z"></path>
-                                </svg>
-                                ¡Inscríbete Ya! Solo por ${{ event.price }}
-                            </button>
-                        {% endif %}
-                        {% if participant.active %}
-                            <a href="#"
-                               onclick="cancel_participant('/eventos/set_active_participant/{{ event.id }}/')"
-                               style="width: max-content"
-                               class="text-white flex items-center bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
-                                <svg fill="none" class="w-4 h-4 mr-2 -ml-1" stroke="currentColor" stroke-width="1.5"
-                                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                          d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                No voy a asistir
-                            </a>
+                    {% if participant is not None and participant.user %}
+                        {% if event_participant is not None %}
+                            {% if event_participant.active %}
+                                {% if event_participant.pay %}
+                                    Felicidades ya pagaste
+                                {% else %}
+                                    <button type="button" data-modal-target="paypalFormModal"
+                                            data-modal-toggle="paypalFormModal"
+                                            style="width: max-content"
+                                            class="text-gray-900 bg-[#F7BE38] hover:bg-[#F7BE38]/90 focus:ring-4 focus:outline-none focus:ring-[#F7BE38]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#F7BE38]/50 mr-2">
+                                        <svg class="w-4 h-4 mr-2 -ml-1" aria-hidden="true" focusable="false" data-prefix="fab"
+                                             data-icon="paypal" role="img" xmlns="http://www.w3.org/2000/svg"
+                                             viewBox="0 0 384 512">
+                                            <path fill="currentColor"
+                                                  d="M111.4 295.9c-3.5 19.2-17.4 108.7-21.5 134-.3 1.8-1 2.5-3 2.5H12.3c-7.6 0-13.1-6.6-12.1-13.9L58.8 46.6c1.5-9.6 10.1-16.9 20-16.9 152.3 0 165.1-3.7 204 11.4 60.1 23.3 65.6 79.5 44 140.3-21.5 62.6-72.5 89.5-140.1 90.3-43.4 .7-69.5-7-75.3 24.2zM357.1 152c-1.8-1.3-2.5-1.8-3 1.3-2 11.4-5.1 22.5-8.8 33.6-39.9 113.8-150.5 103.9-204.5 103.9-6.1 0-10.1 3.3-10.9 9.4-22.6 140.4-27.1 169.7-27.1 169.7-1 7.1 3.5 12.9 10.6 12.9h63.5c8.6 0 15.7-6.3 17.4-14.9 .7-5.4-1.1 6.1 14.4-91.3 4.6-22 14.3-19.7 29.3-19.7 71 0 126.4-28.8 142.9-112.3 6.5-34.8 4.6-71.4-23.8-92.6z"></path>
+                                        </svg>
+                                        ¡Inscríbete Ya! Solo por ${{ event.price }}
+                                    </button>
+                                    <a href="#"
+                                       onclick="cancel_participant('/eventos/set_active_participant/{{ event.id }}/')"
+                                       style="width: max-content"
+                                       class="text-white flex items-center bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
+                                        <svg fill="none" class="w-4 h-4 mr-2 -ml-1" stroke="currentColor" stroke-width="1.5"
+                                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        No voy a asistir
+                                    </a>
+                                {% endif %}
+                            {% else %}
+                                <a href="{% url 'set_active_participant' event.id %}"
+                                   style="width: max-content"
+                                   class="text-white flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                                    <svg fill="none" class="w-4 h-4 mr-2 -ml-1" stroke="currentColor" stroke-width="1.5"
+                                         viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    Quiero asistir
+                                </a>
+                            {% endif %}
                         {% else %}
                             <a href="{% url 'set_active_participant' event.id %}"
                                style="width: max-content"
@@ -213,6 +228,7 @@
                                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                             ¡Regístrate Ya! Solo por ${{ event.price }}
                         </button>
+
                     {% endif %}
                 </div>
             {% endif %}
@@ -255,7 +271,8 @@
         </div>
 
         <div class="participants col-span-2 py-4">
-            <h2 class="text-4xl flex items-center justify-center font-bold dark:text-white text-center">Participantes <span class="bg-blue-100 text-blue-800 text-2xl font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ml-2">{{ participants.count }}</span></h2>
+            <h2 class="text-4xl flex items-center justify-center font-bold dark:text-white text-center">Participantes <span class="bg-blue-100 text-blue-800 text-2xl font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ml-2">{{ actives_participants.count }}</span></h2>
+            {% if event.user.id == request.user.id or request.user.is_superuser %}
             <div class="mt-6 relative overflow-x-auto shadow-md sm:rounded-lg p-4">
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400" id="datatable_accounts">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -338,11 +355,11 @@
                                 {% endif %}
                             </td>
                             <td class="px-6 py-4">
-                                {% if participant.participant.user.id == request.user.id %}
+                                {% if event_participant.participant.user.id == request.user.id %}
                                     <a href="#"
                                        class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
                                 {% endif %}
-                                {% if request.user.id == event.user.id or request.user.is_superuser %}
+                                {% if request.user.id == event.user.id or request.user.is_superuser and not event_participant.pay %}
                                     <a href="#"
                                        class="font-medium text-red-600 dark:text-red-500 hover:underline">Eliminar</a>
                                 {% endif %}
@@ -352,6 +369,7 @@
                     </tbody>
                 </table>
             </div>
+            {% endif %}
         </div>
 
     </div>
@@ -899,6 +917,20 @@
                             }
                         })
                     })
+                },
+                onCancel: function (data) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '¡Transacción abortada!',
+                        body: '¡Tu proceso de pago fué cancelado. Intenta de nuevo!',
+                        footer: 'Si tienes algun problema no dudes en contactarnos',
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'OK',
+                    }).then((result) => {
+                        if (result.value) {
+                            window.location.href = '/eventos/view_event/{{ event.id }}/';
+                        }
+                    })
                 }
             }).render('#paypal-button-container');
             //This function displays Smart Payment Buttons on your web page.
@@ -911,8 +943,8 @@
                 text: "¡Esperamos cambies de decisión!",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
                 confirmButtonText: 'Cancelar asistencia',
                 cancelButtonText: 'Si asistiré'
             }).then((result) => {
@@ -921,14 +953,14 @@
                 }
             })
         }
-
+        {% if event_participant %}
         function show_invoice() {
             Swal.fire({
                 icon: 'info',
                 width: 1024,
                 title: '<div class="flex gap-4 justify-center items-center">' +
                             'Comprobante ' +
-                            '<a href="https://www.paypal.com/myaccount/activities/?free_text_search={{ participant.capture_id }}" target="_blank">' +
+                            '<a href="https://www.paypal.com/myaccount/activities/?free_text_search={{ event_participant.capture_id }}" target="_blank">' +
                                 '<svg fill="none" class="w-5 h-5" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"></path> </svg>' +
                             '</a>' +
                         '</div>',
@@ -947,23 +979,24 @@
                             '<tbody>' +
                                 '<tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">' +
                                     '<td class="px-6 py-4">{{ event.title }}</td>' +
-                                    '<td class="px-6 py-4">{{ participant.payer_id }}</td>' +
-                                    '<td class="px-6 py-4">{{ participant.client_name }}</td>' +
-                                    '<td class="px-6 py-4">{{ participant.client_email }}</td>' +
-                                    '<td class="px-6 py-4">{{ participant.capture_id }}</td>' +
-                                    '<td class="px-6 py-4">{{ participant.date_created }}</td>' +
+                                    '<td class="px-6 py-4">{{ event_participant.payer_id }}</td>' +
+                                    '<td class="px-6 py-4">{{ event_participant.client_name }}</td>' +
+                                    '<td class="px-6 py-4">{{ event_participant.client_email }}</td>' +
+                                    '<td class="px-6 py-4">{{ event_participant.capture_id }}</td>' +
+                                    '<td class="px-6 py-4">{{ event_participant.date_created }}</td>' +
                                 '</tr>' +
                             '</tbody>' +
                         '</table>' +
                     '</div>' +
                     '<div class="flex flex-col items-end justify-end px-6 py-4">' +
-                        '<p><strong>Subtotal: </strong>$ {{ participant.total_buy }}</p>' +
+                        '<p><strong>Subtotal: </strong>$ {{ event_participant.total_buy }}</p>' +
                     '</div>',
-                footer: "En tu cuenta de Paypal busca la orden con el siguiente número: <strong> {{ participant.capture_id }}</strong>",
+                footer: "En tu cuenta de Paypal busca la orden con el siguiente número: <strong> {{ event_participant.capture_id }}</strong>",
                 confirmButtonColor: '#3085d6',
                 confirmButtonText: 'ok',
             })
         }
+        {% endif %}
 
     </script>
 

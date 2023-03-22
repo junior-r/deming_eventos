@@ -1,4 +1,5 @@
 import json
+import os
 import pprint
 import sys
 
@@ -85,21 +86,26 @@ def view_event(request, id_event):
     event = Event.objects.get(id=id_event)
 
     participants = event.eventparticipant_set.all()
+    event_participant = None
 
     try:
-        if participants:
-            participant = participants.get(participant__user_id=request.user.id)
-        else:
-            participant = Participant.objects.get(user_id=request.user.id)
+        participant = Participant.objects.get(user_id=request.user.id)
+        try:
+            event_participant = event.eventparticipant_set.get(participant=participant)
+        except:
+            pass
     except Exception:
         participant = None
+
+    print(participant)
 
     data = {
         'event': event,
         'participant': participant,
         'participants': participants,
-        'actives_participants': participants.filter(active=True),
-        'form_participant': ParticipantForm(instance=participant),
+        'event_participant': event_participant,
+        'actives_participants': participants.filter(active=True, event=event),
+        'form_participant': ParticipantForm(instance=request.user),
         'template_name_email_event': 'Eventos/contact_event_email.html',
     }
 
@@ -121,11 +127,11 @@ def validate_participant_event(request, id_event, data):
         form = ParticipantForm(request.POST, request.FILES)
         if form.is_valid():
             profile_image = request.FILES.get('profile_image') if request.FILES.get('profile_image') else \
-                user.profile_image_user.url
+                os.path.join(settings.MEDIA_URL, 'user_profile_placeholder.jpg')
             curriculum = request.FILES.get('curriculum')
 
-            first_name = request.POST.get('first_name')
-            last_name = request.POST.get('last_name')
+            first_name = user.first_name
+            last_name = user.last_name
             country_of_birth = request.POST.get('country_of_birth')
             dni = request.POST.get('dni')
             passport_number = request.POST.get('passport_number') if request.POST.get('passport_number') else None
@@ -134,7 +140,7 @@ def validate_participant_event(request, id_event, data):
             current_country = request.POST.get('current_country')
             address = request.POST.get('address')
             phone = request.POST.get('phone')
-            email = request.POST.get('email')
+            email = user.email
             alternative_email = request.POST.get('alternative_email') if request.POST.get('alternative_email') else None
             profession = request.POST.get('profession')
             object = request.POST.get('object')
@@ -261,7 +267,7 @@ def pago(request, id_event):
                 "text": f"Ya realizaste el pago a este evento",
                 "footer": f"Si continuas teniendo problemas, no dudes en contactarnos"
             }
-            return redirect('view_event', event.id)
+            return JsonResponse(data)
     else:
         print('Debe llenar datos')
         data = {
@@ -270,7 +276,7 @@ def pago(request, id_event):
             "text": f"Antes de pagar por el evento, llena tus datos de regístro o da click en el botón 'Quiero asistir'",
             "footer": f"Si continuas teniendo problemas, no dudes en contactarnos"
         }
-        return redirect('view_event', event.id)
+        return JsonResponse(data)
 
 
 class PayPalClient:
