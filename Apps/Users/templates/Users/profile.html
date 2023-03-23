@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -43,7 +44,7 @@
             {% include 'Users/components/sidebar.html' %}
         {% endblock %}
 
-        <div class="container w-full py-6 flex items-stretch flex-col gap-8 flex-wrap" id="content-info">
+        <div class="container mx-auto w-full py-6 flex items-stretch flex-col gap-8 flex-wrap" id="content-info">
             {% block content %}
                 <div class="content-info w-full border py-4 px-6 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
                     <h3 class="mb-6 flex items-center gap-4 text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -58,16 +59,55 @@
                         <img class="rounded-full w-36 h-36" src="{{ user.get_picture_profile }}"
                              alt="Extra large avatar">
                         <div class="info">
-                            <p class="mb-1 font-normal text-gray-700 dark:text-gray-400">{{ user.username }}</p>
-                            <p class="mb-1 font-normal text-gray-700 dark:text-gray-400">{{ user.get_full_name }}</p>
-                            <p class="mb-1 font-normal text-gray-700 dark:text-gray-400">{{ user.email }}</p>
-                            <p class="mb-1 font-normal text-gray-700 dark:text-gray-400">Último inicio de
-                                sesión: {{ user.last_login }}</p>
-                            <p class="mb-1 font-normal text-gray-700 dark:text-gray-400">Fecha de
-                                creación: {{ user.date_joined }}</p>
+                            <p class="mb-1 font-normal text-gray-700 dark:text-gray-400 flex items-center gap-2">
+                                <svg fill="none" class="w-6 w-6" stroke="currentColor" stroke-width="1.5"
+                                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path stroke-linecap="round"
+                                          d="M16.5 12a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zm0 0c0 1.657 1.007 3 2.25 3S21 13.657 21 12a9 9 0 10-2.636 6.364M16.5 12V8.25"></path>
+                                </svg>
+                                <span>{{ user.username }}</span>
+                            </p>
+                            <p class="mb-1 font-normal text-gray-700 dark:text-gray-400 flex items-center gap-2">
+                                <svg fill="none" class="w-6 w-6" stroke="currentColor" stroke-width="1.5"
+                                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                                <span>{{ user.get_full_name }}</span>
+                            </p>
+                            <p class="mb-1 font-normal text-gray-700 dark:text-gray-400 flex items-center gap-2">
+                                <svg fill="none" class="w-6 w-6" stroke="currentColor" stroke-width="1.5"
+                                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"></path>
+                                </svg>
+                                <span>{{ user.email }}</span>
+                            </p>
+                            <p class="mb-1 font-normal text-gray-700 dark:text-gray-400 flex items-center gap-2">
+                                <svg fill="none" class="w-6 w-6" stroke="currentColor" stroke-width="1.5"
+                                     viewBox="0 0 24 24"
+                                     xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"></path>
+                                </svg>
+                                <span>Último inicio de sesión hace: {{ user.last_login | naturaltime }}</span>
+                            </p>
+                            <p class="mb-1 font-normal text-gray-700 dark:text-gray-400 flex items-center gap-2">
+                                <svg fill="none" class="w-6 w-6" stroke="currentColor" stroke-width="1.5"
+                                     viewBox="0 0 24 24"
+                                     xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M12 8.25v-1.5m0 1.5c-1.355 0-2.697.056-4.024.166C6.845 8.51 6 9.473 6 10.608v2.513m6-4.87c1.355 0 2.697.055 4.024.165C17.155 8.51 18 9.473 18 10.608v2.513m-3-4.87v-1.5m-6 1.5v-1.5m12 9.75l-1.5.75a3.354 3.354 0 01-3 0 3.354 3.354 0 00-3 0 3.354 3.354 0 01-3 0 3.354 3.354 0 00-3 0 3.354 3.354 0 01-3 0L3 16.5m15-3.38a48.474 48.474 0 00-6-.37c-2.032 0-4.034.125-6 .37m12 0c.39.049.777.102 1.163.16 1.07.16 1.837 1.094 1.837 2.175v5.17c0 .62-.504 1.124-1.125 1.124H4.125A1.125 1.125 0 013 20.625v-5.17c0-1.08.768-2.014 1.837-2.174A47.78 47.78 0 016 13.12M12.265 3.11a.375.375 0 11-.53 0L12 2.845l.265.265zm-3 0a.375.375 0 11-.53 0L9 2.845l.265.265zm6 0a.375.375 0 11-.53 0L15 2.845l.265.265z"></path>
+                                </svg>
+                                <span>Miembro desde {{ user.date_joined | naturaltime }}</span>
+                            </p>
                             {% if user.is_active %}
                                 <span class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">
                                 Activo
+                                </span>
+                            {% else %}
+                                <span class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">
+                                NO Activo
                                 </span>
                             {% endif %}
                         </div>
@@ -196,6 +236,49 @@
                                 </div>
                             </div>
 
+                            {% if request.user.is_superuser or request.user.is_staff and request.user.id != user.id %}
+                            <section class="border p-4 mb-4 rounded-lg border-red-500 bg-red-500 bg-opacity-50">
+                                <div class="grid md:grid-cols-2 md:gap-6">
+                                    <div class="relative z-0 w-full mb-6">
+                                        <div class="flex items-center pl-4 border border-gray-200 rounded dark:border-gray-600 mb-2">
+                                            {{ form.is_staff }}
+                                            <label for="{{ form.is_staff.id_for_label }}"
+                                                   class="w-full py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                {{ form.is_staff.label }}
+                                            </label>
+                                        </div>
+                                        <p id="{{ form.is_staff.id_for_label }}"
+                                           class="text-xs font-normal text-gray-500 dark:text-gray-300">
+                                            <svg fill="none" class="w-6 h-6" stroke="currentColor" stroke-width="1.5"
+                                                 viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                      d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"></path>
+                                            </svg>
+                                            <span>Depende de los que se marque, este usuario podrá o no tener privilegios en el programa</span>
+                                        </p>
+                                    </div>
+
+                                    <div class="relative z-0 w-full mb-6">
+                                        <div class="flex items-center pl-4 border border-gray-200 rounded dark:border-gray-600 mb-2">
+                                            {{ form.is_active }}
+                                            <label for="{{ form.is_active.id_for_label }}"
+                                                   class="w-full py-4 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                {{ form.is_active.label }}
+                                            </label>
+                                        </div>
+                                        <p id="{{ form.is_active.id_for_label }}"
+                                           class="text-xs font-normal text-gray-500 dark:text-gray-300">
+                                            <svg fill="none" class="w-6 h-6 block" stroke="currentColor" stroke-width="1.5"
+                                                 viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                      d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"></path>
+                                            </svg>
+                                            <span>Si desmarca está opción, el usuario no podrá iniciar sesión y tendrá que contactar a un superusuario para que cambie su contraseña y active su cuenta</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </section>
+                            {% endif %}
                             <div class="buttons flex justify-end">
                                 <button type="submit"
                                         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
@@ -213,9 +296,6 @@
 {% block footer %}
 {% endblock %}
 
-{% block js %}
-{% endblock %}
-
 <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.2/flowbite.min.js"></script>
 <!-- jQuery -->
@@ -226,39 +306,41 @@
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{% static 'Home/js/darkMode.js' %}"></script>
 <script src="{% static 'Home/js/dataTables.js' %}"></script>
-<script src="{% static 'Users/js/input_file.js' %}"></script>
 
-<script>
-    const input1 = document.getElementById("new_password1");
-    const input2 = document.getElementById("new_password2");
+{% block js %}
+    <script src="{% static 'Users/js/input_file.js' %}"></script>
+    <script>
+        const input1 = document.getElementById("new_password1");
+        const input2 = document.getElementById("new_password2");
 
-    // Agregamos un event listener al input1 para detectar cuando se escribe algo en él
-    input1.addEventListener("input", function () {
-        // Verificamos si el valor del input1 es diferente de una cadena vacía
-        if (input1.value !== "") {
-            // Hacemos que el input2 sea requerido
-            input1.required = true;
-            input2.required = true;
-        } else {
-            // Si el input1 está vacío, quitamos el requerido del input2
-            input1.required = false;
-            input2.required = false;
-        }
-    });
-    // Agregamos un event listener al input1 para detectar cuando se escribe algo en él
-    input2.addEventListener("input", function () {
-        // Verificamos si el valor del input1 es diferente de una cadena vacía
-        if (input2.value !== "") {
-            // Hacemos que el input2 sea requerido
-            input2.required = true;
-            input1.required = true;
-        } else {
-            // Si el input1 está vacío, quitamos el requerido del input2
-            input2.required = false;
-            input1.required = false;
-        }
-    });
-</script>
+        // Agregamos un event listener al input1 para detectar cuando se escribe algo en él
+        input1.addEventListener("input", function () {
+            // Verificamos si el valor del input1 es diferente de una cadena vacía
+            if (input1.value !== "") {
+                // Hacemos que el input2 sea requerido
+                input1.required = true;
+                input2.required = true;
+            } else {
+                // Si el input1 está vacío, quitamos el requerido del input2
+                input1.required = false;
+                input2.required = false;
+            }
+        });
+        // Agregamos un event listener al input1 para detectar cuando se escribe algo en él
+        input2.addEventListener("input", function () {
+            // Verificamos si el valor del input1 es diferente de una cadena vacía
+            if (input2.value !== "") {
+                // Hacemos que el input2 sea requerido
+                input2.required = true;
+                input1.required = true;
+            } else {
+                // Si el input1 está vacío, quitamos el requerido del input2
+                input2.required = false;
+                input1.required = false;
+            }
+        });
+    </script>
+{% endblock %}
 
 {% if messages %}
     {% for m in messages %}

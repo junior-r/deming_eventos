@@ -44,14 +44,21 @@ def sign_up(request):
 
 
 @login_required
-def profile(request, username):
-    user = User.objects.get(id=request.user.id, username=username)
+def profile(request, username, id_user):
+    user = User.objects.get(id=id_user, username=username)
     data = {
         'user': user,
         'form': UpdateUserForm(instance=user)
     }
 
     if request.method == 'POST':
+        if request.user.id != user.id:
+            if request.user.is_superuser:
+                pass
+            else:
+                messages.error(request, 'No tienes permiso para actualizar esta información')
+                return redirect('profile', user.username, user.id)
+
         form = UpdateUserForm(data=request.POST, files=request.FILES, instance=user)
         if form.is_valid():
             if form.has_changed():
@@ -65,21 +72,37 @@ def profile(request, username):
                     user.last_name
                 email = request.POST.get('email') if request.POST.get('email') is not None else \
                     user.email
+                is_staff = True if request.POST.get('is_staff') == 'on' else False
+                is_active = True if request.POST.get('is_active') == 'on' else False
 
                 user.profile_image_user = picture_profile
                 user.username = username
                 user.first_name = first_name
                 user.last_name = last_name
                 user.email = email
+                user.is_staff = is_staff
+                user.is_active = is_active
                 user.save()
 
-                messages.success(request, 'Tu información ha sido actualizada')
-                return redirect('profile', user.username)
+                messages.success(request, 'La información ha sido actualizada')
+                return redirect('profile', user.username, user.id)
             else:
                 messages.info(request, 'Debes cambiar algún dato para actualizar tu información.')
-                return redirect('profile', user.username)
+                return redirect('profile', user.username, user.id)
         else:
             data['form'] = form
             print(form.errors)
             messages.error(request, 'Datos inválidos')
     return render(request, 'Users/profile.html', data)
+
+
+@login_required
+def users_staff(request, id_user):
+    super_user = User.objects.get(id=id_user, is_superuser=True)
+    staff_users = User.objects.filter(is_staff=True).exclude(id=super_user.id)
+    mortal_users = User.objects.all().exclude(is_staff=True)
+    data = {
+        'staff_users': staff_users,
+        'mortal_users': mortal_users,
+    }
+    return render(request, 'Users/users_staff.html', data)

@@ -36,5 +36,11 @@ class User(AbstractUser):
         else:
             return '{}{}'.format(settings.MEDIA_URL, 'user_profile_placeholder.jpg')
 
+    def save(self, *args, **kwargs):
+        user = super(User, self)
+        user.set_password(self.password)
+        user.save(*args, **kwargs)
+        return user
+
     def __str__(self):
         return self.username

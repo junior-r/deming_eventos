@@ -14,6 +14,7 @@ const dataTableOptions = {
         infoEmpty: "<span class='text-gray-900 dark:text-white'>Ningún registro encontrado</span>",
         infoFiltered: "<span class='text-gray-900 dark:text-white'>(filtrados desde _MAX_ registros totales)</span>",
         search: "<span class='text-gray-900 dark:text-white'>Buscar:</span>",
+        searchPlaceholder: 'Busca usuarios',
         loadingRecords: "<span class='text-gray-900 dark:text-white'>Cargando...</span>",
         paginate: {
             first: "Primero",

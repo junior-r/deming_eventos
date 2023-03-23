@@ -1,0 +1,189 @@
+{% extends 'Users/profile.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+{% endblock %}
+
+{% block styles %}
+{% endblock %}
+
+{% block left-sidebar %}
+    {% include 'Users/components/sidebar.html' %}
+{% endblock %}
+
+{% block content %}
+
+    <section class="bg-white dark:bg-gray-900 rounded-lg">
+
+
+        <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
+            <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="myTab"
+                data-tabs-toggle="#myTabContent" role="tablist">
+                <li class="mr-2" role="presentation">
+                    <button class="inline-block p-4 border-b-2 rounded-t-lg" id="staff-tab" data-tabs-target="#staff"
+                            type="button" role="tab" aria-controls="staff" aria-selected="false">Miembros de Staff
+                    </button>
+                </li>
+                <li class="mr-2" role="presentation">
+                    <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+                            id="normal_users-tab" data-tabs-target="#normal_users" type="button" role="tab"
+                            aria-controls="normal_users" aria-selected="false">Usuarios Normales
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <div id="myTabContent">
+            <div class="hidden rounded-lg staff py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16 lg:px-6"
+                 id="staff" role="tabpanel" aria-labelledby="staff-tab">
+                <div class="mx-auto mb-8 max-w-screen-sm lg:mb-16">
+                    <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
+                        Creadores de Actividades y Staff
+                    </h2>
+                    <p class="font-light text-gray-500 sm:text-xl dark:text-gray-400">
+                        Esta es una lista de todos los creadores de eventos, actividades, entre otros y también de los
+                        miembros staff.
+                    </p>
+                </div>
+                {% for user in staff_users %}
+
+                    <div class="grid gap-8 lg:gap-16 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                        <div class="text-center text-gray-500 dark:text-gray-400">
+                            <img class="mx-auto mb-4 w-36 h-36 rounded-full"
+                                 src="{{ user.get_picture_profile }}"
+                                 alt="Bonnie Avatar">
+                            <h3 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                                <a href="{% url 'profile' user.username user.id %}">{{ user.get_full_name }}</a>
+                            </h3>
+                            {% if user.is_active %}
+                                <span class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                                Activo
+                                </span>
+                            {% else %}
+                                <span class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">
+                                NO Activo
+                                </span>
+                            {% endif %}
+                            <div class="flex justify-center mt-2 space-x-4">
+                                <div class="mail">
+                                    <a href="mailto:{{ user.email }}">
+                                        {{ user.email }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="hidden rounded-lg staff py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6"
+                 id="normal_users" role="tabpanel" aria-labelledby="normal_users-tab">
+                <div class="mx-auto mb-8 max-w-screen-sm lg:mb-16 text-center">
+                    <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
+                        Usuarios sin Privilegios
+                    </h2>
+                    <p class="font-light text-gray-500 sm:text-xl dark:text-gray-400">
+                        Esta es una lista de todos los usuarios sin privilegios (no son miembros del staff).
+                    </p>
+                </div>
+
+                <section class="table w-full">
+
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                        <table class="w-full text-sm text-gray-500 dark:text-gray-400" id="datatable_accounts">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" class="p-4">
+                                        <div class="flex items-center">
+                                            <input id="checkbox-all-search" type="checkbox"
+                                                   class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                            <label for="checkbox-all-search" class="sr-only">checkbox</label>
+                                        </div>
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Name
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Nombre de usuario
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Status
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Último ingreso
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Creado en
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for mortal_user in mortal_users %}
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    <td class="w-4 p-4">
+                                        <div class="flex items-center">
+                                            <input id="checkbox-table-search-1" type="checkbox"
+                                                   class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                            <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
+                                        </div>
+                                    </td>
+                                    <th scope="row"
+                                        class="flex items-center justify-start px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                                        <img class="w-10 h-10 rounded-full object-cover" src="{{ mortal_user.get_picture_profile }}"
+                                             alt="{{ mortal_user.get_full_name }} image">
+                                        <div class="pl-3 text-left">
+                                            <div class="text-base font-semibold">{{ mortal_user.get_full_name }}</div>
+                                            <div class="font-normal text-gray-500">{{ mortal_user.email }}</div>
+                                        </div>
+                                    </th>
+                                    <td class="px-6 py-4">
+                                        <a href="{% url 'profile' mortal_user.username mortal_user.id %}" class="text-blue-400">{{ mortal_user.username }}</a>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        {% if mortal_user.is_active %}
+                                            <div class="flex items-center">
+                                                <div class="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div>
+                                                Activo
+                                            </div>
+                                        {% else %}
+                                            <div class="flex items-center">
+                                                <div class="h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></div>
+                                                Inactivo
+                                            </div>
+                                        {% endif %}
+
+                                    </td>
+
+                                    <td class="px-6 py-4">
+                                        <span>{{ mortal_user.last_login | naturaltime }}</span>
+                                    </td>
+
+                                    <td class="px-6 py-4">
+                                        <span>{{ mortal_user.date_joined.date.isoformat }}</span>
+                                    </td>
+
+                                    <td class="px-6 py-4">
+                                        <a href="{% url 'profile' mortal_user.username mortal_user.id %}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit
+                                            user</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </section>
+            </div>
+        </div>
+
+    </section>
+
+{% endblock content %}
+
+{% block footer %}
+{% endblock %}
+
+{% block js %}
+{% endblock %}
