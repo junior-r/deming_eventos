@@ -24,7 +24,7 @@ from Apps.Users.models import User
 
 def view_events(request):
     global get_career
-    events = Event.objects.all()
+    events = Event.objects.filter(active=True)
 
     data = {
         'form': EventForm(),
@@ -87,6 +87,9 @@ def view_events(request):
 @login_required
 def view_event(request, id_event):
     event = Event.objects.get(id=id_event)
+    if not event.active:
+        messages.error(request, 'Este evento ya no está disponible')
+        return redirect(request.META.get('HTTP_REFERER'))
 
     participants = event.eventparticipant_set.all()
     event_participant = None

@@ -80,6 +80,10 @@ class EventForm(forms.ModelForm):
         'placeholder': 'johndoe123@example.com',
         'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
     }))
+    link_to_classroom = forms.URLField(max_length=300, required=False, widget=forms.URLInput(attrs={
+        'placeholder': 'https://example.com',
+        'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
+    }))
     curriculum_user = forms.FileField(required=True, widget=forms.FileInput(attrs={
         'accept': 'application/pdf, application/vnd.ms-excel',
         'class': 'block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400',

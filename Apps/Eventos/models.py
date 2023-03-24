@@ -153,6 +153,7 @@ class Event(models.Model):
     alternative_phone = models.BigIntegerField(null=True, blank=True)
     email = models.EmailField(unique=False, null=False, blank=False)
     alternative_email = models.EmailField(unique=False, null=True, blank=True)
+    link_to_classroom = models.URLField(null=True, blank=False)
     curriculum_user = models.FileField(upload_to=event_directory_user_file_path, max_length=255,
                                        validators=[FileExtensionValidator(['pdf'])], blank=False, null=False)
     event_planning = models.FileField(upload_to=event_directory_planning_file_path, max_length=255,
