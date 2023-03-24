@@ -78,25 +78,87 @@
                  id="staff" role="tabpanel" aria-labelledby="staff-tab">
                 <div class="mx-auto mb-8 max-w-screen-sm lg:mb-16">
                     <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
-                        Creadores de Actividades y Staff &nbsp;
-                        {% if request.user.is_superuser %}
-                            <button type="button" data-modal-target="authentication-modal"
-                                    data-modal-toggle="authentication-modal"
-                                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                <svg fill="none" class="w-5 h-5" stroke="currentColor" stroke-width="1.5"
-                                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                          d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z"></path>
-                                </svg>
-                                <span class="sr-only">Icon description</span>
-                            </button>
-                        {% endif %}
+                        Creadores de Actividades y Staff
                     </h2>
                     <p class="font-light text-gray-500 sm:text-xl dark:text-gray-400">
                         Esta es una lista de todos los creadores de eventos, actividades, entre otros y también de los
                         miembros staff.
                     </p>
                 </div>
+
+                <section class="flex items-center bg-gray-50 dark:bg-gray-900">
+                    <div class="w-full max-w-screen-xl my-4 mx-auto lg:px-12">
+                        <!-- Start coding here -->
+                        <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
+                            <div class="flex-row items-center justify-between p-4 space-y-3 sm:flex sm:space-y-0 sm:space-x-4">
+                                <div>
+                                    <h5 class="mr-3 text-left font-semibold dark:text-white">Usuarios Staff</h5>
+                                    <p class="text-gray-500 text-left dark:text-gray-400">
+                                        Maneja todos tus usuarios staff existentes.
+                                    </p>
+                                </div>
+
+                                <div class="buttons flex items-center gap-4">
+                                    <button id="actionsDropdownButtonStaff" data-dropdown-toggle="actionsDropdownStaff"
+                                            class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg md:w-auto focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                                            type="button">
+                                        <svg class="-ml-1 mr-1.5 w-5 h-5" fill="currentColor"
+                                             viewbox="0 0 20 20"
+                                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                            <path clip-rule="evenodd" fill-rule="evenodd"
+                                                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"></path>
+                                        </svg>
+                                        Actions
+                                    </button>
+                                    <div id="actionsDropdownStaff"
+                                         class="z-10 hidden bg-white divide-y divide-gray-100 rounded shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
+                                            aria-labelledby="actionsDropdownButtonStaff">
+                                            <li>
+                                                <a href="#"
+                                                   class="block text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Mass
+                                                    Edit</a>
+                                            </li>
+                                        </ul>
+                                        <div class="py-1">
+                                            <a href="#"
+                                               class="block text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete
+                                                all</a>
+                                        </div>
+                                    </div>
+
+                                    {% if perms.Users.view_user %}
+                                    <a href="{% url 'export_users' 'staff' % 0}"
+                                            class="flex items-center justify-center px-4 py-2 text-sm font-medium text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                                        <svg fill="none" stroke="currentColor" stroke-width="1.5"
+                                             class="h-3.5 w-3.5 mr-2 -ml-1"
+                                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                                             aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"></path>
+                                        </svg>
+                                        Exportar
+                                    </a>
+                                    {% endif %}
+
+                                    {% if request.user.is_superuser %}
+                                        <button type="button" data-modal-target="create_user_staff-modal"
+                                                data-modal-toggle="create_user_staff-modal"
+                                                class="flex items-center justify-center px-4 py-2 text-sm font-medium text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                                            <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
+                                                 xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                <path clip-rule="evenodd" fill-rule="evenodd"
+                                                      d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"></path>
+                                            </svg>
+                                            Agregar usuario
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 <div class="grid gap-8 lg:gap-16 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                     {% for user in staff_users %}
                         <div class="text-center text-gray-500 dark:text-gray-400">
@@ -146,6 +208,64 @@
                 <section class="table w-full">
 
                     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                        <section class="flex items-center bg-gray-50 dark:bg-gray-900">
+                            <div class="w-full max-w-screen-xl my-4 mx-auto lg:px-12">
+                                <!-- Start coding here -->
+                                <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
+                                    <div class="flex-row items-center justify-between p-4 space-y-3 sm:flex sm:space-y-0 sm:space-x-4">
+                                        <div>
+                                            <h5 class="mr-3 font-semibold dark:text-white">Usuarios Normales</h5>
+                                            <p class="text-gray-500 dark:text-gray-400">
+                                                Maneja todos los usuarios normales existentes.
+                                            </p>
+                                        </div>
+
+                                        <div class="buttons flex items-center gap-4">
+                                            <button id="actionsDropdownButtonUsers"
+                                                    data-dropdown-toggle="actionsDropdownUsers"
+                                                    class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg md:w-auto focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                                                    type="button">
+                                                <svg class="-ml-1 mr-1.5 w-5 h-5" fill="currentColor"
+                                                     viewbox="0 0 20 20"
+                                                     xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                    <path clip-rule="evenodd" fill-rule="evenodd"
+                                                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"></path>
+                                                </svg>
+                                                Actions
+                                            </button>
+                                            <div id="actionsDropdownUsers"
+                                                 class="z-10 hidden bg-white divide-y divide-gray-100 rounded shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                                                <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
+                                                    aria-labelledby="actionsDropdownButtonUsers">
+                                                    <li>
+                                                        <a href="#"
+                                                           class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Mass
+                                                            Edit</a>
+                                                    </li>
+                                                </ul>
+                                                <div class="py-1">
+                                                    <a href="#"
+                                                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete
+                                                        all</a>
+                                                </div>
+                                            </div>
+
+                                            <a href="{% url 'export_users' 'mortals' 0 %}"
+                                                    class="flex items-center justify-center px-4 py-2 text-sm font-medium text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                                                <svg fill="none" stroke="currentColor" stroke-width="1.5"
+                                                     class="h-3.5 w-3.5 mr-2 -ml-1"
+                                                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                                                     aria-hidden="true">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                          d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"></path>
+                                                </svg>
+                                                Exportar
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
                         <table class="w-full text-sm text-gray-500 dark:text-gray-400" id="datatable_accounts">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
@@ -242,14 +362,14 @@
 
 
     <!-- Create User Staff modal -->
-    <div id="authentication-modal" tabindex="-1" aria-hidden="true"
+    <div id="create_user_staff-modal" tabindex="-1" aria-hidden="true"
          class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full">
         <div class="relative w-full h-full max-w-md md:h-auto">
             <!-- Modal content -->
             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                 <button type="button"
                         class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
-                        data-modal-hide="authentication-modal">
+                        data-modal-hide="create_user_staff-modal">
                     <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
                          xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd"

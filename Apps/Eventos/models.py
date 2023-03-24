@@ -187,6 +187,14 @@ class Event(models.Model):
             return self.title[:12] + '...'
         return self.title
 
+    def get_unicode(self):
+        if len(self.title) > 8:
+            return '{0}-{1}_{2}_{3}_{4}'.format(self.id, self.title[:8], self.start_date.year, self.start_date.month,
+                                                self.start_date.day)
+        else:
+            return '{0}-{1}_{2}_{3}_{4}'.format(self.id, self.title, self.start_date.year, self.start_date.month,
+                                                self.start_date.day)
+
     def delete(self, *args, **kwargs):
         try:
             if self.logo:

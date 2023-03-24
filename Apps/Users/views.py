@@ -1,14 +1,23 @@
-from django.shortcuts import render, redirect
-from Apps.Users.models import User
-from Apps.Users.forms import UserForm, UpdateUserForm
-from django.contrib.auth import login
+import os.path
+from datetime import datetime
+
+import openpyxl
+from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.decorators import user_passes_test
-from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import Q
+from django.db.models import Q, QuerySet
+from django.db.models.fields.files import ImageFieldFile
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+
+from Apps.Users.forms import UserForm, UpdateUserForm
+from Apps.Users.models import User
+from Apps.Eventos.models import Event, Participant
 
 
 def sign_up(request):
@@ -70,8 +79,6 @@ def profile(request, username, id_user):
         'permissions': permissions,
         'form': UpdateUserForm(instance=user)
     }
-
-    print(user.has_perm('users.delete_user'))
 
     if request.method == 'POST':
         if request.user.id != user.id:
@@ -150,6 +157,79 @@ def users_staff(request, id_user):
     return render(request, 'Users/users_staff.html', data)
 
 
+def export_to_excel(queryset: QuerySet, filename: str):
+    # Create an Excel file.
+    file = openpyxl.Workbook()
+    sheet = file.active
+
+    # Write the column headers to the first row.
+    headers = [field.name for field in queryset.model._meta.fields]
+    for i, header in enumerate(headers):
+        sheet.cell(row=1, column=i + 1).value = header
+
+    # Write the data from the records to the queryset by row.
+    for i, record in enumerate(queryset):
+        for j, field in enumerate(headers):
+            value = getattr(record, field)
+            cell = sheet.cell(row=i + 2, column=j + 1)
+            # If the value is a date, the value will be formatted as a valid Excel date
+            if isinstance(value, datetime):
+                cell.value = f'{value.year}/{value.month}/{value.day} - {value.hour}:{value.minute}:{value.second}'
+            elif isinstance(value, ImageFieldFile):
+                try:
+                    cell.value = str(value.url)
+                except ValueError:
+                    cell.value = os.path.join(settings.MEDIA_URL, 'user_profile_placeholder.jpg')
+                except:
+                    cell.value = os.path.join(settings.MEDIA_URL, 'user_profile_placeholder.jpg')
+            # if the value is an argon-encoded password, the value will be 'CONFIDENTIAL'
+            elif str(value).startswith('argon'):
+                cell.value = 'CONDENTIAL'
+            else:
+                cell.value = str(value)
+    # Guarda el archivo de Excel
+    file.save("{0}".format(filename))
+    return file
+
+
+@login_required
+@permission_required('Users.view_user')
+def export_users(request, user_type: str, event_id: int):
+    current_user = User.objects.get(id=request.user.id)
+    users_to_export = None
+    if user_type == 'staff':
+        users_to_export = User.objects.filter(is_staff=True).exclude(id=current_user.id)
+        filename = 'Usuarios_Staff.xlsx'
+    elif user_type == 'actives_participants':
+        event = Event.objects.get(id=event_id)
+        participants = Participant.objects.filter(event__participants__event=event, event__eventparticipant__active=True)
+        users_to_export = participants
+        filename = 'Participantes_Activos_{0}.xlsx'.format(event.get_unicode())
+    elif user_type == 'participants_payed':
+        event = Event.objects.get(id=event_id)
+        participants = Participant.objects.filter(event__participants__event=event, event__eventparticipant__pay=True)
+        users_to_export = participants
+        filename = 'Participantes_Pagos_{0}.xlsx'.format(event.get_unicode())
+    else:
+        users_to_export = User.objects.filter(is_staff=False, is_superuser=False)
+        filename = 'Usuarios_Normales.xlsx'
+
+    if users_to_export.exists():
+        print(users_to_export)
+        file = export_to_excel(users_to_export, filename)
+
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename={0}'.format(filename)
+        response.write(open('{0}'.format(filename), 'rb').read())
+        messages.success(request, 'Usuarios descargados exitosamente')
+        file_saved = os.path.join(settings.BASE_DIR, filename)
+        os.remove(file_saved)
+        return response
+    else:
+        messages.info(request, 'No se encontraron registros para descargar')
+        return redirect(request.META.get('HTTP_REFERER'))
+
+
 @login_required
 @permission_required('Users.add_user')
 @user_passes_test(lambda u: u.is_superuser)
@@ -180,5 +260,3 @@ def create_user_staff(request, user_id, data):
         else:
             messages.error(request, 'Ocurrió un error. Revisa e intenta de nuevo')
             data['create_staff_form'] = form
-
-

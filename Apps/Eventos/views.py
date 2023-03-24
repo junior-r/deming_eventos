@@ -90,6 +90,7 @@ def view_event(request, id_event):
 
     participants = event.eventparticipant_set.all()
     event_participant = None
+    participants.filter()
 
     try:
         participant = Participant.objects.get(user_id=request.user.id)
@@ -443,7 +444,7 @@ def careers(request):
     return render(request, 'Eventos/carreras_universitarias.html', data)
 
 
-@permission_required('event.add_career')
+@permission_required('Eventos.add_career')
 def create_careers(request, data):
     form = CareerForm(request.POST, request.FILES)
     if form.is_valid():

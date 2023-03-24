@@ -50,7 +50,11 @@
                     <div class="content-info w-full border py-4 px-6 rounded-lg bg-gray-100 dark:bg-gray-700"
                          style="grid-column: 1 / 2; grid-row: 1 / 2">
                         <h3 class="mb-6 flex items-center gap-4 text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
-                            <span>Información de cuenta</span>
+                            {% if request.user.id == current_profile_user.id %}
+                                <span>Información de tu cuenta</span>
+                            {% else %}
+                                <span>Información de esta cuenta</span>
+                            {% endif %}
                             <svg fill="none" class="w-8 h-8" stroke="currentColor" stroke-width="1.5"
                                  viewBox="0 0 24 24"
                                  xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
