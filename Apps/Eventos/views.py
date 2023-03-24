@@ -56,10 +56,13 @@ def view_events(request):
             if isinstance(alternative_phone, str):
                 alternative_phone = None
 
+            get_career = None
             try:
                 get_career = Career.objects.get(id=career)
             except Career.DoesNotExist:
                 messages.error(request, 'No se pudo encontrar la carrera seleccionada. Contacte al administrador.')
+            except ValueError:
+                messages.error(request, 'Porfavor selecciona una carrera válida')
 
             if final_date < start_date:
                 raise ValidationError('La fecha final no puede ser menor a la fecha de inicio')

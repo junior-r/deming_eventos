@@ -28,7 +28,7 @@
                     <span class="flex-1 ml-3 whitespace-nowrap">Mis eventos</span>
                 </a>
             </li>
-            {% if request.user.is_superuser or request.user.is_staff and request.user.is_authenticated %}
+            {% if request.user.is_superuser or perms.Users.view_user and request.user.is_authenticated %}
                 <li>
                     <a href="{% url 'users_staff' request.user.id %}"
                        class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
