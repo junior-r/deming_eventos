@@ -13,7 +13,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q, QuerySet
 from django.db.models.fields.files import ImageFieldFile
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from Apps.Users.forms import UserForm, UpdateUserForm
 from Apps.Users.models import User
@@ -60,12 +60,12 @@ def sign_up(request):
 @login_required
 def profile(request, username, id_user):
     user = get_user_model().objects.get(id=id_user, username=username)
-    permissions_content_type = ContentType.objects.get(app_label='auth', model='permission')
-    users_content_type = ContentType.objects.get(app_label='Users', model='user')
-    careers_content_type = ContentType.objects.get(app_label='Eventos', model='career')
-    event_content_type = ContentType.objects.get(app_label='Eventos', model='event')
-    event_participant_content_type = ContentType.objects.get(app_label='Eventos', model='eventparticipant')
-    participant_content_type = ContentType.objects.get(app_label='Eventos', model='participant')
+    permissions_content_type = get_object_or_404(ContentType, app_label='auth', model='permission')
+    users_content_type = get_object_or_404(ContentType, app_label='Users', model='user')
+    careers_content_type = get_object_or_404(ContentType, app_label='Eventos', model='career')
+    event_content_type = get_object_or_404(ContentType, app_label='Eventos', model='event')
+    event_participant_content_type = get_object_or_404(ContentType, app_label='Eventos', model='eventparticipant')
+    participant_content_type = get_object_or_404(ContentType, app_label='Eventos', model='participant')
 
     permissions = Permission.objects.filter(
         Q(content_type=permissions_content_type) | Q(content_type=users_content_type) |
@@ -75,7 +75,7 @@ def profile(request, username, id_user):
 
     data = {
         'current_profile_user': user,
-        'current_user': User.objects.get(id=request.user.id),
+        'current_user': get_object_or_404(User, id=request.user.id),
         'permissions': permissions,
         'form': UpdateUserForm(instance=user)
     }
@@ -128,7 +128,7 @@ def profile(request, username, id_user):
 @login_required
 @user_passes_test(lambda u: u.is_superuser)
 def assign_perms_user(request, current_profile_user_id):
-    current_profile_user = User.objects.get(id=current_profile_user_id)
+    current_profile_user = get_object_or_404(User, id=current_profile_user_id)
     perms_to_set = request.POST.getlist('permisos')
 
     try:
@@ -142,7 +142,7 @@ def assign_perms_user(request, current_profile_user_id):
 
 @login_required
 def users_staff(request, id_user):
-    user = User.objects.get(id=id_user)
+    user = get_object_or_404(User, id=id_user)
     staff_users = User.objects.filter(is_staff=True).exclude(id=user.id)
     mortal_users = User.objects.all().exclude(is_staff=True)
     data = {
@@ -195,18 +195,18 @@ def export_to_excel(queryset: QuerySet, filename: str):
 @login_required
 @permission_required('Users.view_user')
 def export_users(request, user_type: str, event_id: int):
-    current_user = User.objects.get(id=request.user.id)
+    current_user = get_object_or_404(User, id=request.user.id)
     users_to_export = None
     if user_type == 'staff':
         users_to_export = User.objects.filter(is_staff=True).exclude(id=current_user.id)
         filename = 'Usuarios_Staff.xlsx'
     elif user_type == 'actives_participants':
-        event = Event.objects.get(id=event_id)
+        event = get_object_or_404(Event, id=event_id)
         participants = Participant.objects.filter(event__participants__event=event, event__eventparticipant__active=True)
         users_to_export = participants
         filename = 'Participantes_Activos_{0}.xlsx'.format(event.get_unicode())
     elif user_type == 'participants_payed':
-        event = Event.objects.get(id=event_id)
+        event = get_object_or_404(Event, id=event_id)
         participants = Participant.objects.filter(event__participants__event=event, event__eventparticipant__pay=True)
         users_to_export = participants
         filename = 'Participantes_Pagos_{0}.xlsx'.format(event.get_unicode())

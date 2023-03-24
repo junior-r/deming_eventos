@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.core.mail import EmailMultiAlternatives
 from django.forms import ValidationError
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import get_template
 from django.utils import timezone
 from paypalcheckoutsdk.core import PayPalHttpClient, SandboxEnvironment
@@ -58,7 +58,7 @@ def view_events(request):
 
             get_career = None
             try:
-                get_career = Career.objects.get(id=career)
+                get_career = get_object_or_404(Career, id=career)
             except Career.DoesNotExist:
                 messages.error(request, 'No se pudo encontrar la carrera seleccionada. Contacte al administrador.')
             except ValueError:
@@ -86,7 +86,7 @@ def view_events(request):
 
 @login_required
 def view_event(request, id_event):
-    event = Event.objects.get(id=id_event)
+    event = get_object_or_404(Event, id=id_event)
     if not event.active:
         messages.error(request, 'Este evento ya no está disponible')
         return redirect(request.META.get('HTTP_REFERER'))
@@ -96,7 +96,7 @@ def view_event(request, id_event):
     participants.filter()
 
     try:
-        participant = Participant.objects.get(user_id=request.user.id)
+        participant = get_object_or_404(Participant, user_id=request.user.id)
         try:
             event_participant = event.eventparticipant_set.get(participant=participant)
         except:
@@ -126,8 +126,8 @@ def view_event(request, id_event):
 
 @login_required
 def validate_participant_event(request, id_event, data):
-    user = User.objects.get(id=request.user.id)
-    event = Event.objects.get(id=id_event)
+    user = get_object_or_404(User, id=request.user.id)
+    event = get_object_or_404(Event, id=id_event)
     if request.method == 'POST':
         form = ParticipantForm(request.POST, request.FILES)
         if form.is_valid():
@@ -172,8 +172,8 @@ def validate_participant_event(request, id_event, data):
 
 @login_required
 def set_active_participant(request, id_event):
-    event = Event.objects.get(id=id_event)
-    participant = Participant.objects.get(user_id=request.user.id)
+    event = get_object_or_404(Event, id=id_event)
+    participant = get_object_or_404(Participant, user_id=request.user.id)
     exists_participant = event.eventparticipant_set.filter(participant=participant.id)
 
     if exists_participant.exists():
@@ -209,8 +209,8 @@ def set_active_participant(request, id_event):
 @login_required
 def pago(request, id_event):
     data = json.loads(request.body)
-    event = Event.objects.get(id=id_event)
-    participant = Participant.objects.get(user_id=request.user.id)
+    event = get_object_or_404(Event, id=id_event, active=True)
+    participant = get_object_or_404(Participant, user_id=request.user.id)
     is_participant_registered = event.eventparticipant_set.filter(participant=participant.id)
 
     if is_participant_registered.exists():
@@ -226,7 +226,7 @@ def pago(request, id_event):
                 client_name = '{0} {1}'.format(transaction.result.payer.name.given_name,
                                                transaction.result.payer.name.surname)
 
-                participant_buy = EventParticipant.objects.get(participant=participant.participant, event=event)
+                participant_buy = get_object_or_404(EventParticipant, participant=participant.participant, event=event)
                 participant_buy.order_id = transaction.result.id
                 participant_buy.capture_id = transaction.result.purchase_units[0].payments.captures[0].id
                 participant_buy.client_name = client_name
@@ -379,7 +379,7 @@ def send_email_event(request, id_event, template_route: str):
     template_route = template_route.replace(' ', '/', 1)
     template_route = template_route + '.html'
     template = get_template(template_route)
-    event = Event.objects.get(id=id_event)
+    event = get_object_or_404(Event, id=id_event)
     user_names = request.POST.get('user_name')
     user_email = request.POST.get('user_email')
     subject = request.POST.get('subject')
@@ -414,7 +414,7 @@ def send_email_event(request, id_event, template_route: str):
 
 
 def send_whatsapp_event(request, id_event):
-    event = Event.objects.get(id=id_event)
+    event = get_object_or_404(Event, id=id_event)
     if request.method == 'POST':
         user_name = request.POST.get('user_name')
         user_email = request.POST.get('user_email')
