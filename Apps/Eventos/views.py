@@ -238,8 +238,32 @@ def pago(request, id_event):
                 participant_buy.pay = True
 
                 participant_buy.save()
-                sample_dict = dict(transaction.result.__dict__)
-                pprint.pprint(sample_dict)
+
+                message = ""
+
+                content = {
+                    'event': event,
+                    'message': message,
+                    'current_year': timezone.now().year,
+                }
+                template = get_template('Eventos/email_post_pay.html')
+                content_template = template.render(content)
+                emails = [participant.participant.email]
+                if participant.participant.alternative_email is not None:
+                    emails.append(participant.participant.alternative_email)
+
+                email = EmailMultiAlternatives(
+                    subject='Email de confirmación de pago',
+                    body=message, from_email=settings.EMAIL_HOST_USER, to=emails,
+                    reply_to=[settings.EMAIL_HOST_USER])
+
+                try:
+                    email.attach_alternative(content_template, 'text/html')
+                    email.send()
+                    messages.success(request, 'Mensaje enviado exitosamente')
+                except Exception as e:
+                    print(e)
+                    messages.error(request, 'No se pudo enviar el mensaje. Intenta de nuevo más tarde')
 
                 data = {
                     "icon": f"success",
@@ -249,11 +273,8 @@ def pago(request, id_event):
                             f"Fecha: {timezone.now().date()} - {timezone.now().time()}",
                     "footer": f"ID Compra {transaction.result.purchase_units[0].payments.captures[0].id}"
                 }
-                print('todo bien')
                 return JsonResponse(data)
             else:
-                print('precios no coinciden')
-
                 data = {
                     "icon": f"error",
                     "title": "¡Error de precios!",
@@ -262,7 +283,6 @@ def pago(request, id_event):
                 }
                 return JsonResponse(data)
         else:
-            print('ya realizó pago')
             data = {
                 "icon": f"warning",
                 "title": "Pago ya realizado",
@@ -271,7 +291,6 @@ def pago(request, id_event):
             }
             return JsonResponse(data)
     else:
-        print('Debe llenar datos')
         data = {
             "icon": f"warning",
             "title": "Falta Registro",
