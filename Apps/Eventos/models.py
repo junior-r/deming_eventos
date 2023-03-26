@@ -106,6 +106,12 @@ class Participant(models.Model):
     def __str__(self):
         return '{0}_{1}'.format(self.first_name, self.dni)
 
+    def get_profile_image(self) -> object:
+        if self.profile_image:
+            return '{}{}'.format(settings.MEDIA_URL, self.profile_image)
+        else:
+            return '{}{}'.format(settings.MEDIA_URL, 'user_profile_placeholder.jpg')
+
     def get_full_number_phone(self):
         phone_number_info = phonenumbers.parse(f'{self.phone}', self.current_country.__str__())
         return '+{0}{1}'.format(phone_number_info.country_code, phone_number_info.national_number)
@@ -161,6 +167,7 @@ class Event(models.Model):
     link_video = models.URLField(null=True, blank=True)
     date_created = models.DateTimeField(default=timezone.now)
     active = models.BooleanField(default=True)
+    certify = models.BooleanField(default=False)
     career = models.ForeignKey(Career, on_delete=models.SET_NULL, null=True, blank=False)
 
     def get_full_number_phone(self):

@@ -87,6 +87,7 @@ def view_events(request):
 @login_required
 def view_event(request, id_event):
     event = get_object_or_404(Event, id=id_event)
+
     if not event.active:
         messages.error(request, 'Este evento ya no está disponible')
         return redirect(request.META.get('HTTP_REFERER'))
