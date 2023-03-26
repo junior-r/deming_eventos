@@ -158,7 +158,21 @@ def validate_participant_event(request, id_event, data):
             )
             try:
                 participant.save()
-                event.participants.add(participant, through_defaults={'active': True})
+                if user.is_superuser or event.user.id == user.id:
+                    event.participants.add(participant, through_defaults={
+                        'active': True,
+                        'pay': True,
+                        'client_name': user.username,
+                        'client_email': user.email,
+                        'payer_id': user.id,
+                        'total_buy': 0.00,
+                        'discount_paypal': 0.00,
+                        'net_price': 0.00,
+                        'status_buy': 'COMPLETED',
+                        'status_code': '203',
+                    })
+                else:
+                    event.participants.add(participant, through_defaults={'active': True})
                 messages.success(request, '¡Te haz regístrado exitosamente!')
             except Exception as e:
                 print(e)
