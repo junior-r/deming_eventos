@@ -1,0 +1,275 @@
+{% extends 'Users/profile.html' %}
+
+{% load countries %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'Users/css/input_file.css' %}">
+{% endblock %}
+
+{% block left-sidebar %}
+    {% include 'Users/components/sidebar.html' %}
+{% endblock %}
+
+{% block content %}
+    {% if form.errors %}
+        <div id="toast-danger"
+             class="absolute flex items-center w-full max-w-xl top-4 left-8 p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+             role="alert">
+            <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
+                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clip-rule="evenodd"></path>
+                </svg>
+                <span class="sr-only">Error icon</span>
+            </div>
+            <div class="ml-3 text-sm font-normal">
+                <ul>
+                    {% for key, value in form.errors.items %}
+                        <li class="flex gap-2">
+                            <svg fill="none" class="w-5 h-5 text-gray-500 dark:text-gray-400" stroke="currentColor"
+                                 stroke-width="1.5" viewBox="0 0 24 24"
+                                 xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"></path>
+                            </svg>
+                            {{ value }}
+                        </li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+            <button type="button"
+                    class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+                    data-dismiss-target="#toast-danger" aria-label="Close">
+                <span class="sr-only">Close</span>
+                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clip-rule="evenodd"></path>
+                </svg>
+            </button>
+        </div>
+    {% endif %}
+
+    <div class="content-info border py-4 px-6 rounded-lg bg-gray-100 dark:bg-gray-700"
+         style="grid-column: 1 / 2; grid-row: 2 / 3">
+        <h3 class="mb-6 flex items-center gap-4 text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
+            <span>Editar información de registro en eventos</span>
+            <svg fill="none" class="w-8 h-8" stroke="currentColor" stroke-width="1.5"
+                 viewBox="0 0 24 24"
+                 xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"></path>
+            </svg>
+        </h3>
+        <div class="info-user ml-4 flex flex-col flex-wrap gap-4">
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="grid md:grid-cols-2 md:gap-6">
+                    <div class="relative z-0 w-full mb-6 group">
+                        <div class="container-input">
+                            <input type="file" name="{{ form.profile_image.html_name }}"
+                                   value="{{ participant.get_profile_image }}"
+                                   accept="image/jpeg" class="inputfile inputfile-5" id="file-5"
+                                   data-multiple-caption="{count} archivos seleccionados">
+                            <label for="file-5">
+                                <figure>
+                                    <img src="{% static 'Home/images/user_profile_placeholder.jpg' %}"
+                                         alt="imagen de perfil de usuario">
+                                    <img id="imagenPrevisualizacion"
+                                         alt="Imagen de perfil del usuario"
+                                         src="{{ participant.get_profile_image }}"
+                                         loading="lazy">
+                                </figure>
+                                <span class="iborrainputfile block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ form.picture_profile.label }}</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="relative z-0 w-full mb-6 group">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                               for="{{ form.birthdate.id_for_label }}">
+                            Hoja de vida
+                        </label>
+                        {{ form.curriculum }}
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-3 md:gap-6">
+                    <div class="relative z-0 w-full mb-6">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                               for="{{ form.first_name.id_for_label }}">
+                            Nombres
+                        </label>
+                        {{ form.first_name }}
+                    </div>
+
+                    <div class="relative z-0 w-full mb-6">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                               for="{{ form.last_name.id_for_label }}">
+                            Apellidos
+                        </label>
+                        {{ form.last_name }}
+                    </div>
+
+                    <div class="relative z-0 w-full mb-6">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                               for="{{ form.dni.id_for_label }}">
+                            Número de identificación nacional
+                        </label>
+                        {{ form.dni }}
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-3 md:gap-6">
+                    <div class="relative z-0 w-full mb-6">
+                        {% get_countries as countries %}
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                               for="{{ form.country_of_birth.id_for_label }}">
+                            País de nacimiento
+                        </label>
+                        <select id="{{ form.country_of_birth.id_for_label }}"
+                                name="{{ form.country_of_birth.html_name }}" required
+                                class="bg-gray-50 border border-gray-300 text-gray-900 mb-6 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            {% if participant.country_of_birth %}
+                                {% get_country participant.country_of_birth as country_of_birth %}
+                                <option value="{{ country_of_birth.code }}"
+                                        selected>{{ country_of_birth.name }}</option>
+                            {% endif %}
+                            {% for country in countries %}
+                                <option value="{{ country.code }}">{{ country.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="relative z-0 w-full mb-6">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                               for="{{ form.current_country.id_for_label }}">
+                            País actual
+                        </label>
+                        <select id="{{ form.current_country.id_for_label }}"
+                                name="{{ form.current_country.html_name }}" required
+                                class="bg-gray-50 border border-gray-300 text-gray-900 mb-6 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            {% if participant.current_country %}
+                                {% get_country participant.current_country as current_county %}
+                                <option value="{{ current_county.code }}" selected>{{ current_county.name }}</option>
+                            {% endif %}
+                            {% for country in countries %}
+                                <option value="{{ country.code }}">{{ country.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="relative z-0 w-full mb-6">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                               for="{{ form.gender.id_for_label }}">
+                            Género
+                        </label>
+                        {{ form.gender }}
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-3 md:gap-6">
+                    <div class="relative z-0 w-full mb-6">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                               for="{{ form.passport_number.id_for_label }}">
+                            Número de pasaporte
+                        </label>
+                        {{ form.passport_number }}
+                    </div>
+
+                    <div class="relative z-0 w-full mb-6">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                               for="{{ form.birthdate.id_for_label }}">
+                            Fecha de nacimiento
+                        </label>
+                        <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                               type="date" required value="{{ participant.birthdate.isoformat }}"
+                               name="{{ form.birthdate.html_name }}" id="{{ form.birthdate.id_for_label }}">
+                    </div>
+
+                    <div class="relative z-0 w-full mb-6">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                               for="{{ form.phone.id_for_label }}">
+                            Teléfono
+                        </label>
+                        <div class="flex">
+                            <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                                {{ participant.get_inter_dialling_code }}
+                            </span>
+                            {{ form.phone }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-3 md:gap-6">
+                    <div class="relative z-0 w-full mb-6">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                               for="{{ form.email.id_for_label }}">
+                            Email
+                        </label>
+                        {{ form.email }}
+                    </div>
+
+                    <div class="relative z-0 w-full mb-6">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                               for="{{ form.alternative_email.id_for_label }}">
+                            Email alternativo
+                        </label>
+                        {{ form.alternative_email }}
+                    </div>
+
+                    <div class="relative z-0 w-full mb-6">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                               for="{{ form.profession.id_for_label }}">
+                            Profesión
+                        </label>
+                        {{ form.profession }}
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 md:gap-6">
+                    <div class="relative z-0 w-full mb-6">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                               for="{{ form.object.id_for_label }}">
+                            Motivo de participación
+                        </label>
+                        {{ form.object }}
+                    </div>
+
+                    <div class="relative z-0 w-full mb-6">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                               for="{{ form.address.id_for_label }}">
+                            Dirección
+                        </label>
+                        {{ form.address }}
+                    </div>
+                </div>
+
+                <div class="buttons flex justify-end">
+                    <button type="submit"
+                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                        Actualizar
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+{% endblock content %}
+
+{% block footer %}
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'Users/js/input_file.js' %}"></script>
+{% endblock %}

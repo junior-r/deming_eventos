@@ -17,7 +17,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from Apps.Users.forms import UserForm, UpdateUserForm
 from Apps.Users.models import User
-from Apps.Eventos.models import Event, Participant
+from Apps.Eventos.models import Event, Participant, EventParticipant
+from Apps.Eventos.forms import ParticipantDataUpdateForm
 
 
 def sign_up(request):
@@ -123,6 +124,78 @@ def profile(request, username, id_user):
             print(form.errors)
             messages.error(request, 'Datos inválidos')
     return render(request, 'Users/profile.html', data)
+
+
+@login_required
+def info_participant(request, username, id_user):
+    current_user = get_object_or_404(User, username=username, id=id_user)
+    participant = get_object_or_404(Participant, user_id=current_user.id)
+    data = {
+        'current_user': current_user,
+        'participant': participant,
+        'form': ParticipantDataUpdateForm(instance=participant)
+    }
+
+    if request.method == 'POST':
+        print('Hola')
+        form = ParticipantDataUpdateForm(request.POST, request.FILES, instance=participant)
+        if form.is_valid():
+            if form.has_changed():
+                profile_image = request.FILES.get('profile_image') if request.FILES.get('profile_image') is not None \
+                    else os.path.join(settings.MEDIA_URL, 'user_profile_placeholder.jpg')
+                curriculum = request.FILES.get('curriculum') if request.FILES.get('curriculum') is not None else \
+                    participant.curriculum.url
+
+                first_name = request.POST.get('first_name')
+                last_name = request.POST.get('last_name')
+                country_of_birth = request.POST.get('country_of_birth')
+                dni = request.POST.get('dni')
+                passport_number = request.POST.get('passport_number') if request.POST.get('passport_number') else None
+                gender = request.POST.get('gender')
+                birthdate = request.POST.get('birthdate')
+                current_country = request.POST.get('current_country')
+                address = request.POST.get('address')
+                phone = request.POST.get('phone')
+                email = request.POST.get('email')
+                alternative_email = request.POST.get('alternative_email') if request.POST.get(
+                    'alternative_email') else None
+                profession = request.POST.get('profession')
+                object = request.POST.get('object')
+
+                participant.profile_image, participant.first_name = profile_image, first_name
+                participant.last_name, participant.country_of_birth = last_name, country_of_birth
+                participant.dni, participant.passport_number = dni, passport_number
+                participant.gender, participant.birthdate = gender, birthdate
+                participant.current_country, participant.address = current_country, address
+                participant.phone, participant.email, participant.alternative_email = phone, email, alternative_email
+                participant.profession, participant.object = profession, object
+                participant.save()
+
+                messages.success(request, 'Información actualizada exitósamente')
+                return redirect('info_participant', current_user.username, current_user.id)
+            else:
+                messages.info(request, 'Debes cambiar algún campo para actualizar tus datos.')
+                return redirect('info_participant', current_user.username, current_user.id)
+        else:
+            print(form.errors)
+            messages.error(request, 'Ocurrió un error. Revisa e intenta de nuevo.')
+            data['form'] = form
+
+    return render(request, 'Users/info_participant.html', data)
+
+
+@login_required
+def user_events(request, username, id_user):
+    current_user = get_object_or_404(User, username=username, id=id_user)
+    participant = get_object_or_404(Participant, user_id=current_user.id)
+    events = EventParticipant.objects.filter(participant_id=participant.id, pay=True)
+
+    data = {
+        'user': current_user,
+        'participant': participant,
+        'events': events,
+    }
+    return render(request, 'Users/user_events.html', data)
 
 
 @login_required
