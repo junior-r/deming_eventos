@@ -30,6 +30,13 @@ class User(AbstractUser):
         finally:
             super(User, self).delete(*args, **kwargs)
 
+    def get_full_name(self):
+        first_name = self.first_name
+        last_name = self.last_name
+        if first_name and last_name:
+            return '{0} {1}'.format(first_name, last_name)
+        return self.username
+
     def get_picture_profile(self):
         if self.profile_image_user:
             return '{}{}'.format(settings.MEDIA_URL, self.profile_image_user)

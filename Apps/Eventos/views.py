@@ -136,8 +136,8 @@ def validate_participant_event(request, id_event, data):
                 os.path.join(settings.MEDIA_URL, 'user_profile_placeholder.jpg')
             curriculum = request.FILES.get('curriculum')
 
-            first_name = user.first_name
-            last_name = user.last_name
+            first_name = user.first_name if request.POST.get('first_name') == '' else request.POST.get('first_name')
+            last_name = user.last_name if request.POST.get('last_name') == '' else request.POST.get('last_name')
             country_of_birth = request.POST.get('country_of_birth')
             dni = request.POST.get('dni')
             passport_number = request.POST.get('passport_number') if request.POST.get('passport_number') else None
