@@ -1,7 +1,8 @@
+import datetime
 import json
 import os
-import pprint
 import sys
+import qrcode
 
 import phonenumbers
 import requests
@@ -87,10 +88,6 @@ def view_events(request):
 @login_required
 def view_event(request, id_event):
     event = get_object_or_404(Event, id=id_event)
-
-    if not event.active:
-        messages.error(request, 'Este evento ya no está disponible')
-        return redirect(request.META.get('HTTP_REFERER'))
 
     participants = event.eventparticipant_set.all()
     event_participant = None
@@ -219,6 +216,28 @@ def set_active_participant(request, id_event):
         event.participants.add(participant, through_defaults={'active': True})
         messages.success(request, '¡Fuíste añadido a la lista de participantes exitosamente!')
         return redirect('view_event', id_event)
+
+
+@login_required
+def download_certify_event(request, id_event, id_participant):
+    event = get_object_or_404(Event, id=id_event)
+    participant = get_object_or_404(Participant, id=id_participant)
+    payment_data = get_object_or_404(EventParticipant, event_id=event.id, participant_id=participant.id)
+
+    url_certify = '{0}{1}'.format(request.get_host(), request.get_full_path())
+    qr = qrcode.QRCode(version=1, box_size=10, border=5)
+    qr.add_data(url_certify)
+    qr.make(fit=True)
+
+    context = {
+        'event': event,
+        'participant': participant,
+        'payment_data': payment_data,
+        'now': datetime.datetime.now(),
+    }
+
+    css_root = os.path.join(settings.BASE_DIR, 'staticfiles/css/dist/styles.css')
+    return render(request, 'Eventos/certify.html', context)
 
 
 @login_required

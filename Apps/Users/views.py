@@ -1,5 +1,5 @@
 import os.path
-from datetime import datetime
+import datetime
 
 import openpyxl
 from django.conf import settings
@@ -246,7 +246,7 @@ def export_to_excel(queryset: QuerySet, filename: str):
             value = getattr(record, field)
             cell = sheet.cell(row=i + 2, column=j + 1)
             # If the value is a date, the value will be formatted as a valid Excel date
-            if isinstance(value, datetime):
+            if isinstance(value, datetime.datetime):
                 cell.value = f'{value.year}/{value.month}/{value.day} - {value.hour}:{value.minute}:{value.second}'
             elif isinstance(value, ImageFieldFile):
                 try:

@@ -120,6 +120,9 @@ class Participant(models.Model):
         phone_number_info = phonenumbers.parse(f'{self.phone}', self.current_country.__str__())
         return '+{}'.format(phone_number_info.country_code)
 
+    def get_full_name(self):
+        return '{0} {1}'.format(self.first_name, self.last_name)
+
     def delete(self, *args, **kwargs):
         try:
             if self.curriculum:
