@@ -11,12 +11,13 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.mail import EmailMultiAlternatives
 from django.forms import ValidationError
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import get_template
 from django.utils import timezone
 from paypalcheckoutsdk.core import PayPalHttpClient, SandboxEnvironment
 from paypalcheckoutsdk.orders import OrdersGetRequest, OrdersCaptureRequest
+from weasyprint import HTML, CSS
 
 from Apps.Eventos.forms import CareerForm, EventForm, ParticipantForm
 from Apps.Eventos.models import Career, Event, EventParticipant, Participant
@@ -225,19 +226,29 @@ def download_certify_event(request, id_event, id_participant):
     payment_data = get_object_or_404(EventParticipant, event_id=event.id, participant_id=participant.id)
 
     url_certify = '{0}{1}'.format(request.get_host(), request.get_full_path())
-    qr = qrcode.QRCode(version=1, box_size=10, border=5)
-    qr.add_data(url_certify)
-    qr.make(fit=True)
+    qr_root = os.path.join(settings.MEDIA_ROOT, 'QRCODES', f'event_{event.id}_participant_{participant.id}.png')
+    if not os.path.exists(qr_root):
+        qr = qrcode.QRCode(version=1, box_size=10, border=5)
+        qr.add_data(url_certify)
+        qr.make(fit=True)
+        img = qr.make_image(fill_color='black', back_color='white')
+        img.save(qr_root)
 
     context = {
         'event': event,
         'participant': participant,
         'payment_data': payment_data,
         'now': datetime.datetime.now(),
+        'qr': os.path.join(settings.MEDIA_URL, 'QRCODES', f'event_{event.id}_participant_{participant.id}.png'),
+        'certify_url': url_certify,
     }
 
-    css_root = os.path.join(settings.BASE_DIR, 'staticfiles/css/dist/styles.css')
-    return render(request, 'Eventos/certify.html', context)
+    css_root = os.path.join(settings.BASE_DIR, 'staticfiles/Eventos/css/certify.css')
+    template = get_template('Eventos/certify.html')
+    html_template = template.render(context)
+
+    pdf = HTML(string=html_template, base_url=request.build_absolute_uri()).write_pdf(stylesheets=[CSS(css_root)])
+    return HttpResponse(pdf, content_type='application/pdf')
 
 
 @login_required
@@ -267,8 +278,10 @@ def pago(request, id_event):
                 participant_buy.client_email = transaction.result.payer.email_address
                 participant_buy.payer_id = transaction.result.payer.payer_id
                 participant_buy.total_buy = transaction.result.purchase_units[0].payments.captures[0].amount.value
-                participant_buy.discount_paypal = transaction.result.purchase_units[0].payments.captures[0].seller_receivable_breakdown.paypal_fee.value
-                participant_buy.net_price = transaction.result.purchase_units[0].payments.captures[0].seller_receivable_breakdown.net_amount.value
+                participant_buy.discount_paypal = transaction.result.purchase_units[0].payments.captures[
+                    0].seller_receivable_breakdown.paypal_fee.value
+                participant_buy.net_price = transaction.result.purchase_units[0].payments.captures[
+                    0].seller_receivable_breakdown.net_amount.value
                 participant_buy.status_buy = transaction.result.status
                 participant_buy.status_code = transaction.status_code
                 participant_buy.active = True

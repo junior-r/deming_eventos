@@ -19,67 +19,81 @@
             document.documentElement.classList.remove('dark')
         }
     </script>
+    <style>
+        @page {
+            size: landscape;
+        }
+    </style>
 </head>
 <body class="bg-gray-300" style="min-height: 100vh">
 
-    <div class="container w-full mx-auto flex flex-col justify-center" style="height: 100vh">
-        <div class="certify grid grid-cols-1 grid-rows-3 gap-6 mx-auto py-8" style="max-width: 1000px">
-            <div class="head flex justify-between gap-4 items-center">
-                <div class="header">
-                    <h1 class="text-5xl font-extrabold">Certificado</h1>
-                    <h3 class="text-3xl font-bold ">De finalización</h3>
+<div class="container w-full mx-auto flex flex-col justify-center" style="height: 100vh">
+    <div class="certify grid grid-cols-1 grid-rows-3 gap-6 mx-auto py-8" style="max-width: 1000px">
+        <div class="head flex justify-between gap-4 items-center">
+            <div class="header">
+                <h1 class="text-5xl font-extrabold">Certificado</h1>
+                <h3 class="text-3xl font-bold ">De finalización</h3>
+            </div>
+            <div class="logo">
+                <img src="{% static 'Home/images/logo_deming.png' %}" class="rounded h-20">
+            </div>
+        </div>
+
+        <div class="body mb-6">
+            <div class="names">
+                <h3 class="text-3xl font-bold mb-6">Este documento certifica que: </h3>
+                <h2 class="text-6xl font-bold mb-6"
+                    style="font-family: 'Lobster', cursive;">{{ participant.get_full_name }}</h2>
+            </div>
+            <div class="description flex flex-col gap-4" style="font-family: 'Roboto', sans-serif;">
+                <p>
+                    ha completado satisfactoriamente el evento titulado <span
+                        class="font-bold">{{ event.title.capitalize }}</span>, organizado
+                    por el <span class="font-bold">Instituto Tecnológico Corporativo Edwars Deming</span> e impartido
+                    por <span class="font-bold">{{ event.user.get_full_name }}</span>, durante el periodo
+                    comprendido entre <span class="font-semibold italic">{{ event.start_date }}</span> y
+                    <span class="font-semibold italic">{{ event.final_date }}</span>
+                </p>
+
+                <p>
+                    El equipo de <span class="font-bold">Instituto Tecnológico Corporativo Edwars Deming</span> y el
+                    profesor <span class="font-bold">{{ event.user.get_full_name }}</span> se complacen en felicitar
+                    a <span class="font-semibold">{{ participant.get_full_name }}</span> por su esfuerzo y dedicación en
+                    la finalización del curso, y le desea éxito en su futura carrera profesional.
+                </p>
+
+                <p> Fecha de emisión:
+                    <span class="font-semibold italic">{{ now.date }} - {{ now.time }}</span>
+                </p>
+            </div>
+        </div>
+
+        <div class="footer pt-8 grid grid-cols-2 grid-rows-2 gap-6">
+            <div class="signatures flex gap-8 col-span-2" style="justify-content: space-evenly">
+                <div class="teacher_signature">
+                    <p class="border-t border-gray-800" style="width: 15rem"></p>
+                    <p class="teacher-name text-center font-semibold">{{ event.user.get_full_name }}</p>
+                    <p class="teacher-info text-center">Profesor</p>
                 </div>
-                <div class="logo">
-                    <img src="{% static 'Home/images/logo_deming.png' %}" class="rounded h-20">
+                <div class="director_signature">
+                    <p class="border-t border-gray-800" style="width: 15rem"></p>
+                    <p class="director-name text-center font-semibold">Fernando Carrera</p>
+                    <p class="director-info text-center">Rector</p>
                 </div>
             </div>
 
-            <div class="body mb-6">
-                <div class="names">
-                    <h3 class="text-3xl font-bold mb-6">Este documento certifica que: </h3>
-                    <h2 class="text-6xl font-bold mb-6" style="font-family: 'Lobster', cursive;">{{ participant.get_full_name }}</h2>
-                </div>
-                <div class="description flex flex-col gap-4" style="font-family: 'Roboto', sans-serif;">
-                    <p>
-                        ha completado satisfactoriamente el evento titulado <span class="font-bold">{{ event.title.capitalize }}</span>, organizado
-                        por el <span class="font-bold">Instituto Tecnológico Corporativo Edwars Deming</span> e impartido
-                        por <span class="font-bold">{{ event.user.get_full_name }}</span>, durante el periodo
-                        comprendido entre <span class="font-semibold italic">{{ event.start_date }}</span> y
-                        <span class="font-semibold italic">{{ event.final_date }}</span>
+            <div class="qr flex gap-4 items-center">
+                <img src="{{ qr }}" class="w-20 h-20" alt="Código qr para verificar certificado">
+                <div class="description_qr">
+                    <p class="text-sm">Puede verificar la autenticidad de este certificado escaneando este QR</p>
+                    <p class="text-sm">O consultando la siguiente URL: <a href="http://{{ certify_url }}"
+                                                                          class="font-semibold">{{ certify_url }}</a>
                     </p>
-
-                    <p>
-                        El equipo de <span class="font-bold">Instituto Tecnológico Corporativo Edwars Deming</span> y el
-                        profesor <span class="font-bold">{{ event.user.get_full_name }}</span> se complacen en felicitar
-                        a <span class="font-semibold">{{ participant.get_full_name }}</span> por su esfuerzo y dedicación en la finalización del curso, y le desea éxito en su futura carrera profesional.
-                    </p>
-
-                    <p> Fecha de emisión:
-                        <span class="font-semibold italic">{{ now.date }} - {{ now.time }}</span>
-                    </p>
-                </div>
-            </div>
-
-            <div class="footer pt-8 grid grid-cols-2 grid-rows-2 gap-6">
-                <div class="signatures flex gap-8 col-span-2" style="justify-content: space-evenly">
-                    <div class="teacher_signature">
-                        <p class="border-t border-gray-700" style="width: 15rem"></p>
-                        <p class="teacher-name text-center font-semibold">{{ event.user.get_full_name }}</p>
-                        <p class="teacher-info text-center">Profesor</p>
-                    </div>
-                    <div class="director_signature">
-                        <p class="border-t border-gray-700" style="width: 15rem"></p>
-                        <p class="director-name text-center font-semibold">Fernando Carrera</p>
-                        <p class="director-info text-center">Rector</p>
-                    </div>
-                </div>
-
-                <div class="qr">
-
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.2/flowbite.min.js"></script>
 </body>
