@@ -14,6 +14,7 @@ from django.db.models import Q, QuerySet
 from django.db.models.fields.files import ImageFieldFile
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
 
 from Apps.Users.forms import UserForm, UpdateUserForm
 from Apps.Users.models import User
@@ -130,6 +131,8 @@ def profile(request, username, id_user):
 def info_participant(request, username, id_user):
     current_user = get_object_or_404(User, username=username, id=id_user)
     participant = get_object_or_404(Participant, user_id=current_user.id)
+    img_participant = participant.get_profile_image()
+
     data = {
         'current_user': current_user,
         'participant': participant,
@@ -137,14 +140,13 @@ def info_participant(request, username, id_user):
     }
 
     if request.method == 'POST':
-        print('Hola')
         form = ParticipantDataUpdateForm(request.POST, request.FILES, instance=participant)
         if form.is_valid():
             if form.has_changed():
                 profile_image = request.FILES.get('profile_image') if request.FILES.get('profile_image') is not None \
-                    else os.path.join(settings.MEDIA_URL, 'user_profile_placeholder.jpg')
+                    else img_participant
                 curriculum = request.FILES.get('curriculum') if request.FILES.get('curriculum') is not None else \
-                    participant.curriculum.url
+                    os.path.join(settings.MEDIA_URL, 'Events', 'Participants', 'Docs', participant.__str__(), 'curriculum.pdf')
 
                 first_name = request.POST.get('first_name')
                 last_name = request.POST.get('last_name')
@@ -168,7 +170,7 @@ def info_participant(request, username, id_user):
                 participant.gender, participant.birthdate = gender, birthdate
                 participant.current_country, participant.address = current_country, address
                 participant.phone, participant.email, participant.alternative_email = phone, email, alternative_email
-                participant.profession, participant.object = profession, object
+                participant.profession, participant.object, participant.curriculum = profession, object, curriculum
                 participant.save()
 
                 messages.success(request, 'Información actualizada exitósamente')

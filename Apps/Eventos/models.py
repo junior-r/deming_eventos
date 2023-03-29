@@ -108,7 +108,7 @@ class Participant(models.Model):
 
     def get_profile_image(self) -> object:
         if self.profile_image:
-            return '{}{}'.format(settings.MEDIA_URL, self.profile_image)
+            return '{}'.format(os.path.join('/media/', self.profile_image.name))
         else:
             return '{}{}'.format(settings.MEDIA_URL, 'user_profile_placeholder.jpg')
 

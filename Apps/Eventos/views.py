@@ -243,12 +243,14 @@ def download_certify_event(request, id_event, id_participant):
         'certify_url': url_certify,
     }
 
-    css_root = os.path.join(settings.BASE_DIR, 'staticfiles/Eventos/css/certify.css')
     template = get_template('Eventos/certify.html')
     html_template = template.render(context)
 
-    pdf = HTML(string=html_template, base_url=request.build_absolute_uri()).write_pdf(stylesheets=[CSS(css_root)])
-    return HttpResponse(pdf, content_type='application/pdf')
+    pdf = HTML(string=html_template, base_url=request.build_absolute_uri()).write_pdf()
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename={0}_{1}{2}'.format('Certificado', participant.get_full_name(), '.pdf')
+    messages.success(request, 'Certificado generado exitosamente.')
+    return response
 
 
 @login_required
