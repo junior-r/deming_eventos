@@ -184,7 +184,7 @@
                                 </svg>
                             </h3>
                             <div class="info-user ml-4 flex flex-col flex-wrap gap-4">
-                                <form action="" method="post" enctype="multipart/form-data" style="max-width: 100%">
+                                <form method="post" enctype="multipart/form-data" style="max-width: 100%">
                                     {% csrf_token %}
                                     <input type="number" hidden name="id_user_id" value="{{ current_profile_user.id }}" readonly>
                                     <div class="relative z-0 w-full mb-6 group">
@@ -350,7 +350,7 @@
                                     {% endif %}
                                     <div class="buttons flex justify-end">
                                         {% if request.user.id == current_profile_user.id or perms.Users.delete_user or request.user.is_superuser %}
-                                            <a href="#"
+                                            <a href="#" onclick="delete_user({{ current_profile_user.id }})"
                                                class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
                                                 Eliminar cuenta
                                             </a>
@@ -387,6 +387,26 @@
 
 {% block js %}
     <script src="{% static 'Users/js/input_file.js' %}"></script>
+
+    <script>
+        function delete_user(id) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Esta acción es irreversible. ¡Esperamos cambies de decisión!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Borrar mi cuenta',
+                cancelButtonText: 'NO borrar mi cuenta'
+            }).then((result) => {
+                if (result.value) {
+                    window.location.href = '/users/delete_user/' + id + '/';
+                }
+            })
+        }
+    </script>
+
     <script>
         const input1 = document.getElementById("new_password1");
         const input2 = document.getElementById("new_password2");

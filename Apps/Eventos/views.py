@@ -2,9 +2,9 @@ import datetime
 import json
 import os
 import sys
-import qrcode
 
 import phonenumbers
+import qrcode
 import requests
 from django.conf import settings
 from django.contrib import messages
@@ -17,7 +17,7 @@ from django.template.loader import get_template
 from django.utils import timezone
 from paypalcheckoutsdk.core import PayPalHttpClient, SandboxEnvironment
 from paypalcheckoutsdk.orders import OrdersGetRequest, OrdersCaptureRequest
-from weasyprint import HTML, CSS
+from weasyprint import HTML
 
 from Apps.Eventos.forms import CareerForm, EventForm, ParticipantForm
 from Apps.Eventos.models import Career, Event, EventParticipant, Participant
@@ -250,6 +250,7 @@ def download_certify_event(request, id_event, id_participant):
     response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename={0}_{1}{2}'.format('Certificado', participant.get_full_name(), '.pdf')
     messages.success(request, 'Certificado generado exitosamente.')
+    # return render(request, 'Eventos/certify.html', context)
     return response
 
 

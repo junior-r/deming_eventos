@@ -4,10 +4,11 @@ import datetime
 import openpyxl
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q, QuerySet
@@ -26,28 +27,16 @@ def sign_up(request):
     data = {
         'form': UserForm(),
     }
+    # User.objects.get(id=15).delete()
 
     if request.method == 'POST':
         form = UserForm(request.POST, request.FILES)
         if form.is_valid():
-            picture_profile = form.cleaned_data.get('profile_image')
-            username = form.cleaned_data.get('username')
-            first_name = form.cleaned_data.get('first_name')
-            last_name = form.cleaned_data.get('last_name')
             password1 = form.cleaned_data.get('password1')
-            email = form.cleaned_data.get('email')
-
-            user = User.objects.create(
-                profile_image_user=picture_profile,
-                username=username,
-                first_name=first_name,
-                last_name=last_name,
-                email=email,
-                password=password1
-            )
-            user.set_password(password1)
+            user = form.save()
+            user.profile_image_user = request.FILES.get('profile_image')
             user.save()
-
+            user = authenticate(username=user.username, password=password1)
             login(request, user)
 
             messages.success(request, 'Cuenta creada exitosamente.')
@@ -61,7 +50,7 @@ def sign_up(request):
 
 @login_required
 def profile(request, username, id_user):
-    user = get_user_model().objects.get(id=id_user, username=username)
+    user = get_object_or_404(User, id=id_user, username=username)
     permissions_content_type = get_object_or_404(ContentType, app_label='auth', model='permission')
     users_content_type = get_object_or_404(ContentType, app_label='Users', model='user')
     careers_content_type = get_object_or_404(ContentType, app_label='Eventos', model='career')
@@ -90,36 +79,42 @@ def profile(request, username, id_user):
                 messages.error(request, 'No tienes permiso para actualizar esta información')
                 return redirect('profile', user.username, user.id)
 
-        form = UpdateUserForm(data=request.POST, files=request.FILES, instance=user)
+        form = UpdateUserForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
-            if form.has_changed():
-                picture_profile = request.FILES.get('profile_image') if request.FILES.get('profile_image') is not None \
-                    else user.profile_image_user.name
-                username = request.POST.get('username') if request.POST.get('username') is not None else \
-                    user.username
-                first_name = request.POST.get('first_name') if request.POST.get('first_name') is not None else \
-                    user.first_name
-                last_name = request.POST.get('last_name') if request.POST.get('last_name') is not None else \
-                    user.last_name
-                email = request.POST.get('email') if request.POST.get('email') is not None else \
-                    user.email
-                is_staff = True if request.POST.get('is_staff') == 'on' else False
-                is_active = True if request.POST.get('is_active') == 'on' else False
-
-                user.profile_image_user = picture_profile
-                user.username = username
-                user.first_name = first_name
-                user.last_name = last_name
-                user.email = email
-                user.is_staff = is_staff
-                user.is_active = is_active
-                user.save()
-
-                messages.success(request, 'La información ha sido actualizada')
-                return redirect('profile', user.username, user.id)
+            picture_profile = request.FILES.get('profile_image') if request.FILES.get('profile_image') is not None \
+                else user.profile_image_user.name
+            username = request.POST.get('username') if request.POST.get('username') is not None else \
+                user.username
+            first_name = request.POST.get('first_name') if request.POST.get('first_name') is not None else \
+                user.first_name
+            last_name = request.POST.get('last_name') if request.POST.get('last_name') is not None else \
+                user.last_name
+            email = request.POST.get('email') if request.POST.get('email') is not None else \
+                user.email
+            is_staff = request.POST.get('is_staff')
+            is_active = request.POST.get('is_active')
+            if is_staff is None or is_staff == 'off':
+                is_staff = False
             else:
-                messages.info(request, 'Debes cambiar algún dato para actualizar tu información.')
-                return redirect('profile', user.username, user.id)
+                is_staff = True
+
+            if is_active is None or is_active == 'on':
+                is_active = True
+            else:
+                is_active = False
+
+            user.profile_image_user = picture_profile
+            user.username = username
+            user.first_name = first_name
+            user.last_name = last_name
+            user.email = email
+            user.is_staff = is_staff
+            user.is_active = is_active
+            user.save()
+            user.refresh_from_db()
+
+            messages.success(request, 'La información ha sido actualizada')
+            return redirect('profile', user.id)
         else:
             data['form'] = form
             print(form.errors)
@@ -146,7 +141,8 @@ def info_participant(request, username, id_user):
                 profile_image = request.FILES.get('profile_image') if request.FILES.get('profile_image') is not None \
                     else img_participant
                 curriculum = request.FILES.get('curriculum') if request.FILES.get('curriculum') is not None else \
-                    os.path.join(settings.MEDIA_URL, 'Events', 'Participants', 'Docs', participant.__str__(), 'curriculum.pdf')
+                    os.path.join(settings.MEDIA_URL, 'Events', 'Participants', 'Docs', participant.__str__(),
+                                 'curriculum.pdf')
 
                 first_name = request.POST.get('first_name')
                 last_name = request.POST.get('last_name')
@@ -277,7 +273,8 @@ def export_users(request, user_type: str, event_id: int):
         filename = 'Usuarios_Staff.xlsx'
     elif user_type == 'actives_participants':
         event = get_object_or_404(Event, id=event_id)
-        participants = Participant.objects.filter(event__participants__event=event, event__eventparticipant__active=True)
+        participants = Participant.objects.filter(event__participants__event=event,
+                                                  event__eventparticipant__active=True)
         users_to_export = participants
         filename = 'Participantes_Activos_{0}.xlsx'.format(event.get_unicode())
     elif user_type == 'participants_payed':
@@ -329,9 +326,18 @@ def create_user_staff(request, user_id, data):
                 is_staff=True,
                 is_active=True
             )
+            user.set_password(password1)
             user.save()
             messages.success(request, 'Usuario staff creado exitosamente.')
             return redirect('users_staff', user_id)
         else:
             messages.error(request, 'Ocurrió un error. Revisa e intenta de nuevo')
             data['create_staff_form'] = form
+
+
+@login_required
+def delete_user(request, id_user):
+    user = get_object_or_404(User, id=id_user)
+    user.delete()
+    messages.success(request, '¡Cuenta eliminada exitosamente!')
+    return redirect('users_staff', request.user.id)

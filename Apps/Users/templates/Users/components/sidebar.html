@@ -56,7 +56,7 @@
                     </a>
                 </li>
             {% endif %}
-            {% if request.user.is_superuser and request.user.is_authenticated %}
+            {% if request.user.is_superuser or request.user.is_staff %}
                 <li>
                     <a href="/admin/" target="_blank"
                        class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">

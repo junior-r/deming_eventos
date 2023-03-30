@@ -9,6 +9,7 @@
     <title>Login</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.2/flowbite.min.css" rel="stylesheet"/>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="icon" href="{% static 'Home/images/logo_deming2.png' %}" type="image/png"/>
     <script>
         // On page load or when changing themes, best to add inline in `head` to avoid FOUC
         if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -64,7 +65,7 @@
 <div class="flex items-center justify-center" style="height: 100%">
     <div class="w-full max-w-sm relative p-4 bg-white border border-gray-200 rounded-lg shadow-md sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
         <img class="rounded-full bg-gray-600 absolute" style="top: -13%; left: 35%; width: 7rem" src="{% static 'Home/images/logo_deming2.png' %}" alt="Large avatar">
-        <form class="space-y-6" action="#" method="post">
+        <form class="space-y-6" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <h5 class="text-xl font-medium text-gray-900 dark:text-white">Sign in to our platform</h5>
             <div>
