@@ -14,29 +14,31 @@
 {% endblock %}
 
 {% block content %}
-
     <div class="content h-screen flex flex-col items-center justify-center">
-    <h1 class="mb-4 text-4xl text-center font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
-        ¡Bienvenido a nuestra plataforma de eventos académicos en línea!</h1>
-    <p class="mb-6 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">
-        Nuestra plataforma está diseñada para que puedas registrarte en los eventos que más te interesen, pagar de
-        manera segura y recibir un certificado de finalización una vez que hayas completado el evento. Además, nuestro
-        sistema de gestión de eventos en línea te brinda una experiencia de usuario fácil e intuitiva, lo que te permite
-        disfrutar de los eventos de manera fluida y sin problemas.
-    <p class="mb-6 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">
-        Con nuestra plataforma, puedes acceder a eventos académicos de calidad desde cualquier parte del mundo, lo que
-        te permite mejorar tus habilidades y conocimientos desde la comodidad de tu hogar u oficina. Además, nuestro
-        sistema de certificación te permite demostrar tus logros a tus empleadores o clientes.
-    </p>
-    <a href="#"
-       class="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
-        Ver más
-        <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd"
-                  d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                  clip-rule="evenodd"></path>
-        </svg>
-    </a>
+        <h1 class="mb-4 text-4xl text-center font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+            ¡Bienvenido a nuestra plataforma de eventos académicos en línea!</h1>
+        <p class="mb-6 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">
+            Nuestra plataforma está diseñada para que puedas registrarte en los eventos que más te interesen, pagar de
+            manera segura y recibir un certificado de finalización una vez que hayas completado el evento. Además,
+            nuestro
+            sistema de gestión de eventos en línea te brinda una experiencia de usuario fácil e intuitiva, lo que te
+            permite
+            disfrutar de los eventos de manera fluida y sin problemas.
+        <p class="mb-6 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">
+            Con nuestra plataforma, puedes acceder a eventos académicos de calidad desde cualquier parte del mundo, lo
+            que
+            te permite mejorar tus habilidades y conocimientos desde la comodidad de tu hogar u oficina. Además, nuestro
+            sistema de certificación te permite demostrar tus logros a tus empleadores o clientes.
+        </p>
+        <a href="#"
+           class="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
+            Ver más
+            <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd"
+                      d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                      clip-rule="evenodd"></path>
+            </svg>
+        </a>
     </div>
 
 {% endblock content %}
@@ -45,6 +47,23 @@
 {% endblock %}
 
 {% block js %}
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {% if 'accounts/login/' in request.META.HTTP_REFERER %}
+        <script>
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+            })
+            Toast.fire({
+                icon: 'success',
+                title: '¡Inicio de sesión correcto, bienvenido!'
+            })
+        </script>
+    {% endif %}
+
     <script>
         var navbarHome = document.getElementById('NavbarHome');
         var navbarEventos = document.getElementById('NavbarEventos');

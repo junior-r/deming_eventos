@@ -130,47 +130,118 @@
                             </div>
                         </div>
                     </div>
+                    {% if perms.auth.view_permission %}
+                        {% if current_user.is_superuser %}
+                            <div class="content-info w-full border py-4 px-6 rounded-lg bg-gray-100 dark:bg-gray-700"
+                                 style="grid-column: 2 / 3; grid-row: 1 / 3">
+                                <div class="labels flex justify-between gap-4 mb-4">
+                                    <p class="font-bold text-2xl dark:text-white">Permisos</p>
+                                    <p class="font-bold text-2xl dark:text-white">Activación</p>
+                                </div>
+                                <form action="{% url 'assign_perms_user' current_profile_user.id %}" method="post"
+                                      class="flex flex-col">
+                                    {% csrf_token %}
+                                    <ul class="permissions mx-4 mb-4">
+                                        {% for permission in permissions %}
+                                            <li class="perm flex justify-between gap-4 mt-2">
+                                                <div class="perm_info">
+                                                    <p class="perm_name text-gray-600 dark:text-gray-300">{{ permission.name }}</p>
+                                                </div>
+                                                <div class="perm_activation">
+                                                    <label class="relative inline-flex items-center cursor-pointer">
+                                                        <input type="checkbox" value="{{ permission.id }}"
+                                                               name="permisos"
+                                                               class="sr-only peer"
+                                                                {% if not current_user.is_superuser %}
+                                                               disabled
+                                                                {% endif %}
+                                                                {% if permission in current_profile_user.user_permissions.all %}
+                                                               checked {% endif %}>
 
-                    {% if current_profile_user.is_staff and request.user.is_superuser %}
-                        <div class="content-info w-full border py-4 px-6 rounded-lg bg-gray-100 dark:bg-gray-700"
-                             style="grid-column: 2 / 3; grid-row: 1 / 3">
-                            <div class="labels flex justify-between gap-4 mb-4">
-                                <p class="font-bold text-2xl dark:text-white">Permisos</p>
-                                <p class="font-bold text-2xl dark:text-white">Activación</p>
+                                                        <div class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+
+                                                        <span class="ml-3">
+                                                            <span class="bg-red-500 text-white text-xs font-medium px-2.5 py-0.5 rounded dark:bg-red-600 dark:text-white">OFF</span>
+                                                            <span class="bg-blue-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-600 dark:text-white">ON</span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </li>
+                                            <hr>
+                                        {% endfor %}
+                                    </ul>
+                                    {% if current_user.is_superuser %}
+                                        <button type="submit"
+                                                class="text-white sticky bottom-2 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                                            Guardar
+                                        </button>
+                                    {% endif %}
+                                </form>
                             </div>
-                            <form action="{% url 'assign_perms_user' current_profile_user.id %}" method="post" class="flex flex-col">
-                                {% csrf_token %}
+                        {% else %}
+                            <div class="content-info w-full border py-4 px-6 rounded-lg bg-gray-100 dark:bg-gray-700"
+                                 style="grid-column: 2 / 3; grid-row: 1 / 3">
+                                <div class="labels flex justify-between gap-4 mb-4">
+                                    <p class="font-bold text-2xl dark:text-white">Permisos</p>
+                                    <p class="font-bold text-2xl dark:text-white">Activación</p>
+                                </div>
                                 <ul class="permissions mx-4 mb-4">
                                     {% for permission in permissions %}
                                         <li class="perm flex justify-between gap-4 mt-2">
                                             <div class="perm_info">
                                                 <p class="perm_name text-gray-600 dark:text-gray-300">{{ permission.name }}</p>
                                             </div>
-                                            <div class="perm_activation">
-                                                <label class="relative inline-flex items-center cursor-pointer">
-                                                    <input type="checkbox" value="{{ permission.id }}" name="permisos"
-                                                           class="sr-only peer"
-                                                            {% if permission in current_profile_user.user_permissions.all %}
-                                                           checked {% endif %}>
-                                                    <div class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
-                                                    <span class="ml-3">
-                                                        <span class="bg-red-500 text-white text-xs font-medium px-2.5 py-0.5 rounded dark:bg-red-600 dark:text-white">OFF</span>
-                                                        <span class="bg-blue-500 text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-600 dark:text-white">ON</span>
-                                                    </span>
-                                                </label>
+                                            <div class="perm_activation ml-3 mb-2">
+                                                {% if permission in current_profile_user.user_permissions.all %}
+                                                    <span class="bg-blue-500 text-white text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-600 dark:text-white">ON</span>
+                                                {% else %}
+                                                    <span class="bg-red-500 text-white text-xs font-medium px-2.5 py-0.5 rounded dark:bg-red-600 dark:text-white">OFF</span>
+                                                {% endif %}
                                             </div>
                                         </li>
                                         <hr>
                                     {% endfor %}
                                 </ul>
-                                <button type="submit"
-                                        class="text-white sticky bottom-0 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
-                                    Guardar
-                                </button>
-                            </form>
-                        </div>
-                    {% endif %}
+                            </div>
+                        {% endif %}
 
+                    {% else %}
+                        {% if current_user_perms %}
+                            <div class="content-info w-full border py-4 px-6 rounded-lg bg-gray-100 dark:bg-gray-700"
+                                 style="grid-column: 2 / 3; grid-row: 1 / 3">
+                                <div class="labels flex justify-between gap-4 mb-4">
+                                    <p class="font-bold text-2xl dark:text-white">Permisos</p>
+                                    <p class="font-bold text-2xl dark:text-white">Activación</p>
+                                </div>
+                                <ul class="permissions mx-4 mb-4">
+                                    {% for permission in current_user_perms %}
+                                        <li class="perm flex justify-between gap-4 mt-2">
+                                            <div class="perm_info">
+                                                <p class="perm_name text-gray-600 dark:text-gray-300">{{ permission.name }}</p>
+                                            </div>
+                                            <div class="perm_activation">
+                                                <div class="relative inline-flex items-center cursor-pointer">
+                                                    <span class="bg-blue-500 text-white text-xs mb-2 font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-600 dark:text-white">ON</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <hr>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% else %}
+                            <div class="content-info w-full border py-4 px-6 rounded-lg bg-gray-100 dark:bg-gray-700">
+                                <div class="content flex justify-center items-center flex-col w-full p-4">
+                                    <img src="{% static 'Eventos/images/icons/filter-circle-xmark-solid.svg' %}"
+                                         style="width: 10rem" class="mb-4"
+                                         alt="ícono de registros no encontrados">
+                                    <h1 class="text-3xl font-extrabold dark:text-white">No tienes permisos
+                                        asignados</h1>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
                     {% if request.user.id == current_profile_user.id or request.user.is_superuser or perms.Users.change_user and not current_profile_user.is_superuser %}
                         <div class="content-info border py-4 px-6 rounded-lg bg-gray-100 dark:bg-gray-700"
                              style="grid-column: 1 / 2; grid-row: 2 / 3">
@@ -186,7 +257,8 @@
                             <div class="info-user ml-4 flex flex-col flex-wrap gap-4">
                                 <form method="post" enctype="multipart/form-data" style="max-width: 100%">
                                     {% csrf_token %}
-                                    <input type="number" hidden name="id_user_id" value="{{ current_profile_user.id }}" readonly>
+                                    <input type="number" hidden name="id_user_id" value="{{ current_profile_user.id }}"
+                                           readonly>
                                     <div class="relative z-0 w-full mb-6 group">
                                         <div class="container-input">
                                             {% if current_profile_user.get_picture_profile %}
@@ -200,7 +272,8 @@
                                                              alt="imagen de perfil de usuario">
                                                         <img id="imagenPrevisualizacion"
                                                              alt="Imagen de perfil del usuario"
-                                                             loading="lazy" src="{{ current_profile_user.get_picture_profile }}">
+                                                             loading="lazy"
+                                                             src="{{ current_profile_user.get_picture_profile }}">
                                                     </figure>
                                                     <span class="iborrainputfile block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ form.picture_profile.label }}</span>
                                                 </label>
@@ -387,6 +460,27 @@
 
 {% block js %}
     <script src="{% static 'Users/js/input_file.js' %}"></script>
+
+    <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+        })
+        {% if current_user.is_superuser %}
+            Toast.fire({
+                icon: 'success',
+                title: 'Puedes asignar permisos'
+            })
+        {% elif current_user.is_staff %}
+            Toast.fire({
+                icon: 'warning',
+                title: 'No puedes asignar permisos'
+            })
+        {% endif %}
+    </script>
 
     <script>
         function delete_user(id) {

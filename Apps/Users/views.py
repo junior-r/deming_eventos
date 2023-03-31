@@ -64,9 +64,13 @@ def profile(request, username, id_user):
         Q(content_type=event_participant_content_type) | Q(content_type=participant_content_type)
     )
 
+    current_user = get_object_or_404(User, id=request.user.id)
+    current_user_perms = Permission.objects.filter(user=user)
+
     data = {
         'current_profile_user': user,
-        'current_user': get_object_or_404(User, id=request.user.id),
+        'current_user': current_user,
+        'current_user_perms': current_user_perms,
         'permissions': permissions,
         'form': UpdateUserForm(instance=user)
     }
@@ -197,14 +201,18 @@ def user_events(request, username, id_user):
 
 
 @login_required
+@permission_required('auth.add_permission', raise_exception=True)
 @user_passes_test(lambda u: u.is_superuser)
 def assign_perms_user(request, current_profile_user_id):
     current_profile_user = get_object_or_404(User, id=current_profile_user_id)
     perms_to_set = request.POST.getlist('permisos')
 
     try:
-        current_profile_user.user_permissions.set(perms_to_set)
-        messages.success(request, 'Permisos configurados exitosamente')
+        if perms_to_set != []:
+            current_profile_user.user_permissions.set(perms_to_set)
+            messages.success(request, 'Permisos configurados exitosamente')
+        else:
+            messages.error(request, 'No seleccionaste ningún permiso para asignar.')
     except:
         messages.error(request, 'No se pudo asignar los permisos seleccionado')
     finally:
@@ -212,8 +220,9 @@ def assign_perms_user(request, current_profile_user_id):
 
 
 @login_required
-def users_staff(request, id_user):
-    user = get_object_or_404(User, id=id_user)
+@permission_required('Users.view_user', raise_exception=True)
+def users(request):
+    user = get_object_or_404(User, id=request.user.id)
     staff_users = User.objects.filter(is_staff=True).exclude(id=user.id)
     mortal_users = User.objects.all().exclude(is_staff=True)
     data = {
@@ -223,7 +232,7 @@ def users_staff(request, id_user):
     }
 
     if request.method == 'POST':
-        create_user_staff(request, user.id, data)
+        create_user_staff(request, data)
 
     return render(request, 'Users/users_staff.html', data)
 
@@ -264,7 +273,7 @@ def export_to_excel(queryset: QuerySet, filename: str):
 
 
 @login_required
-@permission_required('Users.view_user')
+@permission_required('Users.view_user', raise_exception=True)
 def export_users(request, user_type: str, event_id: int):
     current_user = get_object_or_404(User, id=request.user.id)
     users_to_export = None
@@ -303,9 +312,9 @@ def export_users(request, user_type: str, event_id: int):
 
 
 @login_required
-@permission_required('Users.add_user')
+@permission_required('Users.add_user', raise_exception=True)
 @user_passes_test(lambda u: u.is_superuser)
-def create_user_staff(request, user_id, data):
+def create_user_staff(request, data):
     if request.method == 'POST':
         form = UserForm(request.POST, request.FILES)
         if form.is_valid():
@@ -329,7 +338,7 @@ def create_user_staff(request, user_id, data):
             user.set_password(password1)
             user.save()
             messages.success(request, 'Usuario staff creado exitosamente.')
-            return redirect('users_staff', user_id)
+            return redirect('users')
         else:
             messages.error(request, 'Ocurrió un error. Revisa e intenta de nuevo')
             data['create_staff_form'] = form

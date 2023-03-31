@@ -15,11 +15,10 @@ Including another URLconf
 """
 from django.conf import settings
 from django.conf.urls.static import static
-from django.conf.urls import handler404
+from django.conf.urls import handler400, handler403, handler404, handler500
 from django.contrib import admin
 from django.urls import path, include
-from Apps.Home.views import page_not_found_404
-from django.conf.urls import handler404
+from Apps.Home.views import page_denied_400, page_denied_403, page_not_found_404, page_not_found_500
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,7 +29,10 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
 ]
 
+handler400 = page_denied_400
+handler403 = page_denied_403
 handler404 = page_not_found_404
+handler500 = page_not_found_500
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

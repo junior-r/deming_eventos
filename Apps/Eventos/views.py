@@ -516,7 +516,7 @@ def careers(request):
     return render(request, 'Eventos/carreras_universitarias.html', data)
 
 
-@permission_required('Eventos.add_career')
+@permission_required('Eventos.add_career', raise_exception=True)
 def create_careers(request, data):
     form = CareerForm(request.POST, request.FILES)
     if form.is_valid():

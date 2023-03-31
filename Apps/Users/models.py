@@ -37,6 +37,14 @@ class User(AbstractUser):
             return '{0} {1}'.format(first_name, last_name)
         return self.username
 
+    def get_role(self):
+        if self.is_superuser:
+            return '<span class="bg-yellow-100 text-yellow-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">Superusuario</span>'
+        elif self.is_staff:
+            return '<span class="bg-green-100 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">Staff</span>'
+        else:
+            return '<span class="bg-purple-100 text-purple-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300">Usuario</span>'
+
     def get_picture_profile(self):
         if self.profile_image_user:
             return '{}'.format(os.path.join(settings.MEDIA_URL, self.profile_image_user.url))

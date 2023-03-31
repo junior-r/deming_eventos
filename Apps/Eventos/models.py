@@ -146,6 +146,14 @@ class Event(models.Model):
         ('Online', 'Online'),
         ('Online y Presencial', 'Online y Presencial'),
     ]
+    platform_options = [
+        ('', ''),
+        ('Zoom', 'Zoom'),
+        ('Google Meet', 'Google Meet'),
+        ('Microsoft Teams', 'Microsoft Teams'),
+        ('Discord', 'Discord'),
+        ('Skype', 'Skype'),
+    ]
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=False)
     participants = models.ManyToManyField(Participant, through='EventParticipant')
     logo = models.ImageField(upload_to=event_directory_logo_path, blank=True, null=True,
@@ -163,6 +171,8 @@ class Event(models.Model):
     email = models.EmailField(unique=False, null=False, blank=False)
     alternative_email = models.EmailField(unique=False, null=True, blank=True)
     link_to_classroom = models.URLField(null=True, blank=False)
+    code_meeting = models.CharField(max_length=500, null=True, blank=False)
+    platform_meeting = models.CharField(null=True, blank=False, choices=platform_options, max_length=20)
     curriculum_user = models.FileField(upload_to=event_directory_user_file_path, max_length=255,
                                        validators=[FileExtensionValidator(['pdf'])], blank=False, null=False)
     event_planning = models.FileField(upload_to=event_directory_planning_file_path, max_length=255,

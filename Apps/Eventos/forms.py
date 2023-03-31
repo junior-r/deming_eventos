@@ -16,6 +16,15 @@ modality_options = [
     ('Online y Presencial', 'Online y Presencial'),
 ]
 
+platform_options = [
+    ('', ''),
+    ('Zoom', 'Zoom'),
+    ('Google Meet', 'Google Meet'),
+    ('Microsoft Teams', 'Microsoft Teams'),
+    ('Discord', 'Discord'),
+    ('Skype', 'Skype'),
+]
+
 
 class CareerForm(forms.ModelForm):
     name = forms.CharField(max_length=150, required=True, widget=forms.TextInput(attrs={
@@ -82,6 +91,13 @@ class EventForm(forms.ModelForm):
     }))
     link_to_classroom = forms.URLField(max_length=300, required=False, widget=forms.URLInput(attrs={
         'placeholder': 'https://example.com',
+        'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
+    }))
+    code_meeting = forms.CharField(required=False, widget=forms.TextInput(attrs={
+        'placeholder': '00045680?529',
+        'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
+    }))
+    platform_meeting = forms.ChoiceField(choices=platform_options, required=False, widget=forms.Select(attrs={
         'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
     }))
     curriculum_user = forms.FileField(required=True, widget=forms.FileInput(attrs={
@@ -270,8 +286,10 @@ class ParticipantDataUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Participant
-        fields = ['profile_image', 'first_name', 'last_name', 'country_of_birth', 'dni', 'passport_number', 'gender', 'birthdate',
-                  'current_country', 'address', 'phone', 'email', 'alternative_email', 'profession', 'curriculum', 'object']
+        fields = ['profile_image', 'first_name', 'last_name', 'country_of_birth', 'dni', 'passport_number', 'gender',
+                  'birthdate',
+                  'current_country', 'address', 'phone', 'email', 'alternative_email', 'profession', 'curriculum',
+                  'object']
 
 
 class DateInput(forms.DateInput):

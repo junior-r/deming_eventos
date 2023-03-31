@@ -1227,6 +1227,13 @@
             })
         }
         {% if event_participant %}
+            function show_info_meeting() {
+                Swal.fire({
+                    icon: 'success',
+                    title: ''
+                })
+            }
+
             function show_invoice() {
                 Swal.fire({
                     icon: 'success',
