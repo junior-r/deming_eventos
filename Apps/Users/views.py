@@ -118,7 +118,7 @@ def profile(request, username, id_user):
             user.refresh_from_db()
 
             messages.success(request, 'La información ha sido actualizada')
-            return redirect('profile', user.id)
+            return redirect('profile', user.username, user.id)
         else:
             data['form'] = form
             print(form.errors)
@@ -208,11 +208,8 @@ def assign_perms_user(request, current_profile_user_id):
     perms_to_set = request.POST.getlist('permisos')
 
     try:
-        if perms_to_set != []:
-            current_profile_user.user_permissions.set(perms_to_set)
-            messages.success(request, 'Permisos configurados exitosamente')
-        else:
-            messages.error(request, 'No seleccionaste ningún permiso para asignar.')
+        current_profile_user.user_permissions.set(perms_to_set)
+        messages.success(request, 'Permisos configurados exitosamente')
     except:
         messages.error(request, 'No se pudo asignar los permisos seleccionado')
     finally:
@@ -349,4 +346,4 @@ def delete_user(request, id_user):
     user = get_object_or_404(User, id=id_user)
     user.delete()
     messages.success(request, '¡Cuenta eliminada exitosamente!')
-    return redirect('users_staff', request.user.id)
+    return redirect('index')

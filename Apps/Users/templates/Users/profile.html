@@ -130,12 +130,13 @@
                             </div>
                         </div>
                     </div>
-                    {% if perms.auth.view_permission %}
+                    {% if perms.auth.view_permission and current_profile_user.is_staff %}
                         {% if current_user.is_superuser %}
                             <div class="content-info w-full border py-4 px-6 rounded-lg bg-gray-100 dark:bg-gray-700"
                                  style="grid-column: 2 / 3; grid-row: 1 / 3">
                                 <div class="labels flex justify-between gap-4 mb-4">
-                                    <p class="font-bold text-2xl dark:text-white">Permisos</p>
+                                    <p class="font-bold text-2xl dark:text-white">Permisos
+                                        ({{ current_profile_user.user_permissions.all.count }})</p>
                                     <p class="font-bold text-2xl dark:text-white">Activación</p>
                                 </div>
                                 <form action="{% url 'assign_perms_user' current_profile_user.id %}" method="post"
@@ -155,7 +156,7 @@
                                                                 {% if not current_user.is_superuser %}
                                                                disabled
                                                                 {% endif %}
-                                                                {% if permission in current_profile_user.user_permissions.all %}
+                                                                {% if permission in current_profile_user.user_permissions.all or current_profile_user.is_superuser %}
                                                                checked {% endif %}>
 
                                                         <div class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
@@ -182,7 +183,8 @@
                             <div class="content-info w-full border py-4 px-6 rounded-lg bg-gray-100 dark:bg-gray-700"
                                  style="grid-column: 2 / 3; grid-row: 1 / 3">
                                 <div class="labels flex justify-between gap-4 mb-4">
-                                    <p class="font-bold text-2xl dark:text-white">Permisos</p>
+                                    <p class="font-bold text-2xl dark:text-white">Permisos
+                                        ({{ current_profile_user.user_permissions.all.count }})</p>
                                     <p class="font-bold text-2xl dark:text-white">Activación</p>
                                 </div>
                                 <ul class="permissions mx-4 mb-4">
@@ -195,7 +197,11 @@
                                                 {% if permission in current_profile_user.user_permissions.all %}
                                                     <span class="bg-blue-500 text-white text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-600 dark:text-white">ON</span>
                                                 {% else %}
-                                                    <span class="bg-red-500 text-white text-xs font-medium px-2.5 py-0.5 rounded dark:bg-red-600 dark:text-white">OFF</span>
+                                                    {% if current_profile_user.is_superuser %}
+                                                        <span class="bg-blue-500 text-white text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-600 dark:text-white">ON</span>
+                                                    {% else %}
+                                                        <span class="bg-red-500 text-white text-xs font-medium px-2.5 py-0.5 rounded dark:bg-red-600 dark:text-white">OFF</span>
+                                                    {% endif %}
                                                 {% endif %}
                                             </div>
                                         </li>
@@ -204,13 +210,13 @@
                                 </ul>
                             </div>
                         {% endif %}
-
                     {% else %}
                         {% if current_user_perms %}
                             <div class="content-info w-full border py-4 px-6 rounded-lg bg-gray-100 dark:bg-gray-700"
                                  style="grid-column: 2 / 3; grid-row: 1 / 3">
                                 <div class="labels flex justify-between gap-4 mb-4">
-                                    <p class="font-bold text-2xl dark:text-white">Permisos</p>
+                                    <p class="font-bold text-2xl dark:text-white">Permisos
+                                        ({{ current_profile_user.user_permissions.all.count }})</p>
                                     <p class="font-bold text-2xl dark:text-white">Activación</p>
                                 </div>
                                 <ul class="permissions mx-4 mb-4">
@@ -222,13 +228,16 @@
                                             <div class="perm_activation">
                                                 <div class="relative inline-flex items-center cursor-pointer">
                                                     <span class="bg-blue-500 text-white text-xs mb-2 font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-600 dark:text-white">ON</span>
-                                                    </span>
                                                 </div>
                                             </div>
                                         </li>
                                         <hr>
                                     {% endfor %}
                                 </ul>
+                                {% if not current_profile_user.is_staff %}
+                                    <p class="text-gray-700 dark:text-white">Este usuario debe ser staff para asignarle
+                                        o quitarle permisos</p>
+                                {% endif %}
                             </div>
                         {% else %}
                             <div class="content-info w-full border py-4 px-6 rounded-lg bg-gray-100 dark:bg-gray-700">
@@ -238,6 +247,10 @@
                                          alt="ícono de registros no encontrados">
                                     <h1 class="text-3xl font-extrabold dark:text-white">No tienes permisos
                                         asignados</h1>
+                                    {% if not current_profile_user.is_staff %}
+                                        <p class="text-gray-700 dark:text-white">Este usuario debe ser staff para
+                                            asignarle o quitarle permisos</p>
+                                    {% endif %}
                                 </div>
                             </div>
                         {% endif %}
