@@ -13,56 +13,63 @@
 {% endblock %}
 
 {% block content %}
-    {% if create_staff_form.errors %}
-        <div id="toast-danger"
-             class="absolute flex items-center w-full max-w-xl top-4 left-8 p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
-             role="alert">
-            <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
-                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                     xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd"
-                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                          clip-rule="evenodd"></path>
-                </svg>
-                <span class="sr-only">Error icon</span>
-            </div>
-            <div class="ml-3 text-sm font-normal">
-                <ul>
-                    {% for key, value in create_staff_form.errors.items %}
-                        <li class="flex gap-2">
-                            <svg fill="none" class="w-5 h-5 text-gray-500 dark:text-gray-400" stroke="currentColor"
-                                 stroke-width="1.5" viewBox="0 0 24 24"
-                                 xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                      d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"></path>
-                            </svg>
-                            {{ value }}
-                        </li>
-                    {% endfor %}
-                </ul>
-
-            </div>
-            <button type="button"
-                    class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
-                    data-dismiss-target="#toast-danger" aria-label="Close">
-                <span class="sr-only">Close</span>
-                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                     xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd"
-                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                          clip-rule="evenodd"></path>
-                </svg>
-            </button>
-        </div>
-    {% endif %}
-
     <section class="bg-white dark:bg-gray-900 rounded-lg">
+
+        {% if create_users_form.errors %}
+            <div id="toast-danger"
+                 class="absolute flex items-center w-full max-w-xl bottom-0 z-5 left-8 p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+                 role="alert">
+                <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                              clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="sr-only">Error icon</span>
+                </div>
+                <div class="ml-3 text-sm font-normal">
+                    <ul>
+                        {% for key, value in create_users_form.errors.items %}
+                            <li class="flex gap-2">
+                                <svg fill="none" class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                                     stroke="currentColor"
+                                     stroke-width="1.5" viewBox="0 0 24 24"
+                                     xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"></path>
+                                </svg>
+                                {{ value }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+
+                </div>
+                <button type="button"
+                        class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+                        data-dismiss-target="#toast-danger" aria-label="Close">
+                    <span class="sr-only">Close</span>
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                              clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+            </div>
+        {% endif %}
+
         <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
             <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="myTab"
                 data-tabs-toggle="#myTabContent" role="tablist">
                 <li class="mr-2" role="presentation">
                     <button class="inline-block p-4 border-b-2 rounded-t-lg" id="staff-tab" data-tabs-target="#staff"
                             type="button" role="tab" aria-controls="staff" aria-selected="false">Miembros de Staff
+                    </button>
+                </li>
+                <li class="mr-2" role="presentation">
+                    <button class="inline-block p-4 border-b-2 rounded-t-lg" id="teachers-tab" data-tabs-target="#teachers"
+                            type="button" role="tab" aria-controls="teachers" aria-selected="false">Profesores
                     </button>
                 </li>
                 <li class="mr-2" role="presentation">
@@ -76,6 +83,7 @@
         <div id="myTabContent">
             <div class="hidden rounded-lg staff py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6"
                  id="staff" role="tabpanel" aria-labelledby="staff-tab">
+
                 <div class="mx-auto mb-8 max-w-screen-sm lg:mb-16">
                     <h2 class="mb-4 text-4xl tracking-tight text-center font-extrabold text-gray-900 dark:text-white">
                         Creadores de Actividades y Staff
@@ -233,7 +241,7 @@
                                         {% endif %}
                                     </td>
 
-                                    <td class="px-6 py-4">
+                                    <td class="px-6 py-4" style="white-space: nowrap">
                                         {{ staff_user.get_role | safe }}
                                     </td>
 
@@ -247,6 +255,190 @@
 
                                     <td class="px-6 py-4">
                                         <a href="{% url 'profile' staff_user.username staff_user.id %}"
+                                           class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit
+                                            user</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            <div class="hidden rounded-lg staff py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6"
+                 id="teachers" role="tabpanel" aria-labelledby="teachers-tab">
+
+                <div class="mx-auto mb-8 max-w-screen-sm lg:mb-16">
+                    <h2 class="mb-4 text-4xl tracking-tight text-center font-extrabold text-gray-900 dark:text-white">
+                        Profesores de eventos
+                    </h2>
+                    <p class="font-light text-center text-gray-500 sm:text-xl dark:text-gray-400">
+                        Esta es una lista de todos los profesores, ponentes y directores de eventos existentes
+                    </p>
+                </div>
+
+                <div class="table w-full">
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                        <section class="flex items-center bg-gray-50 dark:bg-gray-900">
+                            <div class="w-full max-w-screen-xl my-4 mx-auto lg:px-12">
+                                <!-- Start coding here -->
+                                <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
+                                    <div class="flex-row items-center justify-between p-4 space-y-3 sm:flex sm:space-y-0 sm:space-x-4">
+                                        <div>
+                                            <h5 class="mr-3 text-left font-semibold dark:text-white">Profesores/Ponentes</h5>
+                                            <p class="text-gray-500 text-left dark:text-gray-400">
+                                                Maneja todos tus profesores o ponentes existentes.
+                                            </p>
+                                        </div>
+
+                                        <div class="buttons flex items-center gap-4 flex-wrap">
+                                            <button id="actionsDropdownButtonTeachers"
+                                                    data-dropdown-toggle="actionsDropdownTeachers"
+                                                    class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg md:w-auto focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                                                    type="button">
+                                                <svg class="-ml-1 mr-1.5 w-5 h-5" fill="currentColor"
+                                                     viewbox="0 0 20 20"
+                                                     xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                    <path clip-rule="evenodd" fill-rule="evenodd"
+                                                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"></path>
+                                                </svg>
+                                                Actions
+                                            </button>
+                                            <div id="actionsDropdownTeachers"
+                                                 class="z-10 hidden bg-white divide-y divide-gray-100 rounded shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                                                <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
+                                                    aria-labelledby="actionsDropdownButtonTeachers">
+                                                    <li>
+                                                        <a href="#"
+                                                           class="block text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Mass
+                                                            Edit</a>
+                                                    </li>
+                                                </ul>
+                                                <div class="py-1">
+                                                    <a href="#"
+                                                       class="block text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete
+                                                        all</a>
+                                                </div>
+                                            </div>
+
+                                            {% if perms.Users.view_user %}
+                                                <a href="{% url 'export_users' 'staff' 0 %}"
+                                                   class="flex items-center justify-center px-4 py-2 text-sm font-medium text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                                                    <svg fill="none" stroke="currentColor" stroke-width="1.5"
+                                                         class="h-3.5 w-3.5 mr-2 -ml-1"
+                                                         viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                                                         aria-hidden="true">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                              d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"></path>
+                                                    </svg>
+                                                    Exportar
+                                                </a>
+                                            {% endif %}
+
+                                            {% if request.user.is_superuser %}
+                                                <button type="button" data-modal-target="create_teacher-modal"
+                                                        data-modal-toggle="create_teacher-modal"
+                                                        class="flex items-center justify-center px-4 py-2 text-sm font-medium text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                                                    <svg class="h-3.5 w-3.5 mr-2" fill="currentColor"
+                                                         viewbox="0 0 20 20"
+                                                         xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                        <path clip-rule="evenodd" fill-rule="evenodd"
+                                                              d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"></path>
+                                                    </svg>
+                                                    Agregar usuario
+                                                </button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <table class="w-full text-sm text-gray-500 dark:text-gray-400" id="datatable_teachers">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="p-4">
+                                    <div class="flex items-center">
+                                        <input id="checkbox-all-search" type="checkbox"
+                                               class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                        <label for="checkbox-all-search" class="sr-only">checkbox</label>
+                                    </div>
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Name
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Nombre de usuario
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Status
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Rol
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Último ingreso
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Creado en
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Action
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for teacher in teachers %}
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    <td class="w-4 p-4">
+                                        <div class="flex items-center">
+                                            <input id="checkbox-table-search-1" type="checkbox"
+                                                   class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                            <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
+                                        </div>
+                                    </td>
+                                    <th scope="row"
+                                        class="flex items-center justify-start px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                                        <img class="w-10 h-10 rounded-full object-cover"
+                                             src="{{ teacher.get_picture_profile }}"
+                                             alt="{{ teacher.get_full_name }} image">
+                                        <div class="pl-3 text-left">
+                                            <div class="text-base font-semibold">{{ teacher.get_full_name }}</div>
+                                            <div class="font-normal text-gray-500">{{ teacher.email }}</div>
+                                        </div>
+                                    </th>
+                                    <td class="px-6 py-4">
+                                        <a href="{% url 'profile' teacher.username teacher.id %}"
+                                           class="text-blue-400">{{ teacher.username }}</a>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        {% if teacher.is_active %}
+                                            <div class="flex items-center">
+                                                <div class="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div>
+                                                Activo
+                                            </div>
+                                        {% else %}
+                                            <div class="flex items-center">
+                                                <div class="h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></div>
+                                                Inactivo
+                                            </div>
+                                        {% endif %}
+                                    </td>
+
+                                    <td class="px-6 py-4" style="white-space: nowrap">
+                                        {{ teacher.get_role | safe }}
+                                    </td>
+
+                                    <td class="px-6 py-4">
+                                        <span>{{ teacher.last_login | naturaltime }}</span>
+                                    </td>
+
+                                    <td class="px-6 py-4">
+                                        <span>{{ teacher.date_joined.date.isoformat }}</span>
+                                    </td>
+
+                                    <td class="px-6 py-4">
+                                        <a href="{% url 'profile' teacher.username teacher.id %}"
                                            class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit
                                             user</a>
                                     </td>
@@ -329,7 +521,7 @@
                                 </div>
                             </div>
                         </section>
-                        <table class="w-full text-sm text-gray-500 dark:text-gray-400" id="datatable_accounts">
+                        <table class="w-full text-sm text-gray-500 dark:text-gray-400" id="general_datatable">
                             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" class="p-4">
@@ -401,7 +593,7 @@
 
                                     </td>
 
-                                    <td class="px-6 py-4">
+                                    <td class="px-6 py-4" style="white-space: nowrap">
                                         {{ mortal_user.get_role | safe }}
                                     </td>
 
@@ -434,7 +626,7 @@
     <!-- Create User Staff modal -->
     <div id="create_user_staff-modal" tabindex="-1" aria-hidden="true"
          class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full">
-        <div class="relative w-full h-full max-w-md md:h-auto">
+        <div class="relative w-full h-full max-w-4xl md:h-auto">
             <!-- Modal content -->
             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                 <button type="button"
@@ -450,11 +642,11 @@
                 </button>
                 <div class="px-6 py-6 lg:px-8">
                     <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Crea personal de confianza</h3>
-                    <form class="space-y-2" action="" method="post" enctype="multipart/form-data">
+                    <form class="space-y-2" action="{% url 'create_user' 'staff' %}" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="relative z-0 w-full mb-4 group">
                             <div class="container-input">
-                                {{ create_staff_form.profile_image }}
+                                {{ create_users_form.profile_image }}
                                 <label for="file-5">
                                     <figure>
                                         <img src="{% static 'Home/images/user_profile_placeholder.jpg' %}"
@@ -467,8 +659,8 @@
                             </div>
                         </div>
 
-                        <div class="relative z-0 w-full mb-4">
-                            <label for="{{ create_staff_form.username.id_for_label }}"
+                        <div class="relative z-0 w-full mb-2">
+                            <label for="{{ create_users_form.username.id_for_label }}"
                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Nombre de usuario</label>
                             <div class="relative">
@@ -481,13 +673,20 @@
                                               d="M16.5 12a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zm0 0c0 1.657 1.007 3 2.25 3S21 13.657 21 12a9 9 0 10-2.636 6.364M16.5 12V8.25"></path>
                                     </svg>
                                 </div>
-                                {{ create_staff_form.username }}
+                                {{ create_users_form.username }}
                             </div>
                         </div>
 
+                        <div class="relative z-0 w-full mb-2">
+                            <label for="{{ create_users_form.curriculum.id_for_label }}"
+                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Hoja de vida (PDF)</label>
+                            {{ create_users_form.curriculum }}
+                        </div>
+
                         <div class="grid md:grid-cols-2 md:gap-6">
-                            <div class="relative z-0 w-full mb-6">
-                                <label for="{{ create_staff_form.first_name.id_for_label }}"
+                            <div class="relative z-0 w-full mb-2">
+                                <label for="{{ create_users_form.first_name.id_for_label }}"
                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                     Nombres</label>
                                 <div class="relative">
@@ -500,11 +699,11 @@
                                                   d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"></path>
                                         </svg>
                                     </div>
-                                    {{ create_staff_form.first_name }}
+                                    {{ create_users_form.first_name }}
                                 </div>
                             </div>
-                            <div class="relative z-0 w-full mb-6">
-                                <label for="{{ create_staff_form.last_name.id_for_label }}"
+                            <div class="relative z-0 w-full mb-2">
+                                <label for="{{ create_users_form.last_name.id_for_label }}"
                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                     Apellidos</label>
                                 <div class="relative">
@@ -517,31 +716,14 @@
                                                   d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"></path>
                                         </svg>
                                     </div>
-                                    {{ create_staff_form.last_name }}
+                                    {{ create_users_form.last_name }}
                                 </div>
-                            </div>
-                        </div>
-
-                        <div class="relative z-0 w-full mb-4">
-                            <label for="{{ create_staff_form.email.id_for_label }}"
-                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                Email</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                    <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400"
-                                         fill="currentColor"
-                                         viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
-                                        <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
-                                    </svg>
-                                </div>
-                                {{ create_staff_form.email }}
                             </div>
                         </div>
 
                         <div class="grid md:grid-cols-2 md:gap-6">
-                            <div class="relative z-0 w-full mb-6">
-                                <label for="{{ create_staff_form.password1.id_for_label }}"
+                            <div class="relative z-0 w-full mb-2">
+                                <label for="{{ create_users_form.password1.id_for_label }}"
                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                     Contraseña</label>
                                 <div class="relative">
@@ -554,12 +736,12 @@
                                                   d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"></path>
                                         </svg>
                                     </div>
-                                    {{ create_staff_form.password1 }}
+                                    {{ create_users_form.password1 }}
                                 </div>
                             </div>
 
-                            <div class="relative z-0 w-full mb-6">
-                                <label for="{{ create_staff_form.password2.id_for_label }}"
+                            <div class="relative z-0 w-full mb-2">
+                                <label for="{{ create_users_form.password2.id_for_label }}"
                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                     Contraseña (confirmación)</label>
                                 <div class="relative">
@@ -572,11 +754,47 @@
                                                   d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"></path>
                                         </svg>
                                     </div>
-                                    {{ create_staff_form.password2 }}
+                                    {{ create_users_form.password2 }}
                                 </div>
                             </div>
                         </div>
 
+                        <div class="grid md:grid-cols-2 md:gap-6">
+                            <div class="relative z-0 w-full mb-2">
+                                <label for="{{ create_users_form.email.id_for_label }}"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Email</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                                             fill="currentColor"
+                                             viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
+                                            <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+                                        </svg>
+                                    </div>
+                                    {{ create_users_form.email }}
+                                </div>
+                            </div>
+
+                            <div class="relative z-0 w-full mb-2">
+                                <label for="{{ create_users_form.profession.id_for_label }}"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Profesión</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <svg fill="none" class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                                             stroke="currentColor"
+                                             stroke-width="1.5" viewBox="0 0 24 24"
+                                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z"></path>
+                                        </svg>
+                                    </div>
+                                    {{ create_users_form.profession }}
+                                </div>
+                            </div>
+                        </div>
                         <button type="submit"
                                 class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                             Guardar
@@ -587,6 +805,188 @@
         </div>
     </div>
 
+
+    <!-- Create Teacher modal -->
+    <div id="create_teacher-modal" tabindex="-1" aria-hidden="true"
+         class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full">
+        <div class="relative w-full h-full max-w-4xl md:h-auto">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <button type="button"
+                        class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
+                        data-modal-hide="create_teacher-modal">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                              clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+                <div class="px-6 py-6 lg:px-8">
+                    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Crea profesores para tus eventos</h3>
+                    <form class="space-y-2" action="{% url 'create_user' 'teacher' %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="relative z-0 w-full mb-4 group">
+                            <div class="container-input">
+                                {{ create_users_form.profile_image }}
+                                <label for="file-5">
+                                    <figure>
+                                        <img src="{% static 'Home/images/user_profile_placeholder.jpg' %}"
+                                             alt="imagen de perfil de usuario">
+                                        <img id="imagenPrevisualizacion" alt="Imagen de perfil del usuario"
+                                             loading="lazy">
+                                    </figure>
+                                    <span class="iborrainputfile block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imagen de perfil</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="relative z-0 w-full mb-2">
+                            <label for="{{ create_users_form.username.id_for_label }}"
+                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Nombre de usuario</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <svg fill="none" stroke="currentColor"
+                                         class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                                         stroke-width="1.5" viewBox="0 0 24 24"
+                                         xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path stroke-linecap="round"
+                                              d="M16.5 12a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zm0 0c0 1.657 1.007 3 2.25 3S21 13.657 21 12a9 9 0 10-2.636 6.364M16.5 12V8.25"></path>
+                                    </svg>
+                                </div>
+                                {{ create_users_form.username }}
+                            </div>
+                        </div>
+
+                        <div class="relative z-0 w-full mb-2">
+                            <label for="{{ create_users_form.curriculum.id_for_label }}"
+                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Hoja de vida (PDF)</label>
+                            {{ create_users_form.curriculum }}
+                        </div>
+
+                        <div class="grid md:grid-cols-2 md:gap-6">
+                            <div class="relative z-0 w-full mb-2">
+                                <label for="{{ create_users_form.first_name.id_for_label }}"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Nombres</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <svg fill="none" stroke="currentColor"
+                                             class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                                             stroke-width="1.5" viewBox="0 0 24 24"
+                                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"></path>
+                                        </svg>
+                                    </div>
+                                    {{ create_users_form.first_name }}
+                                </div>
+                            </div>
+                            <div class="relative z-0 w-full mb-2">
+                                <label for="{{ create_users_form.last_name.id_for_label }}"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Apellidos</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <svg fill="none" stroke="currentColor"
+                                             class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                                             stroke-width="1.5" viewBox="0 0 24 24"
+                                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"></path>
+                                        </svg>
+                                    </div>
+                                    {{ create_users_form.last_name }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 md:gap-6">
+                            <div class="relative z-0 w-full mb-2">
+                                <label for="{{ create_users_form.password1.id_for_label }}"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Contraseña</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <svg fill="none" class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                                             stroke="currentColor"
+                                             stroke-width="1.5" viewBox="0 0 24 24"
+                                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"></path>
+                                        </svg>
+                                    </div>
+                                    {{ create_users_form.password1 }}
+                                </div>
+                            </div>
+
+                            <div class="relative z-0 w-full mb-2">
+                                <label for="{{ create_users_form.password2.id_for_label }}"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Contraseña (confirmación)</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <svg fill="none" class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                                             stroke="currentColor"
+                                             stroke-width="1.5" viewBox="0 0 24 24"
+                                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"></path>
+                                        </svg>
+                                    </div>
+                                    {{ create_users_form.password2 }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 md:gap-6">
+                            <div class="relative z-0 w-full mb-2">
+                                <label for="{{ create_users_form.email.id_for_label }}"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Email</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                                             fill="currentColor"
+                                             viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
+                                            <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+                                        </svg>
+                                    </div>
+                                    {{ create_users_form.email }}
+                                </div>
+                            </div>
+
+                            <div class="relative z-0 w-full mb-2">
+                                <label for="{{ create_users_form.profession.id_for_label }}"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Profesión</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <svg fill="none" class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                                             stroke="currentColor"
+                                             stroke-width="1.5" viewBox="0 0 24 24"
+                                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z"></path>
+                                        </svg>
+                                    </div>
+                                    {{ create_users_form.profession }}
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit"
+                                class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            Guardar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock content %}
 
 {% block footer %}

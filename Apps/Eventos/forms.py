@@ -3,6 +3,7 @@ from django.forms import ValidationError
 from django.utils import timezone
 from django_countries.fields import CountryField
 
+from Apps.Users.models import User
 from Apps.Eventos.models import Event, Career, Participant
 
 gender_options = [
@@ -100,10 +101,6 @@ class EventForm(forms.ModelForm):
     platform_meeting = forms.ChoiceField(choices=platform_options, required=False, widget=forms.Select(attrs={
         'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
     }))
-    curriculum_user = forms.FileField(required=True, widget=forms.FileInput(attrs={
-        'accept': 'application/pdf, application/vnd.ms-excel',
-        'class': 'block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400',
-    }))
     event_planning = forms.FileField(required=True, widget=forms.FileInput(attrs={
         'accept': 'application/pdf, application/vnd.ms-excel',
         'class': 'block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400',
@@ -113,6 +110,9 @@ class EventForm(forms.ModelForm):
         'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
     }))
     career = forms.ModelChoiceField(required=False, queryset=Career.objects.all(), widget=forms.Select(attrs={
+        'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
+    }))
+    teachers = forms.ModelMultipleChoiceField(queryset=User.objects.filter(is_teacher=True), widget=forms.SelectMultiple(attrs={
         'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
     }))
 
@@ -196,14 +196,6 @@ class ParticipantForm(forms.ModelForm):
         'placeholder': ' ',
         'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
     }))
-    profession = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
-        'placeholder': ' ',
-        'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
-    }))
-    curriculum = forms.FileField(required=True, widget=forms.FileInput(attrs={
-        'accept': 'application/pdf, application/vnd.ms-excel',
-        'class': 'block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400',
-    }))
     object = forms.CharField(max_length=256, required=True, widget=forms.Textarea(attrs={
         'placeholder': 'I want to be at the event, because...',
         'rows': 2,
@@ -281,7 +273,7 @@ class ParticipantDataUpdateForm(forms.ModelForm):
     object = forms.CharField(max_length=256, required=True, widget=forms.Textarea(attrs={
         'placeholder': 'I want to be at the event, because...',
         'rows': 2,
-        'class': 'block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
+        'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
     }))
 
     class Meta:

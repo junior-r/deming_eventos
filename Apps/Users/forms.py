@@ -18,6 +18,15 @@ class UserForm(UserCreationForm):
             'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
         }
     ), label='Nombre de usuario')
+    profession = forms.CharField(max_length=100, widget=forms.TextInput(
+        attrs={
+            'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
+        }
+    ), label='Profesión')
+    curriculum = forms.FileField(required=True, widget=forms.FileInput(attrs={
+        'accept': 'application/pdf, application/vnd.ms-excel',
+        'class': 'block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400',
+    }), label='Hoja de vida (PDF)')
     email = forms.EmailField(max_length=150, widget=forms.EmailInput(
         attrs={
             'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
@@ -53,7 +62,8 @@ class UserForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['profile_image', 'username', 'first_name', 'last_name', 'email', 'password1', 'password2']
+        fields = ['profile_image', 'username', 'first_name', 'last_name', 'email', 'password1', 'password2',
+                  'profession', 'curriculum']
 
 
 class UpdateUserForm(forms.ModelForm):
@@ -85,6 +95,15 @@ class UpdateUserForm(forms.ModelForm):
             'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
         }
     ), label='Apellidos')
+    profession = forms.CharField(max_length=100, widget=forms.TextInput(
+        attrs={
+            'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
+        }
+    ), label='Profesión')
+    curriculum = forms.FileField(required=True, widget=forms.FileInput(attrs={
+        'accept': 'application/pdf, application/vnd.ms-excel',
+        'class': 'block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400',
+    }), label='Hoja de vida (PDF)')
     is_staff = forms.BooleanField(required=False, widget=forms.CheckboxInput(
         attrs={
             'class': 'w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600',
@@ -95,6 +114,11 @@ class UpdateUserForm(forms.ModelForm):
             'class': 'w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600',
         }
     ), label='¿Está activo?')
+    is_teacher = forms.BooleanField(required=False, widget=forms.CheckboxInput(
+        attrs={
+            'class': 'w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600',
+        }
+    ), label='¿Es Ponente?')
 
     def _clean_fields(self):
         email = self.cleaned_data.get('email')
@@ -105,4 +129,5 @@ class UpdateUserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['user_id', 'profile_image', 'username', 'first_name', 'last_name', 'email', 'is_staff', 'is_active']
+        fields = ['user_id', 'profile_image', 'username', 'first_name', 'last_name', 'email', 'is_staff', 'is_active',
+                  'is_teacher', 'profession', 'curriculum']

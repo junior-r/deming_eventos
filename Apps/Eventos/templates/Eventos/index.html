@@ -15,7 +15,49 @@
 {% endblock %}
 
 {% block content %}
+    {% if form.errors %}
+        <div id="toast-danger"
+             class="absolute flex items-center w-full max-w-xl bottom-0 z-5 left-8 p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+             role="alert">
+            <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
+                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clip-rule="evenodd"></path>
+                </svg>
+                <span class="sr-only">Error icon</span>
+            </div>
+            <div class="ml-3 text-sm font-normal">
+                <ul>
+                    {% for key, value in form.errors.items %}
+                        <li class="flex gap-2">
+                            <svg fill="none" class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                                 stroke="currentColor"
+                                 stroke-width="1.5" viewBox="0 0 24 24"
+                                 xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"></path>
+                            </svg>
+                            {{ value }}
+                        </li>
+                    {% endfor %}
+                </ul>
 
+            </div>
+            <button type="button"
+                    class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+                    data-dismiss-target="#toast-danger" aria-label="Close">
+                <span class="sr-only">Close</span>
+                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clip-rule="evenodd"></path>
+                </svg>
+            </button>
+        </div>
+    {% endif %}
 
     <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
         <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="myEventsTab"
@@ -41,7 +83,7 @@
              aria-labelledby="table-events-tab">
 
             <div class="mt-6 relative overflow-x-auto shadow-md sm:rounded-lg p-4">
-                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400" id="datatable_accounts">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400" id="general_datatable">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
                         <th scope="col" class="px-6 py-3">
@@ -90,7 +132,14 @@
                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             </th>
                             <td class="px-6 py-4">
-                                {{ event.user.username }}
+                                <div class="flex -space-x-4">
+                                    {% for teacher in event.teachers.all %}
+                                        <a href="{{ teacher.curriculum.url }}" target="_blank">
+                                            <img class="w-10 h-10 border-2 border-white rounded-full dark:border-gray-800"
+                                                 src="{{ teacher.get_picture_profile }}" alt="Imagen de perfil del profesor {{ teacher.get_full_name }}">
+                                        </a>
+                                    {% endfor %}
+                                </div>
                             </td>
                             <td class="px-6 py-4" data-popover-target="popover-title-event-{{ event.id }}">
                                 <div data-popover id="popover-title-event-{{ event.id }}" role="tooltip"
@@ -142,7 +191,8 @@
                                 {% endif %}
                             </td>
                             <td class="px-6 py-4">
-                                <a href="{% url 'view_event' event.id %}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                                <a href="{% url 'view_event' event.id %}"
+                                   class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
                                     <svg fill="none" class="w-5 h-5 mr-1" stroke="currentColor" stroke-width="1.5"
                                          viewBox="0 0 24 24"
                                          xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -165,26 +215,27 @@
              aria-labelledby="cards-events-tab">
 
             <div class="content-cards flex gap-4 wrap">
-            {% if events %}
-                {% for event in events %}
-                    <div class="w-full relative max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                        {% if event.active %}
-                            <span class="absolute top-2 left-2 bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Activo</span>
-                        {% else %}
-                            <span class="absolute top-2 left-2 bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Inactivo</span>
-                        {% endif %}
-                        <a href="#">
-                            <img class="p-8 rounded-t-lg" loading="lazy" src="{{ event.get_logo }}" alt="product image"/>
-                        </a>
-                        <div class="px-5 pb-5">
-                            <a href="#" class="mb-4 block">
-                                <h5 class="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
-                                    {{ event.title.capitalize }}
-                                </h5>
+                {% if events %}
+                    {% for event in events %}
+                        <div class="w-full relative max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                            {% if event.active %}
+                                <span class="absolute top-2 left-2 bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Activo</span>
+                            {% else %}
+                                <span class="absolute top-2 left-2 bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Inactivo</span>
+                            {% endif %}
+                            <a href="#">
+                                <img class="p-8 rounded-t-lg" loading="lazy" src="{{ event.get_logo }}"
+                                     alt="product image"/>
                             </a>
-                            <div class="dates mb-4 flex gap-2 items-center">
-                                <div class="start_date">
-                                    <p class="dark:text-white">
+                            <div class="px-5 pb-5">
+                                <a href="#" class="mb-4 block">
+                                    <h5 class="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
+                                        {{ event.title.capitalize }}
+                                    </h5>
+                                </a>
+                                <div class="dates mb-4 flex gap-2 items-center">
+                                    <div class="start_date">
+                                        <p class="dark:text-white">
                                     <span class="bg-blue-100 text-blue-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
                                         <svg fill="none" class="w-3 h-3 mr-1" stroke="currentColor" stroke-width="1.5"
                                              viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -193,17 +244,18 @@
                                         </svg>
                                       {{ event.start_date.isoformat }}
                                     </span>
-                                    </p>
-                                </div>
+                                        </p>
+                                    </div>
 
-                                <svg fill="none" class="w-5 h-5 mr-1" stroke="white" stroke-width="1.5" viewBox="0 0 24 24"
-                                     xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                          d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"></path>
-                                </svg>
+                                    <svg fill="none" class="w-5 h-5 mr-1" stroke="white" stroke-width="1.5"
+                                         viewBox="0 0 24 24"
+                                         xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"></path>
+                                    </svg>
 
-                                <div class="final_date">
-                                    <p class="dark:text-white">
+                                    <div class="final_date">
+                                        <p class="dark:text-white">
                                     <span class="bg-blue-100 text-blue-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
                                         <svg fill="none" class="w-3 h-3 mr-1" stroke="currentColor" stroke-width="1.5"
                                              viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -212,424 +264,435 @@
                                         </svg>
                                       {{ event.final_date.isoformat }}
                                     </span>
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="description">
+                                    <p class="dark:text-gray-400">
+                                        {{ event.addressed_to }}
                                     </p>
                                 </div>
-                            </div>
 
-                            <div class="description">
-                                <p class="dark:text-gray-400">
-                                    {{ event.addressed_to }}
-                                </p>
-                            </div>
-
-                            <div class="flex items-center justify-between">
-                                <span class="text-3xl font-bold text-gray-900 dark:text-white">${{ event.price.to_eng_string }}</span>
-                                <a href="{% url 'view_event' event.id %}"
-                                   class="text-white flex bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                    Ver más
-                                    <svg fill="none" class="w-5 h-5 mr-1" stroke="white" stroke-width="1.5" viewBox="0 0 24 24"
-                                         xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                              d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"></path>
-                                    </svg>
-                                </a>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-3xl font-bold text-gray-900 dark:text-white">${{ event.price.to_eng_string }}</span>
+                                    <a href="{% url 'view_event' event.id %}"
+                                       class="text-white flex bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                        Ver más
+                                        <svg fill="none" class="w-5 h-5 mr-1" stroke="white" stroke-width="1.5"
+                                             viewBox="0 0 24 24"
+                                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"></path>
+                                        </svg>
+                                    </a>
+                                </div>
                             </div>
                         </div>
+                    {% endfor %}
                     </div>
-                {% endfor %}
-            </div>
-            {% else %}
-                <div class="content flex justify-center items-center flex-col w-full p-4">
-                    <img src="{% static 'Eventos/images/icons/filter-circle-xmark-solid.svg' %}"
-                         style="width: 20rem" class="mb-4"
-                         alt="ícono de registros no encontrados">
-                    <h1 class="text-5xl font-extrabold dark:text-white">No hay eventos activos por ahora.</h1>
-                </div>
-            {% endif %}
+                {% else %}
+                    <div class="content flex justify-center items-center flex-col w-full p-4">
+                        <img src="{% static 'Eventos/images/icons/filter-circle-xmark-solid.svg' %}"
+                             style="width: 20rem" class="mb-4"
+                             alt="ícono de registros no encontrados">
+                        <h1 class="text-5xl font-extrabold dark:text-white">No hay eventos activos por ahora.</h1>
+                    </div>
+                {% endif %}
         </div>
     </div>
 
 
     {% if perms.Eventos.add_event %}
-    <div class="fixed right-6 bottom-6">
-        <button type="button" data-modal-target="events-form-modal" data-modal-toggle="events-form-modal"
-                class="flex items-center justify-center text-white bg-blue-700 rounded-full w-14 h-14 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:focus:ring-blue-800">
-            <svg aria-hidden="true" class="w-8 h-8 transition-transform group-hover:rotate-45" fill="none"
-                 stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-            </svg>
-            <span class="sr-only">Open actions menu</span>
-        </button>
-    </div>
+        <div class="fixed right-6 bottom-6">
+            <button type="button" data-modal-target="events-form-modal" data-modal-toggle="events-form-modal"
+                    class="flex items-center justify-center text-white bg-blue-700 rounded-full w-14 h-14 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:focus:ring-blue-800">
+                <svg aria-hidden="true" class="w-8 h-8 transition-transform group-hover:rotate-45" fill="none"
+                     stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                <span class="sr-only">Open actions menu</span>
+            </button>
+        </div>
 
-    <!-- Extra Large Modal -->
-    <div id="events-form-modal" tabindex="-1"
-         class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full">
-        <div class="relative w-full h-full max-w-7xl md:h-auto">
-            <!-- Modal content -->
-            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                <!-- Modal header -->
-                <div class="flex items-center justify-between p-5 border-b rounded-t dark:border-gray-600">
-                    <h3 class="text-xl font-medium text-gray-900 dark:text-white">
-                        Regístra un Evento
-                    </h3>
-                    <button type="button"
-                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                            data-modal-hide="events-form-modal">
-                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                             xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd"
-                                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                  clip-rule="evenodd"></path>
-                        </svg>
-                        <span class="sr-only">Close modal</span>
-                    </button>
-                </div>
-                <!-- Modal body -->
-                <div class="p-4 space-y-6">
-                    <form action="" method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
+        <!-- Extra Large Modal -->
+        <div id="events-form-modal" tabindex="-1"
+             class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full">
+            <div class="relative w-full h-full max-w-7xl md:h-auto">
+                <!-- Modal content -->
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                    <!-- Modal header -->
+                    <div class="flex items-center justify-between p-5 border-b rounded-t dark:border-gray-600">
+                        <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+                            Regístra un Evento
+                        </h3>
+                        <button type="button"
+                                class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                                data-modal-hide="events-form-modal">
+                            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                      clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="p-4 space-y-6">
+                        <form action="" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
 
-                        <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
-                            <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="myTab"
-                                data-tabs-toggle="#myTabContent" role="tablist">
-                                <li class="mr-2" role="presentation">
-                                    <button class="inline-block p-4 border-b-2 rounded-t-lg" id="profile-tab"
-                                            data-tabs-target="#profile" type="button" role="tab" aria-controls="profile"
-                                            aria-selected="false">Paso 1
-                                    </button>
-                                </li>
+                            <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
+                                <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="myTab"
+                                    data-tabs-toggle="#myTabContent" role="tablist">
+                                    <li class="mr-2" role="presentation">
+                                        <button class="inline-block p-4 border-b-2 rounded-t-lg" id="profile-tab"
+                                                data-tabs-target="#profile" type="button" role="tab"
+                                                aria-controls="profile"
+                                                aria-selected="false">Paso 1
+                                        </button>
+                                    </li>
 
-                                <li class="mr-2" role="presentation">
-                                    <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-                                            id="dashboard-tab" data-tabs-target="#dashboard" type="button" role="tab"
-                                            aria-controls="dashboard" aria-selected="false">Paso 2
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
-                        <div id="myTabContent">
-                            <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="profile" role="tabpanel"
-                                 aria-labelledby="profile-tab">
-                                <div class="relative z-0 w-full mb-6 group">
-                                    <label for="{{ form.logo.id_for_label }}"
-                                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                        Logo</label>
-                                    {{ form.logo }}
-                                    {% if form.logo.errors %}
-                                        <p id="filled_error_help"
-                                           class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                class="font-medium">Oh, error!</span> {{ form.logo.errors }}
-                                        </p>
-                                    {% endif %}
+                                    <li class="mr-2" role="presentation">
+                                        <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+                                                id="dashboard-tab" data-tabs-target="#dashboard" type="button"
+                                                role="tab"
+                                                aria-controls="dashboard" aria-selected="false">Paso 2
+                                        </button>
+                                    </li>
+
+                                    <li class="mr-2" role="presentation">
+                                        <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+                                                id="teachers-tab" data-tabs-target="#teachers" type="button" role="tab"
+                                                aria-controls="teachers" aria-selected="false">Paso 3
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div id="myTabContent">
+                                <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="profile"
+                                     role="tabpanel"
+                                     aria-labelledby="profile-tab">
+                                    <div class="relative z-0 w-full mb-6 group">
+                                        <label for="{{ form.logo.id_for_label }}"
+                                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                            Logo</label>
+                                        {{ form.logo }}
+                                        {% if form.logo.errors %}
+                                            <p id="filled_error_help"
+                                               class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                    class="font-medium">Oh, error!</span> {{ form.logo.errors }}
+                                            </p>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="grid md:grid-cols-3 md:gap-6">
+                                        <div class="relative z-0 w-full mb-6 group">
+                                            <label for="{{ form.title.id_for_label }}"
+                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                Título</label>
+                                            {{ form.title }}
+                                            {% if form.country_of_birth.errors %}
+                                                <p id="filled_error_help"
+                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                        class="font-medium">Oh, error!</span> {{ form.country_of_birth.errors }}
+                                                </p>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="relative z-0 w-full mb-6 group">
+                                            <label for="{{ form.place.id_for_label }}"
+                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                Lugar</label>
+                                            {{ form.place }}
+                                            {% if form.country_of_birth.errors %}
+                                                <p id="filled_error_help"
+                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                        class="font-medium">Oh, error!</span> {{ form.country_of_birth.errors }}
+                                                </p>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="relative z-0 w-full mb-6 group">
+                                            <label for="{{ form.price.id_for_label }}"
+                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                Precio</label>
+                                            {{ form.price }}
+                                            {% if form.country_of_birth.errors %}
+                                                <p id="filled_error_help"
+                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                        class="font-medium">Oh, error!</span> {{ form.country_of_birth.errors }}
+                                                </p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div class="addressed_to">
+                                        <div class="relative z-0 w-full mb-6 group">
+                                            <label for="{{ form.addressed_to.id_for_label }}"
+                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                Dirigído a:</label>
+                                            {{ form.addressed_to }}
+                                            <p id="addressed_to" class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                                {{ form.addressed_to.help_text }}
+                                            </p>
+                                            {% if form.addressed_to.errors %}
+                                                <p id="filled_error_help"
+                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                        class="font-medium">Oh, error!</span> {{ form.addressed_to.errors }}
+                                                </p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div class="grid md:grid-cols-3 md:gap-6">
+                                        <div class="relative z-0 w-full mb-6 group">
+                                            <label for="{{ form.start_date.id_for_label }}"
+                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                Fecha de inicio</label>
+                                            {{ form.start_date }}
+                                            {% if form.start_date.errors %}
+                                                <p id="filled_error_help"
+                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                        class="font-medium">Oh, error!</span> {{ form.start_date.errors }}
+                                                </p>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="relative z-0 w-full mb-6 group">
+                                            <label for="{{ form.final_date.id_for_label }}"
+                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                Fecha de cierre</label>
+                                            {{ form.final_date }}
+                                            {% if form.final_date.errors %}
+                                                <p id="filled_error_help"
+                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                        class="font-medium">Oh, error!</span> {{ form.final_date.errors }}
+                                                </p>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="relative z-0 w-full mb-6 group">
+                                            <label for="{{ form.modality.id_for_label }}"
+                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                Modalidad</label>
+                                            {{ form.modality }}
+                                            {% if form.modality.errors %}
+                                                <p id="filled_error_help"
+                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                        class="font-medium">Oh, error!</span> {{ form.modality.errors }}
+                                                </p>
+                                            {% endif %}
+                                        </div>
+
+                                    </div>
                                 </div>
 
-                                <div class="grid md:grid-cols-3 md:gap-6">
-                                    <div class="relative z-0 w-full mb-6 group">
-                                        <label for="{{ form.title.id_for_label }}"
-                                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Título</label>
-                                        {{ form.title }}
-                                        {% if form.country_of_birth.errors %}
-                                            <p id="filled_error_help"
-                                               class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                    class="font-medium">Oh, error!</span> {{ form.country_of_birth.errors }}
+                                <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="dashboard"
+                                     role="tabpanel" aria-labelledby="dashboard-tab">
+
+                                    <div class="grid md:grid-cols-3 md:gap-6">
+                                        <div class="relative z-0 w-full mb-6 group">
+                                            {% get_countries as countries %}
+                                            <label for="{{ form.country_phone.id_for_label }}"
+                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                País</label>
+                                            <select id="{{ form.country_phone.id_for_label }}" name="country_phone"
+                                                    class="bg-gray-50 border border-gray-300 text-gray-900 mb-6 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                                {% for country in countries %}
+                                                    <option value="{{ country.code }}">{{ country.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <p id="helper-text-explanation"
+                                               class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                                {{ form.country_phone.help_text }}
                                             </p>
-                                        {% endif %}
+                                            {% if form.country_phone.errors %}
+                                                <p id="filled_error_help"
+                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                        class="font-medium">Oh, error!</span> {{ form.country_phone.errors }}
+                                                </p>
+                                            {% endif %}
+                                        </div>
+
+
+                                        <div class="relative z-0 w-full mb-6 group">
+                                            <label for="{{ form.phone.id_for_label }}"
+                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                Teléfono de contacto</label>
+                                            {{ form.phone }}
+                                            {% if form.phone.errors %}
+                                                <p id="filled_error_help"
+                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                        class="font-medium">Oh, error!</span> {{ form.phone.errors }}
+                                                </p>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="relative z-0 w-full mb-6 group">
+                                            <label for="{{ form.alternative_phone.id_for_label }}"
+                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                Teléfono de contacto (Alternativo)</label>
+                                            {{ form.alternative_phone }}
+                                            {% if form.alternative_phone.errors %}
+                                                <p id="filled_error_help"
+                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                        class="font-medium">Oh, error!</span> {{ form.alternative_phone.errors }}
+                                                </p>
+                                            {% endif %}
+                                        </div>
                                     </div>
 
-                                    <div class="relative z-0 w-full mb-6 group">
-                                        <label for="{{ form.place.id_for_label }}"
-                                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Lugar</label>
-                                        {{ form.place }}
-                                        {% if form.country_of_birth.errors %}
-                                            <p id="filled_error_help"
-                                               class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                    class="font-medium">Oh, error!</span> {{ form.country_of_birth.errors }}
-                                            </p>
-                                        {% endif %}
+                                    <div class="grid md:grid-cols-2 md:gap-6">
+                                        <div class="relative z-0 w-full mb-6 group">
+                                            <label for="{{ form.email.id_for_label }}"
+                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                Email de contacto</label>
+                                            {{ form.email }}
+                                            {% if form.email.errors %}
+                                                <p id="filled_error_help"
+                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                        class="font-medium">Oh, error!</span> {{ form.email.errors }}
+                                                </p>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="relative z-0 w-full mb-6 group">
+                                            <label for="{{ form.alternative_email.id_for_label }}"
+                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                Email de contacto (Alternativo)</label>
+                                            {{ form.alternative_email }}
+                                            {% if form.alternative_email.errors %}
+                                                <p id="filled_error_help"
+                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                        class="font-medium">Oh, error!</span> {{ form.alternative_email.errors }}
+                                                </p>
+                                            {% endif %}
+                                        </div>
                                     </div>
 
-                                    <div class="relative z-0 w-full mb-6 group">
-                                        <label for="{{ form.price.id_for_label }}"
-                                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Precio</label>
-                                        {{ form.price }}
-                                        {% if form.country_of_birth.errors %}
-                                            <p id="filled_error_help"
-                                               class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                    class="font-medium">Oh, error!</span> {{ form.country_of_birth.errors }}
-                                            </p>
-                                        {% endif %}
+                                    <div class="grid md:grid-cols-3 md:gap-6">
+                                        <div class="relative z-0 w-full mb-6 group">
+                                            <label for="{{ form.link_video.id_for_label }}"
+                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                Video de explicación</label>
+                                            {{ form.link_video }}
+                                            {% if form.link_video.errors %}
+                                                <p id="filled_error_help"
+                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                        class="font-medium">Oh, error!</span> {{ form.link_video.errors }}
+                                                </p>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="relative z-0 w-full mb-6 group">
+                                            <label for="{{ form.event_planning.id_for_label }}"
+                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                Planificación del evento (PDF)</label>
+                                            {{ form.event_planning }}
+                                            {% if form.event_planning.errors %}
+                                                <p id="filled_error_help"
+                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                        class="font-medium">Oh, error!</span> {{ form.event_planning.errors }}
+                                                </p>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="relative z-0 w-full mb-6 group">
+                                            <label for="{{ form.career.id_for_label }}"
+                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                Carrera vinculada</label>
+                                            {{ form.career }}
+                                            {% if form.career.errors %}
+                                                <p id="filled_error_help"
+                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                        class="font-medium">Oh, error!</span> {{ form.career.errors }}
+                                                </p>
+                                            {% endif %}
+                                        </div>
+
+                                    </div>
+
+                                    <div class="grid md:grid-cols-3 md:gap-6 link_to_classroom">
+                                        <div class="relative z-0 w-full mb-6 group">
+                                            <label for="{{ form.platform_meeting.id_for_label }}"
+                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                Plataforma de reunión</label>
+                                            {{ form.platform_meeting }}
+                                            {% if form.platform_meeting.errors %}
+                                                <p id="filled_error_help"
+                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                        class="font-medium">Oh, error!</span> {{ form.platform_meeting.errors }}
+                                                </p>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="relative z-0 w-full mb-6 group">
+                                            <label for="{{ form.link_to_classroom.id_for_label }}"
+                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                Link de reunión</label>
+                                            {{ form.link_to_classroom }}
+                                            {% if form.link_to_classroom.errors %}
+                                                <p id="filled_error_help"
+                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                        class="font-medium">Oh, error!</span> {{ form.link_to_classroom.errors }}
+                                                </p>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="relative z-0 w-full mb-6 group">
+                                            <label for="{{ form.code_meeting.id_for_label }}"
+                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                Código de reunión</label>
+                                            {{ form.code_meeting }}
+                                            {% if form.code_meeting.errors %}
+                                                <p id="filled_error_help"
+                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                        class="font-medium">Oh, error!</span> {{ form.code_meeting.errors }}
+                                                </p>
+                                            {% endif %}
+                                        </div>
+
                                     </div>
                                 </div>
-
-                                <div class="addressed_to">
+                                <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="teachers">
                                     <div class="relative z-0 w-full mb-6 group">
-                                        <label for="{{ form.addressed_to.id_for_label }}"
-                                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Dirigído a:</label>
-                                        {{ form.addressed_to }}
-                                        <p id="addressed_to" class="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                                            {{ form.addressed_to.help_text }}
-                                        </p>
-                                        {% if form.addressed_to.errors %}
+                                        <label for="{{ form.teachers.id_for_label }}"
+                                               class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                            Seleccione los ponentes</label>
+                                        {{ form.teachers }}
+                                        <p class="text-gray-700 dark:text-white italic">Para seleccionar a más de un Profesor o deseleccionarlo, utilice <span class="font-semibold">ctrl</span> + <span class="font-semibold">click</span></p>
+                                        {% if form.teachers.errors %}
                                             <p id="filled_error_help"
                                                class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                    class="font-medium">Oh, error!</span> {{ form.addressed_to.errors }}
-                                            </p>
-                                        {% endif %}
-                                    </div>
-                                </div>
-
-                                <div class="grid md:grid-cols-3 md:gap-6">
-                                    <div class="relative z-0 w-full mb-6 group">
-                                        <label for="{{ form.start_date.id_for_label }}"
-                                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Fecha de inicio</label>
-                                        {{ form.start_date }}
-                                        {% if form.start_date.errors %}
-                                            <p id="filled_error_help"
-                                               class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                    class="font-medium">Oh, error!</span> {{ form.start_date.errors }}
+                                                    class="font-medium">Oh, error!</span> {{ form.teachers.errors }}
                                             </p>
                                         {% endif %}
                                     </div>
 
-                                    <div class="relative z-0 w-full mb-6 group">
-                                        <label for="{{ form.final_date.id_for_label }}"
-                                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Fecha de cierre</label>
-                                        {{ form.final_date }}
-                                        {% if form.final_date.errors %}
-                                            <p id="filled_error_help"
-                                               class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                    class="font-medium">Oh, error!</span> {{ form.final_date.errors }}
-                                            </p>
-                                        {% endif %}
+                                    <div class="buttons flex gap-4 justify-center">
+                                        <button type="reset"
+                                                class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
+                                            Limpiar campos
+                                        </button>
+                                        <button type="submit"
+                                                class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">
+                                            Guardar
+                                        </button>
                                     </div>
-
-                                    <div class="relative z-0 w-full mb-6 group">
-                                        <label for="{{ form.modality.id_for_label }}"
-                                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Modalidad</label>
-                                        {{ form.modality }}
-                                        {% if form.modality.errors %}
-                                            <p id="filled_error_help"
-                                               class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                    class="font-medium">Oh, error!</span> {{ form.modality.errors }}
-                                            </p>
-                                        {% endif %}
-                                    </div>
-
                                 </div>
                             </div>
+                        </form>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
 
-                            <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="dashboard"
-                                 role="tabpanel" aria-labelledby="dashboard-tab">
-
-                                <div class="grid md:grid-cols-3 md:gap-6">
-                                    <div class="relative z-0 w-full mb-6 group">
-                                        {% get_countries as countries %}
-                                        <label for="{{ form.country_phone.id_for_label }}"
-                                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            País</label>
-                                        <select id="{{ form.country_phone.id_for_label }}" name="country_phone"
-                                                class="bg-gray-50 border border-gray-300 text-gray-900 mb-6 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                            {% for country in countries %}
-                                                <option value="{{ country.code }}">{{ country.name }}</option>
-                                            {% endfor %}
-                                        </select>
-                                        <p id="helper-text-explanation"
-                                           class="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                                            {{ form.country_phone.help_text }}
-                                        </p>
-                                        {% if form.country_phone.errors %}
-                                            <p id="filled_error_help"
-                                               class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                    class="font-medium">Oh, error!</span> {{ form.country_phone.errors }}
-                                            </p>
-                                        {% endif %}
-                                    </div>
-
-
-                                    <div class="relative z-0 w-full mb-6 group">
-                                        <label for="{{ form.phone.id_for_label }}"
-                                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Teléfono de contacto</label>
-                                        {{ form.phone }}
-                                        {% if form.phone.errors %}
-                                            <p id="filled_error_help"
-                                               class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                    class="font-medium">Oh, error!</span> {{ form.phone.errors }}
-                                            </p>
-                                        {% endif %}
-                                    </div>
-
-                                    <div class="relative z-0 w-full mb-6 group">
-                                        <label for="{{ form.alternative_phone.id_for_label }}"
-                                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Teléfono de contacto (Alternativo)</label>
-                                        {{ form.alternative_phone }}
-                                        {% if form.alternative_phone.errors %}
-                                            <p id="filled_error_help"
-                                               class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                    class="font-medium">Oh, error!</span> {{ form.alternative_phone.errors }}
-                                            </p>
-                                        {% endif %}
-                                    </div>
-                                </div>
-
-                                <div class="grid md:grid-cols-3 md:gap-6">
-                                    <div class="relative z-0 w-full mb-6 group">
-                                        <label for="{{ form.email.id_for_label }}"
-                                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Email de contacto</label>
-                                        {{ form.email }}
-                                        {% if form.email.errors %}
-                                            <p id="filled_error_help"
-                                               class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                    class="font-medium">Oh, error!</span> {{ form.email.errors }}
-                                            </p>
-                                        {% endif %}
-                                    </div>
-
-                                    <div class="relative z-0 w-full mb-6 group">
-                                        <label for="{{ form.alternative_email.id_for_label }}"
-                                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Email de contacto (Alternativo)</label>
-                                        {{ form.alternative_email }}
-                                        {% if form.alternative_email.errors %}
-                                            <p id="filled_error_help"
-                                               class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                    class="font-medium">Oh, error!</span> {{ form.alternative_email.errors }}
-                                            </p>
-                                        {% endif %}
-                                    </div>
-
-                                    <div class="relative z-0 w-full mb-6 group">
-                                        <label for="{{ form.link_video.id_for_label }}"
-                                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Video de explicación</label>
-                                        {{ form.link_video }}
-                                        {% if form.link_video.errors %}
-                                            <p id="filled_error_help"
-                                               class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                    class="font-medium">Oh, error!</span> {{ form.link_video.errors }}
-                                            </p>
-                                        {% endif %}
-                                    </div>
-
-                                </div>
-
-                                <div class="grid md:grid-cols-3 md:gap-6">
-                                    <div class="relative z-0 w-full mb-6 group">
-                                        <label for="{{ form.curriculum_user.id_for_label }}"
-                                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Hoja de vida del responsable (PDF)</label>
-                                        {{ form.curriculum_user }}
-                                        {% if form.curriculum_user.errors %}
-                                            <p id="filled_error_help"
-                                               class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                    class="font-medium">Oh, error!</span> {{ form.curriculum_user.errors }}
-                                            </p>
-                                        {% endif %}
-                                    </div>
-
-                                    <div class="relative z-0 w-full mb-6 group">
-                                        <label for="{{ form.event_planning.id_for_label }}"
-                                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Planificación del evento (PDF)</label>
-                                        {{ form.event_planning }}
-                                        {% if form.event_planning.errors %}
-                                            <p id="filled_error_help"
-                                               class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                    class="font-medium">Oh, error!</span> {{ form.event_planning.errors }}
-                                            </p>
-                                        {% endif %}
-                                    </div>
-
-                                    <div class="relative z-0 w-full mb-6 group">
-                                        <label for="{{ form.career.id_for_label }}"
-                                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Carrera vinculada</label>
-                                        {{ form.career }}
-                                        {% if form.career.errors %}
-                                            <p id="filled_error_help"
-                                               class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                    class="font-medium">Oh, error!</span> {{ form.career.errors }}
-                                            </p>
-                                        {% endif %}
-                                    </div>
-
-                                </div>
-
-                                <div class="grid md:grid-cols-3 md:gap-6 link_to_classroom">
-                                    <div class="relative z-0 w-full mb-6 group">
-                                        <label for="{{ form.platform_meeting.id_for_label }}"
-                                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Plataforma de reunión</label>
-                                        {{ form.platform_meeting }}
-                                        {% if form.platform_meeting.errors %}
-                                            <p id="filled_error_help"
-                                               class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                    class="font-medium">Oh, error!</span> {{ form.platform_meeting.errors }}
-                                            </p>
-                                        {% endif %}
-                                    </div>
-
-                                    <div class="relative z-0 w-full mb-6 group">
-                                        <label for="{{ form.link_to_classroom.id_for_label }}"
-                                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Link de reunión</label>
-                                        {{ form.link_to_classroom }}
-                                        {% if form.link_to_classroom.errors %}
-                                            <p id="filled_error_help"
-                                               class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                    class="font-medium">Oh, error!</span> {{ form.link_to_classroom.errors }}
-                                            </p>
-                                        {% endif %}
-                                    </div>
-
-                                    <div class="relative z-0 w-full mb-6 group">
-                                        <label for="{{ form.code_meeting.id_for_label }}"
-                                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Código de reunión</label>
-                                        {{ form.code_meeting }}
-                                        {% if form.code_meeting.errors %}
-                                            <p id="filled_error_help"
-                                               class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                    class="font-medium">Oh, error!</span> {{ form.code_meeting.errors }}
-                                            </p>
-                                        {% endif %}
-                                    </div>
-
-                                </div>
-
-                                <div class="buttons flex gap-4 justify-center">
-                                    <button type="reset"
-                                            class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
-                                        Limpiar campos
-                                    </button>
-                                    <button type="submit"
-                                            class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">
-                                        Guardar
-                                    </button>
-                                </div>
-
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <!-- Modal footer -->
-                <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     {% endif %}
 
 {% endblock %}

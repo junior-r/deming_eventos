@@ -50,10 +50,11 @@ def view_events(request):
             email = request.POST.get('email')
             alternative_email = request.POST.get('alternative_email') if request.POST.get('alternative_email') != '' \
                 else None
-            curriculum_user = request.FILES.get('curriculum_user')
             event_planning = request.FILES.get('event_planning')
             link_video = request.POST.get('link_video')
             career = request.POST.get('career')
+            teachers = request.POST.get('teachers')
+            print(teachers)
 
             if isinstance(alternative_phone, str):
                 alternative_phone = None
@@ -73,14 +74,18 @@ def view_events(request):
                           addressed_to=addressed_to, price=price, start_date=start_date,
                           final_date=final_date, modality=modality, country_phone=country_phone,
                           phone=phone, alternative_phone=alternative_phone, email=email,
-                          alternative_email=alternative_email, curriculum_user=curriculum_user,
-                          event_planning=event_planning, link_video=link_video, career=get_career
+                          alternative_email=alternative_email,
+                          event_planning=event_planning, link_video=link_video, career=get_career,
                           )
             event.save()
+            form2 = EventForm(request.POST, instance=event)
+            form2.save(commit=False)
+            form2.save_m2m()
             messages.success(request, 'Evento creado exitosamente')
             return redirect('eventos')
         else:
             data['form'] = form
+            print(form.errors)
             messages.error(request, 'Ocurrió un error. Intente de nuevo.')
 
     return render(request, 'Eventos/index.html', data)
@@ -132,7 +137,6 @@ def validate_participant_event(request, id_event, data):
         if form.is_valid():
             profile_image = request.FILES.get('profile_image') if request.FILES.get('profile_image') else \
                 os.path.join(settings.MEDIA_URL, 'user_profile_placeholder.jpg')
-            curriculum = request.FILES.get('curriculum')
 
             first_name = user.first_name if request.POST.get('first_name') == '' else request.POST.get('first_name')
             last_name = user.last_name if request.POST.get('last_name') == '' else request.POST.get('last_name')
@@ -146,18 +150,17 @@ def validate_participant_event(request, id_event, data):
             phone = request.POST.get('phone')
             email = user.email
             alternative_email = request.POST.get('alternative_email') if request.POST.get('alternative_email') else None
-            profession = request.POST.get('profession')
             object = request.POST.get('object')
 
             participant = Participant(
                 user=request.user, profile_image=profile_image, first_name=first_name, last_name=last_name,
                 dni=dni, country_of_birth=country_of_birth, passport_number=passport_number, gender=gender,
                 birthdate=birthdate, current_country=current_country, address=address, phone=phone, email=email,
-                alternative_email=alternative_email, profession=profession, object=object, curriculum=curriculum,
+                alternative_email=alternative_email, object=object,
             )
             try:
                 participant.save()
-                if user.is_superuser or event.user.id == user.id:
+                if user.is_superuser or event.user.id == user.id or user.is_teacher:
                     event.participants.add(participant, through_defaults={
                         'active': True,
                         'pay': True,

@@ -94,9 +94,6 @@ class Participant(models.Model):
     alternative_email = models.EmailField(unique=True, blank=True, null=True, error_messages={
         'unique': 'Ya esxite un participante con este email alternativo',
     })
-    profession = models.CharField(max_length=100, blank=False, null=False)
-    curriculum = models.FileField(upload_to=participant_directory_file_path,
-                                  validators=[FileExtensionValidator(['pdf'])], blank=False, null=False)
     object = models.TextField(max_length=256, blank=False, null=False)
     date_created = models.DateTimeField(default=timezone.now)
 
@@ -173,8 +170,6 @@ class Event(models.Model):
     link_to_classroom = models.URLField(null=True, blank=False)
     code_meeting = models.CharField(max_length=500, null=True, blank=False)
     platform_meeting = models.CharField(null=True, blank=False, choices=platform_options, max_length=20)
-    curriculum_user = models.FileField(upload_to=event_directory_user_file_path, max_length=255,
-                                       validators=[FileExtensionValidator(['pdf'])], blank=False, null=False)
     event_planning = models.FileField(upload_to=event_directory_planning_file_path, max_length=255,
                                       validators=[FileExtensionValidator(['pdf'])], blank=False, null=False)
     link_video = models.URLField(null=True, blank=True)
@@ -182,6 +177,7 @@ class Event(models.Model):
     active = models.BooleanField(default=True)
     certify = models.BooleanField(default=False)
     career = models.ForeignKey(Career, on_delete=models.SET_NULL, null=True, blank=False)
+    teachers = models.ManyToManyField(User, related_name='teachers', blank=False)
 
     def get_full_number_phone(self):
         phone_number_info = phonenumbers.parse(f'{self.phone}', self.country_phone.__str__())
@@ -221,8 +217,6 @@ class Event(models.Model):
             if self.logo:
                 os.remove(self.logo.path)
                 self.logo.delete(False)
-            os.remove(self.curriculum_user.path)
-            self.curriculum_user.delete(False)
 
             os.remove(self.event_planning.path)
             self.event_planning.delete(False)

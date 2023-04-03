@@ -14,6 +14,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q, QuerySet
 from django.db.models.fields.files import ImageFieldFile
 from django.http import HttpResponse
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 
@@ -35,6 +36,7 @@ def sign_up(request):
             password1 = form.cleaned_data.get('password1')
             user = form.save()
             user.profile_image_user = request.FILES.get('profile_image')
+            user.curriculum = request.FILES.get('curriculum')
             user.save()
             user = authenticate(username=user.username, password=password1)
             login(request, user)
@@ -87,16 +89,21 @@ def profile(request, username, id_user):
         if form.is_valid():
             picture_profile = request.FILES.get('profile_image') if request.FILES.get('profile_image') is not None \
                 else user.profile_image_user.name
+            curriculum = request.FILES.get('curriculum') if request.FILES.get('curriculum') is not None \
+                else user.curriculum.name
             username = request.POST.get('username') if request.POST.get('username') is not None else \
                 user.username
             first_name = request.POST.get('first_name') if request.POST.get('first_name') is not None else \
                 user.first_name
             last_name = request.POST.get('last_name') if request.POST.get('last_name') is not None else \
                 user.last_name
+            profession = request.POST.get('profession') if request.POST.get('profession') is not None else \
+                user.profession
             email = request.POST.get('email') if request.POST.get('email') is not None else \
                 user.email
             is_staff = request.POST.get('is_staff')
             is_active = request.POST.get('is_active')
+            is_teacher = request.POST.get('is_teacher')
             if is_staff is None or is_staff == 'off':
                 is_staff = False
             else:
@@ -107,15 +114,27 @@ def profile(request, username, id_user):
             else:
                 is_active = False
 
+            if is_teacher == 'on':
+                is_teacher = True
+            else:
+                is_teacher = False
+
             user.profile_image_user = picture_profile
+            user.curriculum = curriculum
             user.username = username
+            user.profession = profession
             user.first_name = first_name
             user.last_name = last_name
             user.email = email
             user.is_staff = is_staff
             user.is_active = is_active
+            user.is_teacher = is_teacher
             user.save()
             user.refresh_from_db()
+            if not is_teacher:
+                event = Event.objects.filter(teachers__username=user.username)
+                for e in event.all():
+                    e.teachers.remove(user)
 
             messages.success(request, 'La información ha sido actualizada')
             return redirect('profile', user.username, user.id)
@@ -221,15 +240,14 @@ def assign_perms_user(request, current_profile_user_id):
 def users(request):
     user = get_object_or_404(User, id=request.user.id)
     staff_users = User.objects.filter(is_staff=True).exclude(id=user.id)
-    mortal_users = User.objects.all().exclude(is_staff=True)
+    teachers = User.objects.filter(is_teacher=True).exclude(id=user.id)
+    mortal_users = User.objects.filter(is_staff=False, is_teacher=False, is_superuser=False)
     data = {
         'staff_users': staff_users,
+        'teachers': teachers,
         'mortal_users': mortal_users,
-        'create_staff_form': UserForm(),
+        'create_users_form': UserForm(),
     }
-
-    if request.method == 'POST':
-        create_user_staff(request, data)
 
     return render(request, 'Users/users_staff.html', data)
 
@@ -310,35 +328,72 @@ def export_users(request, user_type: str, event_id: int):
 
 @login_required
 @permission_required('Users.add_user', raise_exception=True)
+def create_user(request, user_type: str):
+    if request.method == 'POST':
+        form = UserForm(request.POST, request.FILES)
+        if form.is_valid():
+            user = form.save()
+            user.profile_image_user = request.FILES.get('profile_image')
+            user.curriculum = request.FILES.get('curriculum')
+            if user_type == 'staff':
+                if request.user.is_superuser:
+                    user.is_staff = True
+                else:
+                    raise PermissionDenied()
+            elif user_type == 'teacher':
+                user.is_teacher = True
+
+            user.is_active = True
+            user.save()
+            if user_type == 'staff':
+                messages.success(request, 'Usuario staff creado exitosamente.')
+            elif user_type == 'teacher':
+                messages.success(request, 'Profesor creado exitosamente.')
+
+            return redirect('users')
+        else:
+            messages.error(request, 'Ocurrió un error. Revisa e intenta de nuevo')
+            return redirect('users')
+
+
+
+@login_required
+@permission_required('Users.add_user', raise_exception=True)
 @user_passes_test(lambda u: u.is_superuser)
 def create_user_staff(request, data):
     if request.method == 'POST':
         form = UserForm(request.POST, request.FILES)
         if form.is_valid():
-            picture_profile = form.cleaned_data.get('profile_image')
-            username = form.cleaned_data.get('username')
-            first_name = form.cleaned_data.get('first_name')
-            last_name = form.cleaned_data.get('last_name')
-            password1 = form.cleaned_data.get('password1')
-            email = form.cleaned_data.get('email')
-
-            user = User.objects.create(
-                profile_image_user=picture_profile,
-                username=username,
-                first_name=first_name,
-                last_name=last_name,
-                email=email,
-                password=password1,
-                is_staff=True,
-                is_active=True
-            )
-            user.set_password(password1)
+            user = form.save()
+            user.profile_image_user = request.FILES.get('profile_image')
+            user.curriculum = request.FILES.get('curriculum')
+            user.is_staff = True
+            user.is_active = True
             user.save()
             messages.success(request, 'Usuario staff creado exitosamente.')
             return redirect('users')
         else:
             messages.error(request, 'Ocurrió un error. Revisa e intenta de nuevo')
-            data['create_staff_form'] = form
+            data['create_users_form'] = form
+
+
+@login_required
+@permission_required('Users.add_user', raise_exception=True)
+@user_passes_test(lambda u: u.is_superuser)
+def create_teachers(request):
+    if request.method == 'POST':
+        form = UserForm(request.POST, request.FILES)
+        if form.is_valid():
+            user = form.save()
+            user.profile_image_user = request.FILES.get('profile_image')
+            user.curriculum = request.FILES.get('curriculum')
+            user.is_teacher = True
+            user.is_active = True
+            user.save()
+            messages.success(request, 'Profesor creado exitosamente.')
+            return redirect('users')
+        else:
+            messages.error(request, 'Ocurrió un error. Revisa e intenta de nuevo')
 
 
 @login_required
