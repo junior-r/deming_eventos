@@ -19,6 +19,7 @@ from django.conf.urls import handler400, handler403, handler404, handler500
 from django.contrib import admin
 from django.urls import path, include
 from Apps.Home.views import page_denied_400, page_denied_403, page_not_found_404, page_not_found_500
+from Apps.Users.views import password_reset, reset_password_done, reset_password_form
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,6 +28,9 @@ urlpatterns = [
     path('users/', include('Apps.Users.urls')),
     path('eventos/', include('Apps.Eventos.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/password-reset/', password_reset, name='password_reset'),
+    path('accounts/password-reset-done/<int:user_id>/', reset_password_done, name='custom_reset_password_done'),
+    path('accounts/reset_password_form/<int:user_id>/', reset_password_form, name='custom_reset_password_form'),
 ]
 
 handler400 = page_denied_400

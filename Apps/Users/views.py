@@ -50,6 +50,62 @@ def sign_up(request):
     return render(request, 'registration/sign_up.html', data)
 
 
+def password_reset(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        if email is not None and email != '':
+            user = get_object_or_404(User, email=email)
+            subject = 'Instrucciones para cambiar la contraseña'
+            message = f'¡Hola! @{user.username.capitalize()} \nResives este correo por parte de la plataforma de ' \
+                      f'eventos de Instituto Superior Tecnológico Corporativo Edwards Deming \n\n' \
+                      f'Nos contactamos contigo ya que solicitaste cambiar tu contraseña para ingresar a la ' \
+                      f'plataforma \n\nSolo ve al siguiente link y podrás cambiarla {request.get_host()}/accounts' \
+                      f'/reset_password_form/{user.id}/ \n\n¡Que tengas buen día! \nDeming Team'
+            try:
+                user.email_user(subject=subject, message=message, from_email=settings.EMAIL_HOST_USER)
+                messages.success(request, 'Correo enviado exitosamente')
+                return redirect('custom_reset_password_done', user.id)
+            except Exception as e:
+                messages.error(request, f'Error: {e}')
+    return render(request, 'registration/password_reset.html')
+
+
+def reset_password_done(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    data = {
+        'user': user,
+    }
+    return render(request, 'registration/custom_password_reset_done.html', data)
+
+
+def reset_password_form(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    data = {
+        'user': user,
+    }
+
+    if request.method == 'POST':
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        if password1 and password2 and password1 == password2:
+            if user.check_password(password1):
+                messages.error(request, 'No puedes usar la contraseña anterior.')
+                return redirect('custom_reset_password_form', user.id)
+            else:
+                user.password = password1
+                user.set_password(password1)
+                user.save()
+                login(request, user)
+                messages.success(request, '¡Contraseña cambiada exitosamente. Bienvenido!')
+                return redirect('index')
+        else:
+            messages.error(request, 'Debes prpoporcionar 1 contraseña 2 veces, estas deben ser iguales. Tome en cuenta que se distingue entre mayúsculas y minúsculas')
+            return redirect('custom_reset_password_form', user.id)
+
+    return render(request, 'registration/custom_reset_password_form.html', data)
+
+
+
 @login_required
 def profile(request, username, id_user):
     user = get_object_or_404(User, id=id_user, username=username)
