@@ -109,8 +109,10 @@
                                     <span>Miembro desde {{ current_profile_user.date_joined | naturaltime }}</span>
                                 </p>
                                 {{ current_profile_user.get_role | safe }}
+                                {% if current_profile_user.curriculum %}
                                 <a target="_blank" href="{{ current_profile_user.curriculum.url }}"
                                    class="bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">Curriculum</a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -390,11 +392,15 @@
                                             </label>
                                             <input accept="application/pdf, application/vnd.ms-excel"
                                                    name="{{ form.curriculum.html_name }}"
+                                                   {% if current_profile_user.curriculum %}
                                                    value="{{ current_profile_user.curriculum.url }}"
+                                                   {% endif %}
                                                    class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                                                    id="{{ form.curriculum.id_for_label }}" type="file">
+                                            {% if current_profile_user.curriculum %}
                                             <a href="{{ current_profile_user.curriculum.url }}" target="_blank"
                                                class="mt-1 text-sm text-gray-500 dark:text-gray-300">Ver actual</a>
+                                            {% endif %}
                                         </div>
                                     </div>
 

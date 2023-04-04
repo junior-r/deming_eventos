@@ -393,6 +393,9 @@
                                                     </p>
                                                     <p style="font-size: 14px; line-height: 140%;">
                                                         {{ event.link_to_classroom }}
+                                                        {% if event.code_meeting %}
+                                                            Código: {{ event.code_meeting }}
+                                                        {% endif %}
                                                     </p>
                                                     <p style="font-size: 14px; line-height: 140%;">
                                                         La clase se llevará a cabo en la fecha y hora acordadas.

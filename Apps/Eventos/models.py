@@ -177,7 +177,7 @@ class Event(models.Model):
     active = models.BooleanField(default=True)
     certify = models.BooleanField(default=False)
     career = models.ForeignKey(Career, on_delete=models.SET_NULL, null=True, blank=False)
-    teachers = models.ManyToManyField(User, related_name='teachers', blank=False)
+    teachers = models.ManyToManyField(User, related_name='teachers', blank=True)
 
     def get_full_number_phone(self):
         phone_number_info = phonenumbers.parse(f'{self.phone}', self.country_phone.__str__())
