@@ -444,7 +444,7 @@
                                     {{ active_participant.participant.passport_number }}
                                 </td>
                                 <td class="px-6 py-4">
-                                    <a href="{{ active_participant.participant.curriculum.url }}" target="_blank">
+                                    <a href="{{ active_participant.participant.user.curriculum.url }}" target="_blank">
                                         <svg fill="none" class="w-6 h-6" stroke="currentColor" stroke-width="1.5"
                                              viewBox="0 0 24 24"
                                              xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -529,7 +529,7 @@
                                 {{ participant.passport_number }}
                             </td>
                             <td class="px-6 py-4">
-                                <a href="{{ participant.curriculum.url }}" target="_blank">
+                                <a href="{{ participant.user.curriculum.url }}" target="_blank">
                                     <svg fill="none" class="w-6 h-6" stroke="currentColor" stroke-width="1.5"
                                          viewBox="0 0 24 24"
                                          xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -588,50 +588,25 @@
     </div>
 
     <div class="teachers w-full p-4">
-        <h2 class="text-4xl flex items-center justify-center font-bold dark:text-white text-center">Ponentes
+        <h2 class="text-4xl flex items-center justify-center font-bold dark:text-white text-center mb-6">Ponentes
             <span class="bg-gray-700 text-white text-2xl font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-gray-800 ml-2">{{ event.teachers.all.count }}</span>
         </h2>
         <div class="content flex flex-wrap gap-4">
             {% for teacher in event.teachers.all %}
                 <div class="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                     <div class="flex justify-end px-4 pt-4">
-                        <button id="dropdownButton" data-dropdown-toggle="dropdown"
-                                class="inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5"
-                                type="button">
-                            <span class="sr-only">Open dropdown</span>
-                            <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
-                                 xmlns="http://www.w3.org/2000/svg">
-                                <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"></path>
-                            </svg>
-                        </button>
-                        <!-- Dropdown menu -->
-                        <div id="dropdown"
-                             class="z-10 hidden text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                            <ul class="py-2" aria-labelledby="dropdownButton">
-                                <li>
-                                    <a href="#"
-                                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Edit</a>
-                                </li>
-                                <li>
-                                    <a href="#"
-                                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Export
-                                        Data</a>
-                                </li>
-                                <li>
-                                    <a href="#"
-                                       class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</a>
-                                </li>
-                            </ul>
-                        </div>
+
                     </div>
                     <div class="flex flex-col items-center pb-10">
                         <img class="w-24 h-24 mb-3 rounded-full shadow-lg" src="{{ teacher.get_picture_profile }}"
                              alt="Bonnie image"/>
                         <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">@{{ teacher.username }}</h5>
                         <span class="text-sm mb-2 text-gray-500 dark:text-gray-400">Visual Designer</span>
-                        {{ teacher.get_role | safe }}
+                        <div class="roles">
+                            {{ teacher.get_role | safe }}
+                        </div>
                         <div class="flex mt-2 space-x-3 md:mt-6">
-                            <a href="#"
+                            <a href="{{ teacher.curriculum.url }}" target="_blank"
                                class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                 Curriculum
                             </a>

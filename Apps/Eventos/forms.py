@@ -262,14 +262,6 @@ class ParticipantDataUpdateForm(forms.ModelForm):
         'placeholder': ' ',
         'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
     }))
-    profession = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
-        'placeholder': ' ',
-        'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
-    }))
-    curriculum = forms.FileField(required=True, widget=forms.FileInput(attrs={
-        'accept': 'application/pdf, application/vnd.ms-excel',
-        'class': 'block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400',
-    }))
     object = forms.CharField(max_length=256, required=True, widget=forms.Textarea(attrs={
         'placeholder': 'I want to be at the event, because...',
         'rows': 2,
@@ -279,9 +271,7 @@ class ParticipantDataUpdateForm(forms.ModelForm):
     class Meta:
         model = Participant
         fields = ['profile_image', 'first_name', 'last_name', 'country_of_birth', 'dni', 'passport_number', 'gender',
-                  'birthdate',
-                  'current_country', 'address', 'phone', 'email', 'alternative_email', 'profession', 'curriculum',
-                  'object']
+                  'birthdate', 'current_country', 'address', 'phone', 'email', 'alternative_email', 'object']
 
 
 class DateInput(forms.DateInput):

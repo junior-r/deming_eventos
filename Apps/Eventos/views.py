@@ -52,6 +52,9 @@ def view_events(request):
                 else None
             event_planning = request.FILES.get('event_planning')
             link_video = request.POST.get('link_video')
+            platform_meeting = request.POST.get('platform_meeting')
+            link_to_classroom = request.POST.get('link_to_classroom')
+            code_meeting = request.POST.get('code_meeting')
             career = request.POST.get('career')
             teachers = request.POST.get('teachers')
             print(teachers)
@@ -74,7 +77,8 @@ def view_events(request):
                           addressed_to=addressed_to, price=price, start_date=start_date,
                           final_date=final_date, modality=modality, country_phone=country_phone,
                           phone=phone, alternative_phone=alternative_phone, email=email,
-                          alternative_email=alternative_email,
+                          alternative_email=alternative_email, platform_meeting=platform_meeting,
+                          link_to_classroom=link_to_classroom, code_meeting=code_meeting,
                           event_planning=event_planning, link_video=link_video, career=get_career,
                           )
             event.save()
@@ -126,6 +130,49 @@ def view_event(request, id_event):
             return redirect('view_event', id_event)
 
     return render(request, 'Eventos/view_event.html', data)
+
+
+@login_required
+@permission_required('Eventos.change_event', raise_exception=True)
+def update_event(request, id_event):
+    event = get_object_or_404(Event, id=id_event)
+    data = {
+        'form': EventForm(instance=event),
+        'event': event,
+    }
+
+    if request.method == 'POST':
+        form = EventForm(request.POST, request.FILES, instance=event)
+        if form.is_valid():
+            if form.has_changed():
+                logo = request.FILES.get('logo') if request.FILES.get('logo') is not None else event.logo
+                event_planning = request.FILES.get('event_planning') if request.FILES.get('event_planning') is not None\
+                    else event.event_planning
+                print(logo)
+                print(event_planning)
+                event_modified = form.save()
+                event_modified.logo = logo
+                event_modified.event_planning = event_planning
+                form2 = EventForm(request.POST, instance=event)
+                try:
+                    event_modified.save()
+                    form2.save(commit=False)
+                    form2.save_m2m()
+                    messages.success(request, 'Evento modificado exitosamente')
+                    return redirect('view_event', event.id)
+                except Exception as e:
+                    print(e)
+                    messages.error(request, f'Error: {e}')
+                    data['form'] = form
+            else:
+                messages.info(request, 'Debes propocionar información nueva para actualizar los datos.')
+                return redirect('update_event', event.id)
+        else:
+            messages.error(request, 'Algunos datos son inválidos. Revise e intente de nuevo.')
+            data['form'] = form
+
+
+    return render(request, 'Eventos/update_event.html', data)
 
 
 @login_required

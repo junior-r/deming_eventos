@@ -1,0 +1,303 @@
+{% extends 'Home/components/base.html' %}
+{% load static %}
+{% load countries %}
+
+
+{% block title %}
+    <title>Eventos</title>
+{% endblock %}
+
+{% block styles %}
+{% endblock %}
+
+{% block navbar %}
+    {% include 'Home/components/top-navbar.html' %}
+{% endblock %}
+
+{% block content %}
+    {% if form.errors %}
+        <div id="toast-danger"
+             class="absolute flex items-center w-full max-w-xl top-0 z-5 left-8 p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+             role="alert">
+            <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
+                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clip-rule="evenodd"></path>
+                </svg>
+                <span class="sr-only">Error icon</span>
+            </div>
+            <div class="ml-3 text-sm font-normal">
+                <ul>
+                    {% for key, value in form.errors.items %}
+                        <li class="flex gap-2">
+                            <svg fill="none" class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                                 stroke="currentColor"
+                                 stroke-width="1.5" viewBox="0 0 24 24"
+                                 xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"></path>
+                            </svg>
+                            {{ key }}
+                            {{ value }}
+                        </li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+            <button type="button"
+                    class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+                    data-dismiss-target="#toast-danger" aria-label="Close">
+                <span class="sr-only">Close</span>
+                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clip-rule="evenodd"></path>
+                </svg>
+            </button>
+        </div>
+    {% endif %}
+
+    <form action="" method="post" enctype="multipart/form-data" class="p-4">
+        {% csrf_token %}
+        <figure class="max-w-lg mb-4 mx-auto flex flex-col">
+            <div class="img dark:bg-gray-600 bg-gray-200 rounded-lg p-2">
+                <div class="current-logo relative">
+                    <img class="h-auto max-w-full mx-auto rounded-lg object-cover border" id="current_logo"
+                         src="{{ event.get_logo }}"
+                         alt="image description">
+                    <button type="button" id="reset" disabled
+                            class="absolute bottom-0 p-2 right-0 bg-white dark:bg-gray-200 rounded-full">
+                        <svg fill="none" stroke="#ff0000" class="w-5 h-5" stroke-width="1.5" viewBox="0 0 24 24"
+                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path>
+                        </svg>
+                    </button>
+                </div>
+                <p class="py-2 text-sm text-center text-gray-800 dark:text-gray-300" id="current_label">Logo
+                    actual
+                </p>
+            </div>
+            <label class="block mt-4 mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                   for="{{ form.logo.id_for_label }}">
+                Carga un logo
+            </label>
+            {{ form.logo }}
+        </figure>
+
+        <div class="grid gap-6 mb-4 md:grid-cols-3">
+            <div class="title">
+                <label for="{{ form.title.id_for_label }}"
+                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Título</label>
+                {{ form.title }}
+            </div>
+
+            <div class="place">
+                <label for="{{ form.place.id_for_label }}"
+                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Lugar</label>
+                {{ form.place }}
+            </div>
+
+            <div class="price">
+                <label for="{{ form.price.id_for_label }}"
+                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Precio</label>
+                {{ form.price }}
+            </div>
+
+            <div class="start_date">
+                <label for="{{ form.start_date.id_for_label }}"
+                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Fecha de inicio</label>
+                <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                       type="date" required value="{{ event.start_date.isoformat }}"
+                       name="{{ form.start_date.html_name }}" id="{{ form.start_date.id_for_label }}">
+            </div>
+
+            <div class="final_date">
+                <label for="{{ form.final_date.id_for_label }}"
+                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Fecha de cierre</label>
+                <input class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                       type="date" required value="{{ event.final_date.isoformat }}"
+                       name="{{ form.final_date.html_name }}" id="{{ form.final_date.id_for_label }}">
+            </div>
+
+            <div class="modality">
+                <label for="{{ form.modality.id_for_label }}"
+                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Modalidad</label>
+                {{ form.modality }}
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label for="{{ form.addressed_to.id_for_label }}"
+                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                Dirigido a:</label>
+            {{ form.addressed_to }}
+        </div>
+
+        <div class="grid gap-6 mb-4 md:grid-cols-3">
+            <div class="country_phone">
+                {% get_countries as countries %}
+                <label for="{{ form.country_phone.id_for_label }}"
+                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    País</label>
+                <select id="{{ form.country_phone.id_for_label }}" name="{{ form.country_phone.html_name }}"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 mb-6 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    {% get_country event.country_phone as country_phone %}
+                    <option value="{{ country_phone.code }}" selected>{{ country_phone.name }}</option>
+                    {% for country in countries %}
+                        <option value="{{ country.code }}">{{ country.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="phone">
+                <label for="{{ form.phone.id_for_label }}"
+                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Teléfono</label>
+                {{ form.phone }}
+            </div>
+
+            <div class="alt_phone">
+                <label for="{{ form.price.id_for_label }}"
+                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Teléfono alternativo</label>
+                {{ form.alternative_phone }}
+            </div>
+        </div>
+
+        <div class="grid gap-6 mb-4 md:grid-cols-2">
+            <div class="email">
+                <label for="{{ form.email.id_for_label }}"
+                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Email</label>
+                {{ form.email }}
+            </div>
+
+            <div class="alt_email">
+                <label for="{{ form.alternative_email.id_for_label }}"
+                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Email alternativo</label>
+                {{ form.alternative_email }}
+            </div>
+        </div>
+
+        <div class="grid gap-6 mb-4 md:grid-cols-3">
+            <div class="link_video">
+                <label for="{{ form.link_video.id_for_label }}"
+                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Video de explicación</label>
+                {{ form.link_video }}
+            </div>
+
+            <div class="planning_event">
+                <label for="{{ form.event_planning.id_for_label }}"
+                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Planificación del evento (PDF)</label>
+                {{ form.event_planning }}
+                {% if event.event_planning %}
+                    <a href="{{ event.event_planning.url }}" target="_blank" class="italic dark:text-blue-300 text-sm">Ver
+                    actual</a>
+                {% endif %}
+            </div>
+
+            <div class="career">
+                <label for="{{ form.career.id_for_label }}"
+                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Carrera vinculada</label>
+                {{ form.career }}
+            </div>
+
+            <div class="platform">
+                <label for="{{ form.platform_meeting.id_for_label }}"
+                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Plataforma de reunión</label>
+                {{ form.platform_meeting }}
+            </div>
+
+            <div class="link_to_classroom">
+                <label for="{{ form.link_to_classroom.id_for_label }}"
+                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Link de reunión</label>
+                {{ form.link_to_classroom }}
+            </div>
+
+            <div class="code_meeting">
+                <label for="{{ form.code_meeting.id_for_label }}"
+                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Código de reunión</label>
+                {{ form.code_meeting }}
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label for="{{ form.teachers.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                Seleccione a los ponentes</label>
+            {{ form.teachers }}
+        </div>
+
+        <div class="buttons flex gap-4 justify-center">
+            <a href="{{ request.META.HTTP_REFERER }}"
+               class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                Cancelar</a>
+            <button type="submit"
+                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                Actualizar
+            </button>
+        </div>
+
+    </form>
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block js %}
+    <script>
+        const img = document.getElementById('current_logo');
+        const label = document.getElementById('current_label');
+        const resetButton = document.getElementById('reset');
+        const fileInput = document.getElementById('{{ form.logo.id_for_label }}');
+        // Obtener la fuente original de la imagen
+        const originalSrc = '{{ event.get_logo }}';
+
+        // Escuchar el evento 'change' en el input de tipo file
+        fileInput.addEventListener('change', function () {
+            // Verificar si se ha seleccionado un archivo
+            if (fileInput.files && fileInput.files[0]) {
+                // Crear un objeto FileReader para leer el archivo seleccionado
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    // Actualizar la fuente de la imagen con la nueva imagen cargada
+                    img.src = e.target.result;
+                    label.textContent = 'Nuevo logo: ' + fileInput.files[0].name;
+                    resetButton.disabled = false;
+                };
+                // Leer el archivo seleccionado como una URL de datos
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        });
+
+        // Escuchar el evento 'click' en el botón de reset
+        resetButton.addEventListener('click', function () {
+            // Establecer la fuente de la imagen de nuevo a la fuente original
+            img.src = originalSrc;
+            // Actualizar el texto de la etiqueta p con una cadena vacía
+            label.textContent = 'Logo actual';
+            // Restablecer el valor del input de tipo file a una cadena vacía
+            console.log(fileInput.value)
+            fileInput.value = '';
+            console.log(fileInput.value)
+            resetButton.disabled = true;
+        });
+    </script>
+{% endblock %}

@@ -73,7 +73,7 @@
         <div class="info-user ml-4 flex flex-col flex-wrap gap-4">
             <form action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                <div class="grid md:grid-cols-2 md:gap-6">
+                <div class="grid md:grid-cols-1 md:gap-6">
                     <div class="relative z-0 w-full mb-6 group">
                         <div class="container-input">
                             <input type="file" name="{{ form.profile_image.html_name }}"
@@ -92,14 +92,6 @@
                                 <span class="iborrainputfile block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ form.picture_profile.label }}</span>
                             </label>
                         </div>
-                    </div>
-
-                    <div class="relative z-0 w-full mb-6 group">
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                               for="{{ form.birthdate.id_for_label }}">
-                            Hoja de vida {{ participant.curriculum.name }}
-                        </label>
-                        {{ form.curriculum }}
                     </div>
                 </div>
 
@@ -210,7 +202,7 @@
                     </div>
                 </div>
 
-                <div class="grid md:grid-cols-3 md:gap-6">
+                <div class="grid md:grid-cols-2 md:gap-6">
                     <div class="relative z-0 w-full mb-6">
                         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                                for="{{ form.email.id_for_label }}">
@@ -225,14 +217,6 @@
                             Email alternativo
                         </label>
                         {{ form.alternative_email }}
-                    </div>
-
-                    <div class="relative z-0 w-full mb-6">
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                               for="{{ form.profession.id_for_label }}">
-                            Profesión
-                        </label>
-                        {{ form.profession }}
                     </div>
                 </div>
 

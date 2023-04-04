@@ -163,9 +163,6 @@ def info_participant(request, username, id_user):
             if form.has_changed():
                 profile_image = request.FILES.get('profile_image') if request.FILES.get('profile_image') is not None \
                     else img_participant
-                curriculum = request.FILES.get('curriculum') if request.FILES.get('curriculum') is not None else \
-                    os.path.join(settings.MEDIA_URL, 'Events', 'Participants', 'Docs', participant.__str__(),
-                                 'curriculum.pdf')
 
                 first_name = request.POST.get('first_name')
                 last_name = request.POST.get('last_name')
@@ -180,7 +177,6 @@ def info_participant(request, username, id_user):
                 email = request.POST.get('email')
                 alternative_email = request.POST.get('alternative_email') if request.POST.get(
                     'alternative_email') else None
-                profession = request.POST.get('profession')
                 object = request.POST.get('object')
 
                 participant.profile_image, participant.first_name = profile_image, first_name
@@ -189,7 +185,7 @@ def info_participant(request, username, id_user):
                 participant.gender, participant.birthdate = gender, birthdate
                 participant.current_country, participant.address = current_country, address
                 participant.phone, participant.email, participant.alternative_email = phone, email, alternative_email
-                participant.profession, participant.object, participant.curriculum = profession, object, curriculum
+                participant.object = object
                 participant.save()
 
                 messages.success(request, 'Información actualizada exitósamente')
