@@ -28,6 +28,7 @@ class User(AbstractUser):
     profile_image_user = models.ImageField(upload_to=user_directory_image_path, blank=True, null=True,
                                            default="user_profile_placeholder.jpg")
     is_teacher = models.BooleanField(default=False)
+    is_referral = models.BooleanField(default=False)
     curriculum = models.FileField(upload_to=user_directory_file_path,
                                   validators=[FileExtensionValidator(['pdf'])], blank=False, null=False)
     profession = models.CharField(max_length=100, blank=False, null=False)
@@ -57,6 +58,7 @@ class User(AbstractUser):
         badge_staff = '<span class="bg-green-300 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">Staff</span>'
         badge_teacher = '<span class="bg-pink-300 text-pink-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-pink-900 dark:text-pink-300">Profesor</span>'
         badge_user = '<span class="bg-purple-300 text-purple-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-purple-900 dark:text-purple-300">Usuario</span>'
+        badge_referral = '<span class="bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">Reclutador</span>'
         if self.is_superuser:
             return '{0} {1}'.format(badge_superuser, badge_staff)
         elif self.is_staff and self.is_teacher:
@@ -65,6 +67,12 @@ class User(AbstractUser):
             return badge_staff
         elif self.is_teacher:
             return badge_teacher
+        elif self.is_staff and self.is_referral:
+            return '{0} {1}'.format(badge_staff, badge_referral)
+        elif self.is_teacher and self.is_referral:
+            return '{0} {1}'.format(badge_teacher, badge_referral)
+        elif self.is_referral:
+            return badge_referral
         else:
             return badge_user
 

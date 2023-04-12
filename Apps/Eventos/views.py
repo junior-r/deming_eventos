@@ -9,9 +9,10 @@ import requests
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
+from django.core.exceptions import BadRequest
 from django.core.mail import EmailMultiAlternatives
 from django.forms import ValidationError
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import get_template
 from django.utils import timezone
@@ -197,13 +198,14 @@ def validate_participant_event(request, id_event, data):
             phone = request.POST.get('phone')
             email = user.email
             alternative_email = request.POST.get('alternative_email') if request.POST.get('alternative_email') else None
+            referral = request.POST.get('referral') if request.POST.get('referral') else None
             object = request.POST.get('object')
 
             participant = Participant(
                 user=request.user, profile_image=profile_image, first_name=first_name, last_name=last_name,
                 dni=dni, country_of_birth=country_of_birth, passport_number=passport_number, gender=gender,
                 birthdate=birthdate, current_country=current_country, address=address, phone=phone, email=email,
-                alternative_email=alternative_email, object=object,
+                alternative_email=alternative_email, object=object, referral=referral,
             )
             try:
                 participant.save()
@@ -239,14 +241,25 @@ def set_active_participant(request, id_event):
     participant = get_object_or_404(Participant, user_id=request.user.id)
     exists_participant = event.eventparticipant_set.filter(participant=participant.id)
 
+    referral = None
+    try:
+        referral = User.objects.get(id=int(request.POST.get('referral')), is_referral=True)
+    except User.DoesNotExist:
+        referral = None
+    except Exception as e:
+        referral = None
+    print(referral)
+
     if exists_participant.exists():
         participant = exists_participant.get()
+
         if participant.active:
             try:
                 participant.active = False
                 participant.save()
                 messages.success(request, '¡Fuíste elíminado de la lista de participantes exitosamente!')
-            except Exception:
+            except Exception as e:
+                print(e)
                 messages.error(request,
                                'No se pudo eliminar de la lista de participantes. Contactenos por medio de un Email o '
                                'un WhatsApp')
@@ -255,9 +268,12 @@ def set_active_participant(request, id_event):
         else:
             try:
                 participant.active = True
+                participant.participant.referral = referral
                 participant.save()
+                participant.participant.save()
                 messages.success(request, '¡Fuíste añadido a la lista de participantes exitosamente!')
-            except Exception:
+            except Exception as e:
+                print(e)
                 messages.error(request,
                                'No se pudo añadir a la lista de participantes. Contactenos por medio de un Email o un '
                                'WhatsApp')
@@ -265,6 +281,8 @@ def set_active_participant(request, id_event):
                 return redirect('view_event', id_event)
     else:
         event.participants.add(participant, through_defaults={'active': True})
+        participant.referral = referral
+        participant.save()
         messages.success(request, '¡Fuíste añadido a la lista de participantes exitosamente!')
         return redirect('view_event', id_event)
 

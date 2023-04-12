@@ -95,6 +95,7 @@ class Participant(models.Model):
         'unique': 'Ya esxite un participante con este email alternativo',
     })
     object = models.TextField(max_length=256, blank=False, null=False)
+    referral = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True, blank=False, related_name='referral')
     date_created = models.DateTimeField(default=timezone.now)
 
     class Meta:
@@ -122,10 +123,6 @@ class Participant(models.Model):
 
     def delete(self, *args, **kwargs):
         try:
-            if self.curriculum:
-                os.remove(self.curriculum.path)
-                self.curriculum.delete(False)
-
             if self.profile_image:
                 os.remove(self.profile_image.path)
                 self.profile_image.delete(False)

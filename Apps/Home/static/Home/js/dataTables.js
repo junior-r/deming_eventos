@@ -1,6 +1,7 @@
 let dataTable;
 let dataTable2;
 let dataTable3;
+let dataTable4;
 let dataTableIsInitialized = false;
 
 const dataTableOptions = {
@@ -32,10 +33,12 @@ const initDataTable = async () => {
         dataTable.destroy();
         dataTable2.destroy();
         dataTable3.destroy();
+        dataTable4.destroy();
     }
     dataTable = $("#general_datatable").DataTable(dataTableOptions);
     dataTable2 = $("#datatable_staff").DataTable(dataTableOptions);
     dataTable3 = $("#datatable_teachers").DataTable(dataTableOptions);
+    dataTable4 = $("#datatable_referrals").DataTable(dataTableOptions);
     dataTableIsInitialized = true;
 };
 

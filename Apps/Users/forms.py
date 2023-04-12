@@ -119,6 +119,11 @@ class UpdateUserForm(forms.ModelForm):
             'class': 'w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600',
         }
     ), label='¿Es Ponente?')
+    is_referral = forms.BooleanField(required=False, widget=forms.CheckboxInput(
+        attrs={
+            'class': 'w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600',
+        }
+    ), label='¿Es Reclutador?')
 
     def _clean_fields(self):
         email = self.cleaned_data.get('email')
@@ -130,4 +135,4 @@ class UpdateUserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['user_id', 'profile_image', 'username', 'first_name', 'last_name', 'email', 'is_staff', 'is_active',
-                  'is_teacher', 'profession', 'curriculum']
+                  'is_teacher', 'profession', 'curriculum', 'is_referral']

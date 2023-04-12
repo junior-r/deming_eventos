@@ -105,7 +105,6 @@ def reset_password_form(request, user_id):
     return render(request, 'registration/custom_reset_password_form.html', data)
 
 
-
 @login_required
 def profile(request, username, id_user):
     user = get_object_or_404(User, id=id_user, username=username)
@@ -135,9 +134,7 @@ def profile(request, username, id_user):
 
     if request.method == 'POST':
         if request.user.id != user.id:
-            if request.user.is_superuser:
-                pass
-            else:
+            if not request.user.is_superuser:
                 messages.error(request, 'No tienes permiso para actualizar esta información')
                 return redirect('profile', user.username, user.id)
 
@@ -160,6 +157,7 @@ def profile(request, username, id_user):
             is_staff = request.POST.get('is_staff')
             is_active = request.POST.get('is_active')
             is_teacher = request.POST.get('is_teacher')
+            is_referral = request.POST.get('is_referral')
             if is_staff is None or is_staff == 'off':
                 is_staff = False
             else:
@@ -175,6 +173,11 @@ def profile(request, username, id_user):
             else:
                 is_teacher = False
 
+            if is_referral == 'on':
+                is_referral = True
+            else:
+                is_referral = False
+
             user.profile_image_user = picture_profile
             user.curriculum = curriculum
             user.username = username
@@ -185,6 +188,7 @@ def profile(request, username, id_user):
             user.is_staff = is_staff
             user.is_active = is_active
             user.is_teacher = is_teacher
+            user.is_referral = is_referral
             user.save()
             user.refresh_from_db()
             if not is_teacher:
@@ -293,10 +297,12 @@ def users(request):
     user = get_object_or_404(User, id=request.user.id)
     staff_users = User.objects.filter(is_staff=True).exclude(id=user.id)
     teachers = User.objects.filter(is_teacher=True).exclude(id=user.id)
-    mortal_users = User.objects.filter(is_staff=False, is_teacher=False, is_superuser=False)
+    referral_users = User.objects.filter(is_referral=True).exclude(id=user.id)
+    mortal_users = User.objects.filter(is_staff=False, is_teacher=False, is_referral=False, is_superuser=False)
     data = {
         'staff_users': staff_users,
         'teachers': teachers,
+        'referral_users': referral_users,
         'mortal_users': mortal_users,
         'create_users_form': UserForm(),
     }
@@ -406,7 +412,6 @@ def create_user(request, user_type: str):
         else:
             messages.error(request, 'Ocurrió un error. Revisa e intenta de nuevo')
             return redirect('users')
-
 
 
 @login_required

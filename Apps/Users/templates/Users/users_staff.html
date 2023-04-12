@@ -78,6 +78,12 @@
                             aria-controls="normal_users" aria-selected="false">Usuarios Normales
                     </button>
                 </li>
+                <li class="mr-2" role="presentation">
+                    <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+                            id="referral_users-tab" data-tabs-target="#referral_users" type="button" role="tab"
+                            aria-controls="referral_users" aria-selected="false">Usuarios Recomendadores
+                    </button>
+                </li>
             </ul>
         </div>
         <div id="myTabContent">
@@ -607,6 +613,174 @@
 
                                     <td class="px-6 py-4">
                                         <a href="{% url 'profile' mortal_user.username mortal_user.id %}"
+                                           class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit
+                                            user</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </section>
+            </div>
+            <div class="hidden rounded-lg staff py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6"
+                 id="referral_users" role="tabpanel" aria-labelledby="referral_users-tab">
+                <div class="mx-auto mb-8 max-w-screen-sm lg:mb-16 text-center">
+                    <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
+                        Usuarios Recomendadores
+                    </h2>
+                    <p class="font-light text-gray-500 sm:text-xl dark:text-gray-400">
+                        Esta es una lista de todos los usuarios que recomiendan cursos a los participantes.
+                    </p>
+                </div>
+
+                <section class="table w-full">
+                    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                        <section class="flex items-center bg-gray-50 dark:bg-gray-900">
+                            <div class="w-full max-w-screen-xl my-4 mx-auto lg:px-12">
+                                <!-- Start coding here -->
+                                <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
+                                    <div class="flex-row items-center justify-between p-4 space-y-3 sm:flex sm:space-y-0 sm:space-x-4">
+                                        <div>
+                                            <h5 class="mr-3 font-semibold dark:text-white">Usuarios Recomendadores</h5>
+                                            <p class="text-gray-500 dark:text-gray-400">
+                                                Maneja todos los usuarios que recomiendan los cursos existentes.
+                                            </p>
+                                        </div>
+
+                                        <div class="buttons flex items-center gap-4 flex-wrap">
+                                            <button id="actionsDropdownButtonUsers"
+                                                    data-dropdown-toggle="actionsDropdownUsers"
+                                                    class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg md:w-auto focus:outline-none hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                                                    type="button">
+                                                <svg class="-ml-1 mr-1.5 w-5 h-5" fill="currentColor"
+                                                     viewbox="0 0 20 20"
+                                                     xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                    <path clip-rule="evenodd" fill-rule="evenodd"
+                                                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"></path>
+                                                </svg>
+                                                Actions
+                                            </button>
+                                            <div id="actionsDropdownUsers"
+                                                 class="z-10 hidden bg-white divide-y divide-gray-100 rounded shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                                                <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
+                                                    aria-labelledby="actionsDropdownButtonUsers">
+                                                    <li>
+                                                        <a href="#"
+                                                           class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Mass
+                                                            Edit</a>
+                                                    </li>
+                                                </ul>
+                                                <div class="py-1">
+                                                    <a href="#"
+                                                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete
+                                                        all</a>
+                                                </div>
+                                            </div>
+
+                                            <a href=""
+                                               class="flex items-center justify-center px-4 py-2 text-sm font-medium text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                                                <svg fill="none" stroke="currentColor" stroke-width="1.5"
+                                                     class="h-3.5 w-3.5 mr-2 -ml-1"
+                                                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                                                     aria-hidden="true">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                          d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"></path>
+                                                </svg>
+                                                Exportar
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <table class="w-full text-sm text-gray-500 dark:text-gray-400" id="datatable_referrals">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="p-4">
+                                    <div class="flex items-center">
+                                        <input id="checkbox-all-search" type="checkbox"
+                                               class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                        <label for="checkbox-all-search" class="sr-only">checkbox</label>
+                                    </div>
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Name
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Nombre de usuario
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Status
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Rol
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Último ingreso
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Creado en
+                                </th>
+                                <th scope="col" class="px-6 py-3">
+                                    Action
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for referral_user in referral_users %}
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    <td class="w-4 p-4">
+                                        <div class="flex items-center">
+                                            <input id="checkbox-table-search-1" type="checkbox"
+                                                   class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                            <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
+                                        </div>
+                                    </td>
+                                    <th scope="row"
+                                        class="flex items-center justify-start px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                                        <img class="w-10 h-10 rounded-full object-cover"
+                                             src="{{ referral_user.get_picture_profile }}"
+                                             alt="{{ referral_user.get_full_name }} image">
+                                        <div class="pl-3 text-left">
+                                            <div class="text-base font-semibold">{{ referral_user.get_full_name }}</div>
+                                            <div class="font-normal text-gray-500">{{ referral_user.email }}</div>
+                                        </div>
+                                    </th>
+                                    <td class="px-6 py-4">
+                                        <a href="{% url 'profile' referral_user.username referral_user.id %}"
+                                           class="text-blue-400">{{ referral_user.username }}</a>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        {% if referral_user.is_active %}
+                                            <div class="flex items-center">
+                                                <div class="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div>
+                                                Activo
+                                            </div>
+                                        {% else %}
+                                            <div class="flex items-center">
+                                                <div class="h-2.5 w-2.5 rounded-full bg-red-500 mr-2"></div>
+                                                Inactivo
+                                            </div>
+                                        {% endif %}
+
+                                    </td>
+
+                                    <td class="px-6 py-4" style="white-space: nowrap">
+                                        {{ referral_user.get_role | safe }}
+                                    </td>
+
+                                    <td class="px-6 py-4">
+                                        <span>{{ referral_user.last_login | naturaltime }}</span>
+                                    </td>
+
+                                    <td class="px-6 py-4">
+                                        <span>{{ referral_user.date_joined.date.isoformat }}</span>
+                                    </td>
+
+                                    <td class="px-6 py-4">
+                                        <a href="{% url 'profile' referral_user.username referral_user.id %}"
                                            class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit
                                             user</a>
                                     </td>
