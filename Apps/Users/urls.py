@@ -1,11 +1,12 @@
 from django.urls import path
 
 from Apps.Users.views import sign_up, profile, users, assign_perms_user, export_users, info_participant, \
-    user_events, delete_user, create_user
+    user_events, delete_user, create_user, referral_users
 
 urlpatterns = [
     path('', users, name='users'),
     path('sing_up/', sign_up, name='sign_up'),
+    path('referral_users/<int:user_id>/', referral_users, name='referral_users'),
     path('create_user/<str:user_type>/', create_user, name='create_user'),
     path('profile/<str:username>/<int:id_user>/', profile, name='profile'),
     path('info_participant/<str:username>/<int:id_user>/', info_participant, name='info_participant'),

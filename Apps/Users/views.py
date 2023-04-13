@@ -307,7 +307,7 @@ def users(request):
         'create_users_form': UserForm(),
     }
 
-    return render(request, 'Users/users_staff.html', data)
+    return render(request, 'Users/users.html', data)
 
 
 def export_to_excel(queryset: QuerySet, filename: str):
@@ -385,6 +385,25 @@ def export_users(request, user_type: str, event_id: int):
 
 
 @login_required
+def referral_users(request, user_id):
+    events = Event.objects.filter(active=True).order_by('start_date')
+    referral = get_object_or_404(User, id=user_id, is_referral=True)
+    events_participants = []
+    count_participants = 0
+    for event in events:
+        participants = Participant.objects.filter(event=event, referral=referral).order_by('event__title')
+        count_participants += participants.count()
+        events_participants.append({f'event': event, 'participants': participants})
+    users = Participant.objects.filter(referral=referral).order_by('event')
+    data = {
+        'users': users,
+        'events_participants': events_participants,
+        'count_participants': count_participants,
+    }
+    return render(request, 'Users/referral_users.html', data)
+
+
+@login_required
 @permission_required('Users.add_user', raise_exception=True)
 def create_user(request, user_type: str):
     if request.method == 'POST':
@@ -400,13 +419,12 @@ def create_user(request, user_type: str):
                     raise PermissionDenied()
             elif user_type == 'teacher':
                 user.is_teacher = True
+            elif user_type == 'referral':
+                user.is_referral = True
 
             user.is_active = True
             user.save()
-            if user_type == 'staff':
-                messages.success(request, 'Usuario staff creado exitosamente.')
-            elif user_type == 'teacher':
-                messages.success(request, 'Profesor creado exitosamente.')
+            messages.success(request, 'Usuario creado exitosamente.')
 
             return redirect('users')
         else:

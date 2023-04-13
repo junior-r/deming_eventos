@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 import phonenumbers
 from django.conf import settings
@@ -109,6 +110,13 @@ class Participant(models.Model):
             return '{}'.format(os.path.join('/media/', self.profile_image.name))
         else:
             return '{}{}'.format(settings.MEDIA_URL, 'user_profile_placeholder.jpg')
+
+    def get_age(self):
+        birthdate = self.birthdate.__str__()
+        birthdate = datetime.strptime(birthdate, "%Y-%m-%d")
+        today = datetime.today()
+        age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+        return age
 
     def get_full_number_phone(self):
         phone_number_info = phonenumbers.parse(f'{self.phone}', self.current_country.__str__())

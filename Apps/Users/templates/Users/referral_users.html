@@ -1,0 +1,185 @@
+{% extends 'Users/profile.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}
+{% endblock %}
+
+{% block styles %}
+{% endblock %}
+
+{% block left-sidebar %}
+    {% include 'Users/components/sidebar.html' %}
+{% endblock %}
+
+{% block content %}
+    <div class="content">
+        {% if events_participants %}
+
+            <h1 class="flex mb-4 items-center text-5xl font-extrabold dark:text-white">Participantes reclutados<span
+                    class="bg-blue-100 text-blue-800 text-2xl font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 ml-2">{{ count_participants }}</span>
+            </h1>
+            {% for event_participants in events_participants %}
+                <div class="tables_content mb-4 border border-blue-600 rounded p-4 dark:border-gray-300">
+                    <section class="flex items-center">
+                        <div class="w-full py-4 lg:px-12">
+                            <!-- Start coding here -->
+                            <div class="relative overflow-hidden bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
+                                <div class="flex-row items-center justify-between p-4 space-y-3 sm:flex sm:space-y-0 sm:space-x-4">
+                                    <div>
+                                        <h5 class="mr-3 font-semibold dark:text-white">
+                                            {{ event_participants.event.title }}
+                                            <span class="bg-gray-100 text-gray-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded mr-2 dark:bg-gray-700 dark:text-gray-400 border border-gray-500">
+                                                <svg fill="none" stroke="currentColor" stroke-width="1.5"
+                                                     class="w-3 h-3 mr-1"
+                                                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                                                     aria-hidden="true">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                          d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z"></path>
+                                                </svg>
+                                                {{ event_participants.event.start_date.isoformat }}
+                                            </span>
+                                            <span class="bg-gray-100 text-gray-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded mr-2 dark:bg-gray-700 dark:text-gray-400 border border-gray-500">
+                                                <svg fill="none" stroke="currentColor" stroke-width="1.5"
+                                                     class="w-3 h-3 mr-1"
+                                                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                                                     aria-hidden="true">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                          d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z"></path>
+                                                </svg>
+                                                {{ event_participants.event.final_date.isoformat }}
+                                            </span>
+                                        </h5>
+                                        <p class="text-gray-500 dark:text-gray-400">
+                                            {{ event_participants.event.addressed_to }}
+                                        </p>
+                                    </div>
+                                    <button type="button"
+                                            class="flex items-center justify-center px-4 py-2 text-sm font-medium text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-2 -ml-1"
+                                             viewBox="0 0 20 20" fill="currentColor"
+                                             aria-hidden="true">
+                                            <path
+                                                    d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"></path>
+                                        </svg>
+                                        Add new user
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <table id="event-table-{{ event_participants.event.id }}"
+                           class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="p-4">
+                                <div class="flex items-center">
+                                    <input id="checkbox-all-search" type="checkbox"
+                                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                    <label for="checkbox-all-search" class="sr-only">checkbox</label>
+                                </div>
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Nombre
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Fecha de nacimiento
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Cédula
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Pasaporte
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Teléfono
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Action
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for participant in event_participants.participants %}
+                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <td class="w-4 p-4">
+                                    <div class="flex items-center">
+                                        <input id="checkbox-table-search-1" type="checkbox"
+                                               class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                        <label for="checkbox-table-search-1" class="sr-only">checkbox</label>
+                                    </div>
+                                </td>
+                                <th scope="row"
+                                    class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                                    <img class="w-10 h-10 rounded-full" src="{{ participant.get_profile_image }}"
+                                         alt="Jese image">
+                                    <div class="pl-3">
+                                        <div class="text-base font-semibold">{{ participant.get_full_name }}</div>
+                                        <div class="font-normal text-gray-500">{{ participant.email }}</div>
+                                    </div>
+                                </th>
+                                <td class="px-6 py-4">
+                            <span class="bg-yellow-100 text-yellow-800 inline-flex items-center text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">
+                                <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
+                                     class="w-3 h-3 mr-1"
+                                     xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z"></path>
+                                </svg>
+                                {{ participant.birthdate.isoformat }}
+                            </span>
+                                    -
+                                    <span class="bg-yellow-100 text-yellow-800 inline-flex items-center text-xs font-medium ml-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">
+                                <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
+                                     class="w-3 h-3 mr-1"
+                                     xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M12 8.25v-1.5m0 1.5c-1.355 0-2.697.056-4.024.166C6.845 8.51 6 9.473 6 10.608v2.513m6-4.87c1.355 0 2.697.055 4.024.165C17.155 8.51 18 9.473 18 10.608v2.513m-3-4.87v-1.5m-6 1.5v-1.5m12 9.75l-1.5.75a3.354 3.354 0 01-3 0 3.354 3.354 0 00-3 0 3.354 3.354 0 01-3 0 3.354 3.354 0 00-3 0 3.354 3.354 0 01-3 0L3 16.5m15-3.38a48.474 48.474 0 00-6-.37c-2.032 0-4.034.125-6 .37m12 0c.39.049.777.102 1.163.16 1.07.16 1.837 1.094 1.837 2.175v5.17c0 .62-.504 1.124-1.125 1.124H4.125A1.125 1.125 0 013 20.625v-5.17c0-1.08.768-2.014 1.837-2.174A47.78 47.78 0 016 13.12M12.265 3.11a.375.375 0 11-.53 0L12 2.845l.265.265zm-3 0a.375.375 0 11-.53 0L9 2.845l.265.265zm6 0a.375.375 0 11-.53 0L15 2.845l.265.265z"></path>
+                                </svg>
+                                {{ participant.get_age }}
+                            </span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ participant.dni | intcomma }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ participant.passport_number | intcomma }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ participant.phone }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit
+                                        user</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="content-info w-full py-4 px-6 rounded-lg">
+                <div class="content flex justify-center items-center flex-col w-full p-4">
+                    <img src="{% static 'Eventos/images/icons/filter-circle-xmark-solid.svg' %}"
+                         style="width: 10rem" class="mb-4"
+                         alt="ícono de registros no encontrados">
+                    <h1 class="text-3xl font-extrabold dark:text-white">No tienes participantes reclutados</h1>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            {% for event_participants in events_participants %}
+                $('#event-table-{{ event_participants.event.id }}').DataTable(dataTableOptions);
+            {% endfor %}
+        });
+    </script>
+{% endblock %}

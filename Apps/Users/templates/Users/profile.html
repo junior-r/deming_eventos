@@ -113,6 +113,9 @@
                                 <a target="_blank" href="{{ current_profile_user.curriculum.url }}"
                                    class="bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">Curriculum</a>
                                 {% endif %}
+                                {% if current_profile_user.is_referral %}
+                                    <a href="{% url 'referral_users' current_profile_user.id %}" class="bg-indigo-100 text-indigo-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-indigo-900 dark:text-indigo-300">Reclutados</a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

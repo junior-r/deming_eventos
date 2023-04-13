@@ -183,6 +183,14 @@ def validate_participant_event(request, id_event, data):
     if request.method == 'POST':
         form = ParticipantForm(request.POST, request.FILES)
         if form.is_valid():
+            referral = None
+            try:
+                referral = User.objects.get(id=int(request.POST.get('referral')), is_referral=True)
+            except User.DoesNotExist:
+                referral = None
+            except Exception as e:
+                referral = None
+
             profile_image = request.FILES.get('profile_image') if request.FILES.get('profile_image') else \
                 os.path.join(settings.MEDIA_URL, 'user_profile_placeholder.jpg')
 
@@ -198,7 +206,6 @@ def validate_participant_event(request, id_event, data):
             phone = request.POST.get('phone')
             email = user.email
             alternative_email = request.POST.get('alternative_email') if request.POST.get('alternative_email') else None
-            referral = request.POST.get('referral') if request.POST.get('referral') else None
             object = request.POST.get('object')
 
             participant = Participant(
@@ -256,7 +263,9 @@ def set_active_participant(request, id_event):
         if participant.active:
             try:
                 participant.active = False
+                participant.participant.referral = None
                 participant.save()
+                participant.participant.save()
                 messages.success(request, '¡Fuíste elíminado de la lista de participantes exitosamente!')
             except Exception as e:
                 print(e)
