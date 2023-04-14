@@ -32,6 +32,7 @@ class User(AbstractUser):
     curriculum = models.FileField(upload_to=user_directory_file_path,
                                   validators=[FileExtensionValidator(['pdf'])], blank=False, null=False)
     profession = models.CharField(max_length=100, blank=False, null=False)
+    interests = models.ManyToManyField('Eventos.Career', related_name='interests', blank=True)
 
     def delete(self, *args, **kwargs):
         try:

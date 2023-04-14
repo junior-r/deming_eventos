@@ -28,7 +28,7 @@ def sign_up(request):
     data = {
         'form': UserForm(),
     }
-    # User.objects.get(id=15).delete()
+    # User.objects.get(id=7).delete()
 
     if request.method == 'POST':
         form = UserForm(request.POST, request.FILES)
@@ -37,7 +37,12 @@ def sign_up(request):
             user = form.save()
             user.profile_image_user = request.FILES.get('profile_image')
             user.curriculum = request.FILES.get('curriculum')
+
+            user_instance = get_object_or_404(User, id=user.id)
+            form2 = UserForm(request.POST, instance=user_instance)
             user.save()
+            form2.save(commit=False)
+            form2.save_m2m()
             user = authenticate(username=user.username, password=password1)
             login(request, user)
 
