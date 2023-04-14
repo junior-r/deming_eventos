@@ -9,6 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="icon" href="{% static 'Home/images/logo_deming2.png' %}" type="image/png"/>
     {% block title %}
+        <title>@{{ current_profile_user.username.capitalize }} | Plataforma de conferencias académicas del Instituto Deming</title>
     {% endblock %}
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.2/flowbite.min.css" rel="stylesheet"/>
