@@ -45,23 +45,29 @@
             </div>
             <div class="description flex flex-col gap-4">
                 <p class="text">
-                    ha completado satisfactoriamente el evento titulado <span
-                        class="font-bold">{{ event.title.capitalize }}</span>, organizado
-                    por el <span class="font-bold">Instituto Tecnológico Corporativo Edwars Deming</span> e impartido
-                    por <span class="font-bold">{{ event.user.get_full_name }}</span>, durante el periodo
-                    comprendido entre <span class="font-semibold italic">{{ event.start_date }}</span> y
-                    <span class="font-semibold italic">{{ event.final_date }}</span>
+                    ha completado satisfactoriamente el evento titulado <strong
+                        class="font-bold">{{ event.title.capitalize }}</strong>, organizado
+                    por el <strong class="font-bold">Instituto Tecnológico Corporativo Edwars Deming</strong> e impartido
+                    por
+                    {% if participant.user.username == event.user.username or teacher_certify is True %}
+                        <strong class="font-bold" style="font-weight: 700;">{{ participant.get_full_name }}</strong>
+                    {% else %}
+                        <strong class="font-bold">el staff de profesores académicos</strong>
+                    {% endif %}
+                    , durante el periodo
+                    comprendido entre <strong class="font-semibold italic">{{ event.start_date }}</strong> y
+                    <strong class="font-semibold italic">{{ event.final_date }}</strong>
                 </p>
 
                 <p class="text">
-                    El equipo de <span class="font-bold">Instituto Tecnológico Corporativo Edwars Deming</span> y el
-                    profesor <span class="font-bold">{{ event.user.get_full_name }}</span> se complacen en felicitar
-                    a <span class="font-semibold">{{ participant.get_full_name }}</span> por su esfuerzo y dedicación en
+                    El equipo del <strong class="font-bold">Instituto Tecnológico Corporativo Edwars Deming</strong> y los
+                    profesores de dicho evento se complacen en felicitar
+                    a <strong class="font-semibold">{{ participant.get_full_name }}</strong> por su esfuerzo y dedicación en
                     la finalización del curso, y le desea éxito en su futura carrera profesional.
                 </p>
 
                 <p class="text"> Fecha de emisión:
-                    <span class="font-semibold italic">{{ event.final_date }}</span>
+                    <strong class="font-semibold italic">{{ event.final_date }}</strong>
                 </p>
             </div>
         </div>
@@ -69,14 +75,16 @@
         <div class="footer pt-8 grid grid-cols-2 grid-rows-2 gap-6">
             <div class="signatures flex gap-8 col-span-2" style="justify-content: space-evenly">
                 <div class="teacher_signature">
+                    <p class="teacher-name m-0 text-center signature font-semibold">{{ event.teachers.all.first.get_full_name }}</p>
                     <p class="border-t border-gray-800" style="width: 15rem"></p>
-                    <p class="teacher-name text-center title font-semibold">{{ event.user.get_full_name }}</p>
-                    <p class="teacher-info text-center text">Profesor</p>
+                    <p class="teacher-name text-center title font-semibold">{{ event.teachers.all.first.get_full_name }}</p>
+                    <p class="teacher-info text-center text"><strong>Profesor</strong></p>
                 </div>
                 <div class="director_signature">
+                    <p class="director-name m-0 text-center signature font-semibold">Fernando Carrera</p>
                     <p class="border-t border-gray-800" style="width: 15rem"></p>
                     <p class="director-name text-center title font-semibold">Fernando Carrera</p>
-                    <p class="director-info text-center text">Rector</p>
+                    <p class="director-info text-center text"><strong>Rector</strong></p>
                 </div>
             </div>
 

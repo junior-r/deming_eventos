@@ -239,7 +239,7 @@
                             {% endif %}
                         {% endif %}
                     {% endif %}
-                    {% if request.user.id == current_profile_user.id or request.user.is_superuser or perms.Users.change_user and not current_profile_user.is_superuser %}
+                    {% if request.user.id == current_profile_user.id or request.user.is_superuser or perms.Users.change_user %}
                         <div class="content-info border py-4 px-6 rounded-lg bg-gray-100 dark:bg-gray-700"
                              style="grid-column: 1 / 2; grid-row: 2 / 3">
                             <h3 class="mb-6 flex items-center gap-4 text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -252,10 +252,11 @@
                                 </svg>
                             </h3>
                             <div class="info-user ml-4 flex flex-col flex-wrap gap-4">
-                                <form method="post" enctype="multipart/form-data" style="max-width: 100%">
+                                <form method="post" action="" enctype="multipart/form-data" style="max-width: 100%">
                                     {% csrf_token %}
-                                    <input type="number" hidden name="id_user_id" value="{{ current_profile_user.id }}"
+                                    <input type="number" hidden name="user_id" value="{{ current_profile_user.id }}"
                                            readonly>
+
                                     <div class="relative z-0 w-full mb-6 group">
                                         <div class="container-input">
                                             {% if current_profile_user.get_picture_profile %}

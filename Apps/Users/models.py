@@ -1,6 +1,7 @@
 import os
 
 from django.conf import settings
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import FileExtensionValidator
 from django.db import models
@@ -37,7 +38,7 @@ class User(AbstractUser):
     def delete(self, *args, **kwargs):
         try:
             os.remove(os.path.join(settings.MEDIA_ROOT, 'Users', 'Docs', self.__str__(), 'curriculum.pdf'))
-            if self.profile_image_user != 'user_profile_placeholder.jpg':
+            if self.profile_image_user.name != 'user_profile_placeholder.jpg':
                 os.remove(self.profile_image_user.path)
                 self.profile_image_user.delete(False)
         except ValueError:
@@ -85,6 +86,14 @@ class User(AbstractUser):
 
     def get_curriculum(self):
         return '{}'.format(os.path.join(settings.MEDIA_URL, self.curriculum.url))
+
+    def save(self, *args, **kwargs):
+        print(self.password)
+        if self.password is not None and not self.password.startswith('argon2$'):
+            self.password = make_password(self.password)
+            super().save(*args, **kwargs)
+        else:
+            super().save(*args, **kwargs)
 
     def __str__(self):
         return self.username.capitalize()

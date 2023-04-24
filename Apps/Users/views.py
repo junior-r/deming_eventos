@@ -1,49 +1,51 @@
-import os.path
 import datetime
+import os.path
 
 import openpyxl
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth import authenticate
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.decorators import user_passes_test
-from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import PermissionDenied
 from django.db.models import Q, QuerySet
 from django.db.models.fields.files import ImageFieldFile
 from django.http import HttpResponse
-from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect, get_object_or_404
-from django.utils import timezone
 
+from Apps.Eventos.forms import ParticipantDataUpdateForm
+from Apps.Eventos.models import Event, Participant
 from Apps.Users.forms import UserForm, UpdateUserForm
 from Apps.Users.models import User
-from Apps.Eventos.models import Event, Participant, EventParticipant
-from Apps.Eventos.forms import ParticipantDataUpdateForm
 
 
 def sign_up(request):
     data = {
         'form': UserForm(),
     }
-    # User.objects.get(id=7).delete()
 
     if request.method == 'POST':
         form = UserForm(request.POST, request.FILES)
         if form.is_valid():
-            password1 = form.cleaned_data.get('password1')
-            user = form.save()
-            user.profile_image_user = request.FILES.get('profile_image')
-            user.curriculum = request.FILES.get('curriculum')
+            password1 = request.POST.get('password1')
+            profile_image_user = request.FILES.get('profile_image')
+            curriculum = request.FILES.get('curriculum')
+            username = request.POST.get('username')
+            first_name = request.POST.get('first_name')
+            last_name = request.POST.get('last_name')
+            email = request.POST.get('email')
+            profession = request.POST.get('profession')
+            interests = request.POST.getlist('interests')
 
-            user_instance = get_object_or_404(User, id=user.id)
-            form2 = UserForm(request.POST, instance=user_instance)
+            user = User(
+                first_name=first_name, last_name=last_name, email=email, username=username, password=password1,
+                profile_image_user=profile_image_user, curriculum=curriculum, profession=profession
+            )
             user.save()
-            form2.save(commit=False)
-            form2.save_m2m()
-            user = authenticate(username=user.username, password=password1)
+            user.interests.add(*interests)
             login(request, user)
 
             messages.success(request, 'Cuenta creada exitosamente.')
@@ -142,6 +144,8 @@ def profile(request, username, id_user):
             if not request.user.is_superuser:
                 messages.error(request, 'No tienes permiso para actualizar esta información')
                 return redirect('profile', user.username, user.id)
+        else:
+            pass
 
         form = UpdateUserForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
@@ -206,6 +210,7 @@ def profile(request, username, id_user):
         else:
             data['form'] = form
             print(form.errors)
+            print(form.cleaned_data.get('profession'))
             messages.error(request, 'Datos inválidos')
     return render(request, 'Users/profile.html', data)
 
@@ -269,13 +274,25 @@ def info_participant(request, username, id_user):
 @login_required
 def user_events(request, username, id_user):
     current_user = get_object_or_404(User, username=username, id=id_user)
-    participant = get_object_or_404(Participant, user_id=current_user.id)
-    events = EventParticipant.objects.filter(participant_id=participant.id, pay=True)
+    if current_user.is_teacher:
+        try:
+            participant = get_object_or_404(Participant, user_id=current_user.id)
+            events = Event.objects.filter(eventparticipant__participant__id=participant.id, eventparticipant__pay=True)
+            events_teacher = Event.objects.filter(teachers__username=current_user.username)
+        except:
+            participant = None
+            events = None
+            events_teacher = Event.objects.filter(teachers__username=current_user.username)
+    else:
+        events_teacher = None
+        participant = get_object_or_404(Participant, user_id=current_user.id)
+        events = Event.objects.filter(eventparticipant__participant__id=participant.id, eventparticipant__pay=True)
 
     data = {
         'user': current_user,
         'participant': participant,
         'events': events,
+        'events_teacher': events_teacher,
     }
     return render(request, 'Users/user_events.html', data)
 

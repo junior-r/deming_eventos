@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lobster&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Roboto:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lobster&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Roboto:ital@0;1&display=swap');
 
 body {
     background-color: #D1D5DB;
@@ -14,6 +14,11 @@ body {
 
 .name {
     font-family: 'Lobster', cursive;
+}
+
+.signature {
+    font-family: 'Great Vibes', cursive;
+    font-size: 1.5em;
 }
 
 .container {
@@ -43,6 +48,7 @@ body {
     font-size: 3rem;
     margin: 0;
 }
+
 .container .certify .head .header h3 {
     font-size: 1.875rem;
     margin: 0;
@@ -56,11 +62,13 @@ body {
 .container .certify .body {
     margin-bottom: 2rem;
 }
+
 .container .certify .body .names h2 {
     font-size: 3.75rem;
     margin: 1rem 0 1.5rem 0;
     font-weight: bold;
 }
+
 .container .certify .body .names h3 {
     font-size: 3.75rem;
     margin: 0;
@@ -80,9 +88,11 @@ body {
 .font-bold {
     font-weight: bold;
 }
+
 .font-semibold {
     font-weight: 600;
 }
+
 .italic {
     font-style: italic;
 }
@@ -102,9 +112,10 @@ body {
     margin-bottom: 1rem;
 }
 
-.container .certify .footer .signatures div p:first-child {
+.container .certify .footer .signatures div p:nth-child(2) {
     border-top: 1px solid rgba(80, 80, 80, 0.5);
     width: 15rem;
+    margin: 0 2em 0.5em 2em;
 }
 
 .container .certify .footer .signatures div p:last-child,

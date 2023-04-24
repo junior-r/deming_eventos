@@ -27,7 +27,10 @@ from Apps.Users.models import User
 
 def view_events(request):
     global get_career
-    events = Event.objects.filter(active=True)
+    if request.user.is_superuser:
+        events = Event.objects.filter()
+    else:
+        events = Event.objects.filter(active=True)
 
     data = {
         'form': EventForm(),
@@ -300,7 +303,11 @@ def set_active_participant(request, id_event):
 def download_certify_event(request, id_event, id_participant):
     event = get_object_or_404(Event, id=id_event)
     participant = get_object_or_404(Participant, id=id_participant)
+    teacher_certify = False
+    if event.participants.all().filter(event__teachers__username=participant.user.username):
+        teacher_certify = True
     payment_data = get_object_or_404(EventParticipant, event_id=event.id, participant_id=participant.id)
+    print(teacher_certify)
 
     url_certify = '{0}{1}'.format(request.get_host(), request.get_full_path())
     qr_root = os.path.join(settings.MEDIA_ROOT, 'QRCODES', f'event_{event.id}_participant_{participant.id}.png')
@@ -314,6 +321,7 @@ def download_certify_event(request, id_event, id_participant):
     context = {
         'event': event,
         'participant': participant,
+        'teacher_certify': teacher_certify,
         'payment_data': payment_data,
         'now': datetime.datetime.now(),
         'qr': os.path.join(settings.MEDIA_URL, 'QRCODES', f'event_{event.id}_participant_{participant.id}.png'),
@@ -327,8 +335,8 @@ def download_certify_event(request, id_event, id_participant):
     response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename={0}_{1}{2}'.format('Certificado', participant.get_full_name(), '.pdf')
     messages.success(request, 'Certificado generado exitosamente.')
-    # return render(request, 'Eventos/certify.html', context)
-    return response
+    return render(request, 'Eventos/certify.html', context)
+    # return response
 
 
 @login_required

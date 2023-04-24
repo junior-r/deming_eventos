@@ -31,7 +31,7 @@
                     </a>
                 </li>
             {% endif %}
-            {% if request.user.participant %}
+            {% if request.user.participant or request.user.is_teacher %}
                 <li>
                     <a href="{% url 'user_events' request.user.username request.user.id %}"
                        class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
@@ -43,6 +43,8 @@
                         <span class="flex-1 ml-3 whitespace-nowrap">Mis eventos</span>
                     </a>
                 </li>
+            {% endif %}
+            {% if request.user.participant.first_name %}
                 <li>
                     <a href="{% url 'info_participant' request.user.username request.user.id %}"
                        class="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">

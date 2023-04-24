@@ -15,17 +15,11 @@ def update_active_signal(sender, instance, **kwargs):
         start_date = datetime.datetime.strptime(str(instance.start_date), '%Y-%m-%d').date()
         final_date = datetime.datetime.strptime(str(instance.final_date), '%Y-%m-%d').date()
         status_certify = instance.certify
-        if now > final_date:
+        if now > start_date:
             if instance.active is True:
                 instance.active = False
                 instance.save()
-            elif instance.certify is False:
-                instance.certify = True
-                instance.save()
-        else:
-            if instance.active is False:
-                instance.active = True
-                instance.save()
-            elif instance.certify is True:
-                instance.certify = False
-                instance.save()
+            if now > final_date:
+                if instance.certify is False:
+                    instance.certify = True
+                    instance.save()
