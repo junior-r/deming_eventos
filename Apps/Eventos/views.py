@@ -22,6 +22,7 @@ from weasyprint import HTML
 
 from Apps.Eventos.forms import CareerForm, EventForm, ParticipantForm
 from Apps.Eventos.models import Career, Event, EventParticipant, Participant
+from Apps.Home.forms import EmailContactForm, WhatsAppContactForm
 from Apps.Users.models import User
 
 
@@ -123,6 +124,8 @@ def view_event(request, id_event):
         'actives_participants': participants.filter(active=True, event=event),
         'form_participant': ParticipantForm(instance=request.user),
         'template_name_email_event': 'Eventos/contact_event_email.html',
+        'form_email': EmailContactForm(),
+        'form_whatsapp': WhatsAppContactForm(),
     }
 
     if request.method == 'POST':
@@ -505,34 +508,41 @@ def send_email_event(request, id_event, template_route: str):
     template_route = template_route + '.html'
     template = get_template(template_route)
     event = get_object_or_404(Event, id=id_event)
-    user_names = request.POST.get('user_name')
-    user_email = request.POST.get('user_email')
-    subject = request.POST.get('subject')
-    message = request.POST.get('message')
 
-    content = {
-        'user_names': user_names,
-        'user_email': user_email,
-        'subject': subject,
-        'message': message,
-        'event': event,
-        'current_year': timezone.now().year,
-    }
-    content_template = template.render(content)
+    if request.method == 'POST':
+        form = EmailContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            user_names = request.POST.get('name')
+            user_email = request.POST.get('email')
+            subject = request.POST.get('title')
+            message = request.POST.get('message')
 
-    emails = [event.email]
-    if event.alternative_email is not None:
-        emails.append(event.alternative_email)
+            content = {
+                'user_names': user_names,
+                'user_email': user_email,
+                'subject': subject,
+                'message': message,
+                'event': event,
+                'current_year': timezone.now().year,
+            }
+            content_template = template.render(content)
 
-    email = EmailMultiAlternatives(
-        subject=subject, body=message, from_email=settings.EMAIL_HOST_USER, to=emails, reply_to=[user_email])
+            emails = [event.email]
+            if event.alternative_email is not None:
+                emails.append(event.alternative_email)
 
-    try:
-        email.attach_alternative(content_template, 'text/html')
-        email.send()
-        messages.success(request, 'Mensaje enviado exitosamente')
-    except Exception as e:
-        messages.error(request, 'No se pudo enviar el mensaje. Intenta de nuevo más tarde')
+            email = EmailMultiAlternatives(
+                subject=subject, body=message, from_email=settings.EMAIL_HOST_USER, to=emails, reply_to=[user_email])
+
+            try:
+                email.attach_alternative(content_template, 'text/html')
+                email.send()
+                messages.success(request, 'Mensaje enviado exitosamente')
+            except Exception as e:
+                messages.error(request, 'No se pudo enviar el mensaje. Intenta de nuevo más tarde')
+        else:
+            messages.error(request, 'Algunos datos son incorrectos. Revise he intente de nuevo.')
 
     return redirect('view_event', id_event)
 
@@ -540,36 +550,43 @@ def send_email_event(request, id_event, template_route: str):
 def send_whatsapp_event(request, id_event):
     event = get_object_or_404(Event, id=id_event)
     if request.method == 'POST':
-        user_name = request.POST.get('user_name')
-        user_email = request.POST.get('user_email')
-        country_phone_user = request.POST.get('country_phone_user')
-        number_user = request.POST.get('number_user')
-        message = request.POST.get('message')
+        form = WhatsAppContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            user_name = request.POST.get('names')
+            user_email = request.POST.get('email')
+            country_phone_user = request.POST.get('country')
+            number_user = request.POST.get('phone')
+            message = request.POST.get('message')
 
-        phone_number_info = phonenumbers.parse(number_user, country_phone_user)
-        full_number = '{0}{1}'.format(phone_number_info.country_code, phone_number_info.national_number)
+            phone_number_info = phonenumbers.parse(number_user, country_phone_user)
+            full_number = '{0}{1}'.format(phone_number_info.country_code, phone_number_info.national_number)
 
-        url = "https://api.ultramsg.com/instance40328/messages/chat"
+            url = "https://api.ultramsg.com/instance40328/messages/chat"
 
-        payload = "token=xlvb1wg94yvs92mu&to={0}&body=*{1}* \n\nLe escribe: *{2}* | Télefono: *{3}* | " \
-                  "Correo: {4} \n\n_{5}_ \n\nFecha: *{6} {7}:{8}*".format(
-            event.get_full_number_phone(), event.title.upper(), user_name, full_number,
-            user_email, message, timezone.now().date(), timezone.now().time().hour,
-            timezone.now().time().minute
-        )
+            payload = "token=xlvb1wg94yvs92mu&to={0}&body=*{1}* \n\nLe escribe: *{2}* | Télefono: *{3}* | " \
+                      "Correo: {4} \n\n_{5}_ \n\nFecha: *{6} {7}:{8}*".format(
+                event.get_full_number_phone(), event.title.upper(), user_name, full_number,
+                user_email, message, timezone.now().date(), timezone.now().time().hour,
+                timezone.now().time().minute
+            )
 
-        payload = payload.encode('utf8').decode('iso-8859-1')
-        headers = {'content-type': 'application/x-www-form-urlencoded'}
+            payload = payload.encode('utf8').decode('iso-8859-1')
+            headers = {'content-type': 'application/x-www-form-urlencoded'}
 
-        response = requests.request("POST", url, data=payload, headers=headers)
-        content = response.json()
+            response = requests.request("POST", url, data=payload, headers=headers)
+            content = response.json()
 
-        if content.get('sent') == 'true':
-            messages.success(request, 'Mensaje enviado exitosamente!')
-            return redirect('view_event', id_event)
+            if content.get('sent') == 'true':
+                print(content)
+                messages.success(request, 'Mensaje enviado exitosamente!')
+                return redirect('view_event', id_event)
+            else:
+                messages.error(request, 'No se pudo enviar el mensaje')
+                return redirect('view_event', id_event)
         else:
-            messages.error(request, 'No se pudo enviar el mensaje')
-            return redirect('view_event', id_event)
+            print(form.errors)
+            messages.error(request, 'Algunos datos son incorrectos. Revise he intente de nuevo.')
 
     return redirect('view_event', id_event)
 

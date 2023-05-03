@@ -768,36 +768,37 @@
                           enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="relative z-0 w-full mb-6 group">
-                            <input type="text" name="user_name" id="user_name"
-                                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                   placeholder=" " required/>
-                            <label for="user_name"
-                                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-400 peer-focus:dark:text-gray-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Tus
-                                Nombres</label>
+                            {{ form_email.name }}
+                            <label for="{{ form_email.name.id_for_label }}"
+                                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-400 peer-focus:dark:text-gray-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                {{ form_email.name.label }}
+                            </label>
                         </div>
                         <div class="relative z-0 w-full mb-6 group">
-                            <input type="email" name="user_email" id="email"
-                                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                   placeholder=" " required/>
-                            <label for="email"
-                                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-400 peer-focus:dark:text-gray-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Tu
-                                correo electrónico</label>
+                            {{ form_email.email }}
+                            <label for="{{ form_email.email.id_for_label }}"
+                                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-400 peer-focus:dark:text-gray-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                {{ form_email.email.label }}
+                            </label>
                         </div>
                         <div class="relative z-0 w-full mb-6 group">
-                            <input type="text" name="subject" id="subject"
-                                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                   placeholder=" " required/>
-                            <label for="subject"
-                                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-400 peer-focus:dark:text-gray-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Título
-                                de tu mensaje</label>
+                            {{ form_email.title }}
+                            <label for="{{ form_email.title.id_for_label }}"
+                                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-400 peer-focus:dark:text-gray-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                {{ form_email.title.label }}
+                            </label>
                         </div>
 
                         <div class="relative z-0 w-full mb-6 group">
-                            <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tu
-                                mensaje</label>
-                            <textarea id="message" name="message" required rows="4"
-                                      class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                      placeholder="Deja un comentario..."></textarea>
+                            <label for="{{ form_email.message.id_for_label }}"
+                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                {{ form_email.message.label }}
+                            </label>
+                            {{ form_email.message }}
+                        </div>
+
+                        <div class="flex justify-center my-4">
+                            {{ form_email.captcha }}
                         </div>
 
                         <div class="flex items-center gap-4">
@@ -845,54 +846,60 @@
                     <form action="{% url 'send_whatsapp_event' event.id %}" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="relative z-0 w-full mb-6 group">
-                            <input type="text" name="user_name" id="user_name"
-                                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                   placeholder=" " required/>
-                            <label for="user_name"
-                                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-400 peer-focus:dark:text-gray-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Tus
-                                Nombres</label>
+                            {{ form_whatsapp.names }}
+                            <label for="{{ form_whatsapp.names.id_for_label }}"
+                                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-400 peer-focus:dark:text-gray-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                {{ form_whatsapp.names.label }}
+                            </label>
                         </div>
                         <div class="relative z-0 w-full mb-6 group">
-                            <input type="email" name="user_email" id="email"
-                                   class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                                   placeholder=" " required/>
-                            <label for="email"
-                                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-400 peer-focus:dark:text-gray-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Tu
-                                correo electrónico</label>
+                            {{ form_whatsapp.email }}
+                            <label for="{{ form_whatsapp.email.id_for_label }}"
+                                   class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-400 peer-focus:dark:text-gray-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                {{ form_whatsapp.email.label }}
+                            </label>
                         </div>
 
                         <div class="grid md:grid-cols-2 md:gap-6">
-                            <div class="relative z-0 w-full mb-6 group">
+                            <div class="relative z-0 w-full group">
                                 {% get_countries as countries %}
-                                <label for="country_phone_user"
-                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tu
-                                    país</label>
-                                <select id="country_phone_user" name="country_phone_user" required
+                                <label for="{{ form_whatsapp.country.id_for_label }}"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Tu país
+                                </label>
+                                <select id="{{ form_whatsapp.country.id_for_label }}"
+                                        name="{{ form_whatsapp.country.html_name }}" required
                                         class="bg-gray-50 border border-gray-300 text-gray-900 mb-6 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                     {% for country in countries %}
                                         <option value="{{ country.code }}">{{ country.name }}</option>
                                     {% endfor %}
                                 </select>
-                                <p id="country_phone_user" class="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                                    Asegurate de seleccionar correctamente el país, ya que este será utilizado para el
-                                    código de teléfono</p>
                             </div>
-                            <div class="relative z-0 w-full mb-6 group">
-                                <label for="number_user"
-                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Número de
-                                    Teléfono</label>
-                                <input type="number" name="number_user" id="number_user"
-                                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                       placeholder=" " required/>
+                            <div class="relative z-0 w-full mt-6 group">
+                                {{ form_whatsapp.phone }}
+                                <label for="{{ form_whatsapp.phone.id_for_label }}"
+                                       class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-gray-400 peer-focus:dark:text-gray-300 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                    {{ form_whatsapp.phone.label }}
+                                </label>
                             </div>
                         </div>
 
+                        <p id="{{ form_whatsapp.country.id_for_label }}"
+                           class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                            Asegurate de seleccionar correctamente el país, ya que este será utilizado para el
+                            código de teléfono
+                        </p>
+
                         <div class="relative z-0 w-full mb-6 group">
-                            <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tu
-                                mensaje</label>
-                            <textarea id="message" name="message" required rows="4"
-                                      class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                      placeholder="Deja un comentario..."></textarea>
+                            <label for="{{ form_whatsapp.message.id_for_label }}"
+                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                {{ form_whatsapp.message.label }}
+                            </label>
+                            {{ form_whatsapp.message }}
+                        </div>
+
+                        <div class="flex justify-center py-4">
+                            {{ form_whatsapp.captcha }}
                         </div>
 
                         <div class="flex items-center gap-4">
