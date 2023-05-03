@@ -238,9 +238,12 @@
                     Guardar
                 </button>
             </div>
-            <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
-                ¿Ya estás registrado? <a href="{% url 'login' %}"
+            <div class="text-sm font-medium text-gray-500 dark:text-gray-300 flex flex-col">
+                <span>
+                    ¿Ya estás registrado? <a href="{% url 'login' %}"
                                          class="text-blue-700 hover:underline dark:text-blue-500">Inicia sesión</a>
+                </span>
+                <span>Los campos marcados con * son obligatorios.</span>
             </div>
         </form>
     </div>

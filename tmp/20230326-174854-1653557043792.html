@@ -1,4 +1,83 @@
-{% load static %}
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    
+        <title>Email de confirmación de pago</title>
+    
+
+    <style type="text/css">
+        #container {
+            margin: 10px auto;
+        }
+
+        #message_headers {
+            background: #fff;
+            font-size: 12px;
+            font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+            border-bottom: 1px solid #dedede;
+            overflow: auto;
+        }
+
+        .message_container {
+            margin: 5px auto;
+
+            min-width: 400px;
+        }
+
+        .row {
+            display: block;
+            overflow: auto;
+        }
+
+        .col-left, .col-right {
+            float: left;
+            min-height: 1px;
+            overflow: auto;
+        }
+
+        .col-left {
+            width: 100px;
+            text-align: right;
+        }
+
+        .col-right {
+            min-width: 200px;
+            padding-left: 10px;
+        }
+
+        pre#message_body {
+            padding: 4px;
+            white-space: pre-wrap;
+            border: 1px solid #eee;
+            background-color: #fcfcfc;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <div id="message_headers">
+        <div class="message_container">
+            <div class="row">
+                <div class="col-left">From:</div>
+                <div class="col-right">deming.instituto2023@gmail.com</div>
+            </div>
+            <div class="row">
+                <div class="col-left">Subject:</div>
+                <div class="col-right"><b>Email de confirmación de pago</b></div>
+            </div>
+            <div class="row">
+                <div class="col-left">Date:</div>
+                <div class="col-right">Sep 2, 2014 10:35:58 PM WIB</div>
+            </div>
+            <div class="row">
+                <div class="col-left">To:</div>
+                <div class="col-right">[&#x27;junior31064049@gmail.com&#x27;]</div>
+            </div>
+            
+        </div>
+    </div>
+
+    
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
@@ -282,7 +361,7 @@
 
                                                 <h1 class="v-text-align v-font-size"
                                                     style="margin: 0px; color: #ffffff; line-height: 140%; text-align: center; word-wrap: break-word; font-family: Arvo; font-size: 26px; ">
-                                                    {{ event.title.capitalize }}</h1>
+                                                    Congreso internacional sobre normas del futbol</h1>
 
                                             </td>
                                         </tr>
@@ -382,20 +461,17 @@
                                                 align="left">
 
                                                 <div class="v-text-align v-font-size"
-                                                     style="line-height: 140%; text-align: left; word-wrap: break-word;">
+                                                     style="line-height: 140%; display: flex; flex-direction: column; gap: 1.5rem; text-align: left; word-wrap: break-word;">
                                                     <p style="font-size: 14px; line-height: 140%;">¡Hola!</p>
                                                     <p style="font-size: 14px; line-height: 140%;">
                                                         Espero que estés bien. Te escribo para confirmar que hemos
-                                                        recibido tu pago por ${{ event.price }} y
+                                                        recibido tu pago por $9,99 y
                                                         estás oficialmente inscrito/a en nuestro
-                                                        evento {{ event.title }}. A continuación, encontrarás el
+                                                        evento Congreso Internacional sobre Normas del Futbol. A continuación, encontrarás el
                                                         enlace de conexión para acceder a la clase:
                                                     </p>
                                                     <p style="font-size: 14px; line-height: 140%;">
-                                                        {{ event.link_to_classroom }}
-                                                        {% if event.code_meeting %}
-                                                            Código: {{ event.code_meeting }}
-                                                        {% endif %}
+                                                        None
                                                     </p>
                                                     <p style="font-size: 14px; line-height: 140%;">
                                                         La clase se llevará a cabo en la fecha y hora acordadas.
@@ -469,7 +545,7 @@
                                                     <p style="font-size: 14px; line-height: 140%;"><span
                                                             style="text-decoration: underline; font-size: 14px; line-height: 19.6px;">
                                                         Plataforma de planeación de eventos | <a
-                                                            href="https://www.deming.edu.ec/">Instituto Tecnológico Corporativo Edwards Deming</a> {{ current_year }}
+                                                            href="https://www.deming.edu.ec/">Instituto Tecnológico Corporativo Edwards Deming</a> 2023
                                                     </span>
                                                     </p>
                                                 </div>
@@ -498,4 +574,9 @@
 <!--[if IE]></div><![endif]-->
 </body>
 
+</html>
+
+
+</div>
+</body>
 </html>

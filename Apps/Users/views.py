@@ -130,14 +130,23 @@ def profile(request, username, id_user):
 
     current_user = get_object_or_404(User, id=request.user.id)
     current_user_perms = Permission.objects.filter(user=user)
+    events_teacher = None
+    if user.is_teacher:
+        events_teacher = Event.objects.filter(teachers__username=user.username)
 
     data = {
         'current_profile_user': user,
+        'events_teacher': events_teacher,
         'current_user': current_user,
         'current_user_perms': current_user_perms,
         'permissions': permissions,
         'form': UpdateUserForm(instance=user)
     }
+
+    is_staff_original = user.is_staff
+    is_active_original = user.is_active
+    is_teacher_original = user.is_teacher
+    is_referral_original = user.is_referral
 
     if request.method == 'POST':
         if request.user.id != user.id:
@@ -163,29 +172,29 @@ def profile(request, username, id_user):
                 user.profession
             email = request.POST.get('email') if request.POST.get('email') is not None else \
                 user.email
-            is_staff = request.POST.get('is_staff')
-            is_active = request.POST.get('is_active')
-            is_teacher = request.POST.get('is_teacher')
-            is_referral = request.POST.get('is_referral')
-            if is_staff is None or is_staff == 'off':
-                is_staff = False
+            is_staff_form = request.POST.get('is_staff')
+            is_active_form = request.POST.get('is_active')
+            is_teacher_form = request.POST.get('is_teacher')
+            is_referral_form = request.POST.get('is_referral')
+            if is_staff_form is None or is_staff_form == 'off':
+                is_staff_form = False
             else:
-                is_staff = True
+                is_staff_form = True
 
-            if is_active is None or is_active == 'on':
-                is_active = True
+            if is_active_form is None or is_active_form == 'on':
+                is_active_form = True
             else:
-                is_active = False
+                is_active_form = False
 
-            if is_teacher == 'on':
-                is_teacher = True
+            if is_teacher_form == 'on':
+                is_teacher_form = True
             else:
-                is_teacher = False
+                is_teacher_form = False
 
-            if is_referral == 'on':
-                is_referral = True
+            if is_referral_form == 'on':
+                is_referral_form = True
             else:
-                is_referral = False
+                is_referral_form = False
 
             user.profile_image_user = picture_profile
             user.curriculum = curriculum
@@ -194,13 +203,23 @@ def profile(request, username, id_user):
             user.first_name = first_name
             user.last_name = last_name
             user.email = email
-            user.is_staff = is_staff
-            user.is_active = is_active
-            user.is_teacher = is_teacher
-            user.is_referral = is_referral
+            new_interests = request.POST.getlist('interests')
+
+            if user.id == current_user.id:
+                user.is_staff = is_staff_original
+                user.is_active = is_active_original
+                user.is_teacher = is_teacher_original
+                user.is_referral = is_referral_original
+            else:
+                user.is_staff = is_staff_form
+                user.is_active = is_active_form
+                user.is_teacher = is_teacher_form
+                user.is_referral = is_referral_form
+
+            user.interests.set(new_interests)
             user.save()
             user.refresh_from_db()
-            if not is_teacher:
+            if not is_teacher_form:
                 event = Event.objects.filter(teachers__username=user.username)
                 for e in event.all():
                     e.teachers.remove(user)
@@ -209,8 +228,6 @@ def profile(request, username, id_user):
             return redirect('profile', user.username, user.id)
         else:
             data['form'] = form
-            print(form.errors)
-            print(form.cleaned_data.get('profession'))
             messages.error(request, 'Datos inválidos')
     return render(request, 'Users/profile.html', data)
 
@@ -264,7 +281,6 @@ def info_participant(request, username, id_user):
                 messages.info(request, 'Debes cambiar algún campo para actualizar tus datos.')
                 return redirect('info_participant', current_user.username, current_user.id)
         else:
-            print(form.errors)
             messages.error(request, 'Ocurrió un error. Revisa e intenta de nuevo.')
             data['form'] = form
 
@@ -275,14 +291,13 @@ def info_participant(request, username, id_user):
 def user_events(request, username, id_user):
     current_user = get_object_or_404(User, username=username, id=id_user)
     if current_user.is_teacher:
+        events_teacher = Event.objects.filter(teachers__username=current_user.username)
         try:
             participant = get_object_or_404(Participant, user_id=current_user.id)
             events = Event.objects.filter(eventparticipant__participant__id=participant.id, eventparticipant__pay=True)
-            events_teacher = Event.objects.filter(teachers__username=current_user.username)
         except:
             participant = None
             events = None
-            events_teacher = Event.objects.filter(teachers__username=current_user.username)
     else:
         events_teacher = None
         participant = get_object_or_404(Participant, user_id=current_user.id)
@@ -391,7 +406,6 @@ def export_users(request, user_type: str, event_id: int):
         filename = 'Usuarios_Normales.xlsx'
 
     if users_to_export.exists():
-        print(users_to_export)
         file = export_to_excel(users_to_export, filename)
 
         response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')

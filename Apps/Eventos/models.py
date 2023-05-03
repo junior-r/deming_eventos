@@ -129,6 +129,11 @@ class Participant(models.Model):
     def get_full_name(self):
         return '{0} {1}'.format(self.first_name, self.last_name)
 
+    def get_passport_number(self):
+        if self.passport_number != 0:
+            return self.passport_number
+        return '-'
+
     def delete(self, *args, **kwargs):
         try:
             if self.profile_image:

@@ -61,7 +61,6 @@ def view_events(request):
             code_meeting = request.POST.get('code_meeting')
             career = request.POST.get('career')
             teachers = request.POST.get('teachers')
-            print(teachers)
 
             if isinstance(alternative_phone, str):
                 alternative_phone = None
@@ -93,7 +92,6 @@ def view_events(request):
             return redirect('eventos')
         else:
             data['form'] = form
-            print(form.errors)
             messages.error(request, 'Ocurrió un error. Intente de nuevo.')
 
     return render(request, 'Eventos/index.html', data)
@@ -152,8 +150,6 @@ def update_event(request, id_event):
                 logo = request.FILES.get('logo') if request.FILES.get('logo') is not None else event.logo
                 event_planning = request.FILES.get('event_planning') if request.FILES.get('event_planning') is not None\
                     else event.event_planning
-                print(logo)
-                print(event_planning)
                 event_modified = form.save()
                 event_modified.logo = logo
                 event_modified.event_planning = event_planning
@@ -165,7 +161,6 @@ def update_event(request, id_event):
                     messages.success(request, 'Evento modificado exitosamente')
                     return redirect('view_event', event.id)
                 except Exception as e:
-                    print(e)
                     messages.error(request, f'Error: {e}')
                     data['form'] = form
             else:
@@ -174,7 +169,6 @@ def update_event(request, id_event):
         else:
             messages.error(request, 'Algunos datos son inválidos. Revise e intente de nuevo.')
             data['form'] = form
-
 
     return render(request, 'Eventos/update_event.html', data)
 
@@ -201,7 +195,8 @@ def validate_participant_event(request, id_event, data):
             last_name = user.last_name if request.POST.get('last_name') == '' else request.POST.get('last_name')
             country_of_birth = request.POST.get('country_of_birth')
             dni = request.POST.get('dni')
-            passport_number = request.POST.get('passport_number') if request.POST.get('passport_number') else None
+            passport_number = request.POST.get('passport_number') if request.POST.get('passport_number') != '' else None
+            print(passport_number)
             gender = request.POST.get('gender')
             birthdate = request.POST.get('birthdate')
             current_country = request.POST.get('current_country')
@@ -236,10 +231,8 @@ def validate_participant_event(request, id_event, data):
                     event.participants.add(participant, through_defaults={'active': True})
                 messages.success(request, '¡Te haz regístrado exitosamente!')
             except Exception as e:
-                print(e)
                 return 'exception'
         else:
-            print(form.errors)
             messages.error(request, 'Ocurrió un error. Intenta de nuevo')
             data['form_participant'] = form
             return 'error'
@@ -258,7 +251,6 @@ def set_active_participant(request, id_event):
         referral = None
     except Exception as e:
         referral = None
-    print(referral)
 
     if exists_participant.exists():
         participant = exists_participant.get()
@@ -271,7 +263,6 @@ def set_active_participant(request, id_event):
                 participant.participant.save()
                 messages.success(request, '¡Fuíste elíminado de la lista de participantes exitosamente!')
             except Exception as e:
-                print(e)
                 messages.error(request,
                                'No se pudo eliminar de la lista de participantes. Contactenos por medio de un Email o '
                                'un WhatsApp')
@@ -285,7 +276,6 @@ def set_active_participant(request, id_event):
                 participant.participant.save()
                 messages.success(request, '¡Fuíste añadido a la lista de participantes exitosamente!')
             except Exception as e:
-                print(e)
                 messages.error(request,
                                'No se pudo añadir a la lista de participantes. Contactenos por medio de un Email o un '
                                'WhatsApp')
@@ -307,7 +297,6 @@ def download_certify_event(request, id_event, id_participant):
     if event.participants.all().filter(event__teachers__username=participant.user.username):
         teacher_certify = True
     payment_data = get_object_or_404(EventParticipant, event_id=event.id, participant_id=participant.id)
-    print(teacher_certify)
 
     url_certify = '{0}{1}'.format(request.get_host(), request.get_full_path())
     qr_root = os.path.join(settings.MEDIA_ROOT, 'QRCODES', f'event_{event.id}_participant_{participant.id}.png')
@@ -400,7 +389,6 @@ def pago(request, id_event):
                     email.send()
                     messages.success(request, 'Mensaje enviado exitosamente')
                 except Exception as e:
-                    print(e)
                     messages.error(request, 'No se pudo enviar el mensaje. Intenta de nuevo más tarde')
 
                 data = {
@@ -542,7 +530,6 @@ def send_email_event(request, id_event, template_route: str):
         email.send()
         messages.success(request, 'Mensaje enviado exitosamente')
     except Exception as e:
-        print(e)
         messages.error(request, 'No se pudo enviar el mensaje. Intenta de nuevo más tarde')
 
     return redirect('view_event', id_event)
@@ -579,7 +566,6 @@ def send_whatsapp_event(request, id_event):
             messages.success(request, 'Mensaje enviado exitosamente!')
             return redirect('view_event', id_event)
         else:
-            print(response.text)
             messages.error(request, 'No se pudo enviar el mensaje')
             return redirect('view_event', id_event)
 
@@ -610,3 +596,28 @@ def create_careers(request, data):
     else:
         data['form'] = form
         messages.error(request, 'Ocurrió algún error. Intente de nuevo.')
+
+
+@login_required
+@permission_required('Eventos.change_career', raise_exception=True)
+def update_career(request, id_career):
+    career = get_object_or_404(Career, id=id_career)
+    form = CareerForm(request.POST, instance=career)
+    if form.is_valid():
+        form.save()
+        messages.success(request, '¡Carrera actualizada exitosamente!')
+        return redirect('careers')
+    else:
+        for key, value in form.errors.items():
+            print(value)
+        messages.error(request, 'Ocurrió algún error. Revise e intente de nuevo.')
+
+
+@login_required
+@permission_required('Eventos.delete_career', raise_exception=True)
+def delete_career(request, id_career):
+    career = get_object_or_404(Career, id=id_career)
+    career.delete()
+    messages.success(request, '¡Carrera eliminada exitosamente!')
+    return redirect('careers')
+

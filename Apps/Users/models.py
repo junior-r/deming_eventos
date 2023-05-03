@@ -88,7 +88,6 @@ class User(AbstractUser):
         return '{}'.format(os.path.join(settings.MEDIA_URL, self.curriculum.url))
 
     def save(self, *args, **kwargs):
-        print(self.password)
         if self.password is not None and not self.password.startswith('argon2$'):
             self.password = make_password(self.password)
             super().save(*args, **kwargs)

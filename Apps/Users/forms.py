@@ -18,42 +18,42 @@ class UserForm(UserCreationForm):
         attrs={
             'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
         }
-    ), label='Nombre de usuario')
+    ), label='Nombre de usuario*', required=True)
     profession = forms.CharField(max_length=100, widget=forms.TextInput(
         attrs={
             'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
         }
-    ), label='Profesión')
+    ), label='Profesión*', required=True)
     curriculum = forms.FileField(required=True, widget=forms.FileInput(attrs={
         'accept': 'application/pdf, application/vnd.ms-excel',
         'class': 'block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400',
-    }), label='Hoja de vida (PDF)')
+    }), label='Hoja de vida (PDF)*')
     email = forms.EmailField(max_length=150, widget=forms.EmailInput(
         attrs={
             'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
         }
-    ), label='Dirección de correo eletrónico')
+    ), label='Dirección de correo eletrónico*', required=True)
     first_name = forms.CharField(max_length=150, widget=forms.TextInput(
         attrs={
             'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
         }
-    ), label='Nombres')
+    ), label='Nombres*', required=True)
     last_name = forms.CharField(max_length=150, widget=forms.TextInput(
         attrs={
             'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
         }
-    ), label='Apellidos')
+    ), label='Apellidos*', required=True)
 
     password1 = forms.CharField(min_length=8, widget=forms.PasswordInput(
         attrs={
             'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
         }
-    ), label='Contraseña')
+    ), label='Contraseña*', required=True)
     password2 = forms.CharField(min_length=8, widget=forms.PasswordInput(
         attrs={
             'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
         }
-    ), label='Contraseña (confirmación)')
+    ), label='Contraseña (confirmación)*', required=True)
     interests = forms.ModelMultipleChoiceField(queryset=Career.objects.all(), required=False, widget=forms.SelectMultiple(attrs={
         'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
     }), label='¿Cuáles son tus intereses?')
@@ -154,12 +154,15 @@ class UpdateUserForm(forms.ModelForm):
                  'dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
     }), label='¿Cuáles son tus intereses?')
 
-    def _clean_fields(self):
-        email = self.cleaned_data.get('email')
-        user_id = self.cleaned_data.get('user_id')
+    def clean(self):
+        cleaned_data = super().clean()
+
+        # Clean email
+        email = cleaned_data.get('email')
+        user_id = cleaned_data.get('user_id')
         if User.objects.filter(email=email).exclude(id=user_id).exists():
             raise ValidationError("Ya existe un usuario registrado con este email. Intente con otro.")
-        return email
+        return cleaned_data
 
     class Meta:
         model = User
