@@ -1,11 +1,12 @@
 from django.urls import path
 
 from Apps.Eventos.views import view_events, careers, view_event, update_event, send_whatsapp_event, send_email_event, \
-    set_active_participant, pago, download_certify_event, update_career, delete_career
+    set_active_participant, pago, download_certify_event, update_career, delete_career, create_career_ajax
 
 urlpatterns = [
     path('', view_events, name='eventos'),
     path('careers/', careers, name='careers'),
+    path('create_career_ajax/', create_career_ajax, name='create_career_ajax'),
     path('edit_career/<int:id_career>/', update_career, name='update_career'),
     path('delete_career/<int:id_career>/', delete_career, name='delete_career'),
     path('pago/<int:id_event>/', pago, name='pago'),

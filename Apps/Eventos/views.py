@@ -35,6 +35,7 @@ def view_events(request):
     data = {
         'form': EventForm(),
         'events': events,
+        'career_form': CareerForm(),
     }
 
     if request.method == 'POST':
@@ -148,7 +149,7 @@ def update_event(request, id_event):
         if form.is_valid():
             if form.has_changed():
                 logo = request.FILES.get('logo') if request.FILES.get('logo') is not None else event.logo
-                event_planning = request.FILES.get('event_planning') if request.FILES.get('event_planning') is not None\
+                event_planning = request.FILES.get('event_planning') if request.FILES.get('event_planning') is not None \
                     else event.event_planning
                 event_modified = form.save()
                 event_modified.logo = logo
@@ -322,7 +323,8 @@ def download_certify_event(request, id_event, id_participant):
 
     pdf = HTML(string=html_template, base_url=request.build_absolute_uri()).write_pdf()
     response = HttpResponse(pdf, content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename={0}_{1}{2}'.format('Certificado', participant.get_full_name(), '.pdf')
+    response['Content-Disposition'] = 'attachment; filename={0}_{1}{2}'.format('Certificado',
+                                                                               participant.get_full_name(), '.pdf')
     messages.success(request, 'Certificado generado exitosamente.')
     return render(request, 'Eventos/certify.html', context)
     # return response
@@ -599,6 +601,29 @@ def create_careers(request, data):
 
 
 @login_required
+@permission_required('Eventos.add_career', raise_exception=True)
+def create_career_ajax(request):
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+    if is_ajax:
+        if request.method == 'POST':
+            form = CareerForm(request.POST)
+            if form.is_valid():
+                instance = form.save()
+                career = get_object_or_404(Career, id=instance.id)
+                career_data = {'id': instance.id,
+                               'name': instance.name,
+                               'date_created_date': career.date_created.date().isoformat(),
+                               'date_created_time': f'{career.date_created.time().hour}:{career.date_created.time().minute}'}
+                return JsonResponse({'career': career_data}, status=200)
+            else:
+                return JsonResponse({"error": 'Ocurrió un error. Revise e intente de nuevo.'}, status=400)
+        else:
+            return JsonResponse({"error": 'Solicitud inválida'}, status=400)
+    else:
+        return HttpResponseBadRequest('Invalid request')
+
+
+@login_required
 @permission_required('Eventos.change_career', raise_exception=True)
 def update_career(request, id_career):
     career = get_object_or_404(Career, id=id_career)
@@ -620,4 +645,3 @@ def delete_career(request, id_career):
     career.delete()
     messages.success(request, '¡Carrera eliminada exitosamente!')
     return redirect('careers')
-

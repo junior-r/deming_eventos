@@ -390,6 +390,12 @@ def export_users(request, user_type: str, event_id: int):
     if user_type == 'staff':
         users_to_export = User.objects.filter(is_staff=True).exclude(id=current_user.id)
         filename = 'Usuarios_Staff.xlsx'
+    elif user_type == 'teacher':
+        users_to_export = User.objects.filter(is_teacher=True).exclude(id=current_user.id)
+        filename = 'Usuarios_Profesores.xlsx'
+    elif user_type == 'referral':
+        users_to_export = User.objects.filter(is_referral=True).exclude(id=current_user.id)
+        filename = 'Usuarios_Recomendadores.xlsx'
     elif user_type == 'actives_participants':
         event = get_object_or_404(Event, id=event_id)
         participants = Participant.objects.filter(event__participants__event=event,
@@ -402,7 +408,7 @@ def export_users(request, user_type: str, event_id: int):
         users_to_export = participants
         filename = 'Participantes_Pagos_{0}.xlsx'.format(event.get_unicode())
     else:
-        users_to_export = User.objects.filter(is_staff=False, is_superuser=False)
+        users_to_export = User.objects.filter(is_staff=False, is_teacher=False, is_referral=False, is_superuser=False)
         filename = 'Usuarios_Normales.xlsx'
 
     if users_to_export.exists():
