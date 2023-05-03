@@ -13,7 +13,7 @@ class EmailContact(models.Model):
 class WhatsAppContact(models.Model):
     names = models.CharField(max_length=255, null=False, blank=False)
     email = models.EmailField(null=False, blank=False)
-    country_of_birth = CountryField(blank=False, null=False)
+    country = CountryField(blank=False, null=False)
     phone = models.IntegerField(null=False, blank=False)
 
     def __str__(self):
