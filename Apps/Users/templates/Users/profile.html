@@ -462,6 +462,10 @@
                                         {{ form.interests }}
                                     </div>
 
+                                    <div class="flex justify-center my-4">
+                                        {{ form.captcha }}
+                                    </div>
+
                                     {% if request.user.id != current_profile_user.id and not current_profile_user.is_superuser and perms.Users.change_user %}
                                         <section
                                                 class="border p-4 mb-4 rounded-lg border-red-500 bg-red-500 bg-opacity-50">

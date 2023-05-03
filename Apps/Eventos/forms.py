@@ -2,6 +2,7 @@ from django import forms
 from django.forms import ValidationError
 from django.utils import timezone
 from django_countries.fields import CountryField
+from captcha.fields import ReCaptchaField
 
 from Apps.Users.models import User
 from Apps.Eventos.models import Event, Career, Participant
@@ -28,6 +29,7 @@ platform_options = [
 
 
 class CareerForm(forms.ModelForm):
+    captcha = ReCaptchaField()
     name = forms.CharField(max_length=150, required=True, widget=forms.TextInput(attrs={
         'placeholder': 'Educación',
         'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
@@ -39,6 +41,7 @@ class CareerForm(forms.ModelForm):
 
 
 class EventForm(forms.ModelForm):
+    captcha = ReCaptchaField()
     logo = forms.ImageField(required=False, widget=forms.FileInput(attrs={
         'accept': 'image/jpeg, image/jpg',
         'class': 'block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400',
@@ -149,6 +152,7 @@ class EventForm(forms.ModelForm):
 
 
 class ParticipantForm(forms.ModelForm):
+    captcha = ReCaptchaField()
     profile_image = forms.ImageField(required=False, widget=forms.FileInput(attrs={
         'accept': 'image/jpeg, image/jpg',
         'class': 'block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400',
@@ -222,6 +226,7 @@ class ParticipantForm(forms.ModelForm):
 
 
 class ParticipantDataUpdateForm(forms.ModelForm):
+    captcha = ReCaptchaField()
     profile_image = forms.ImageField(required=False, widget=forms.FileInput(attrs={
         'accept': 'image/jpeg, image/jpg',
         'class': 'block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400',

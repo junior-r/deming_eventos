@@ -1,12 +1,14 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
+from captcha.fields import ReCaptchaField
 
 from Apps.Eventos.models import Career
 from Apps.Users.models import User
 
 
 class UserForm(UserCreationForm):
+    captcha = ReCaptchaField()
     profile_image = forms.ImageField(label='Imagen de perfil', required=False, widget=forms.FileInput(
         attrs={
             'class': 'inputfile inputfile-5',
@@ -71,6 +73,7 @@ class UserForm(UserCreationForm):
 
 
 class UpdateUserForm(forms.ModelForm):
+    captcha = ReCaptchaField()
     user_id = forms.CharField(required=True, widget=forms.NumberInput(attrs={'hidden': True}))
     profile_image = forms.ImageField(label='Imagen de perfil', required=False, widget=forms.FileInput(
         attrs={

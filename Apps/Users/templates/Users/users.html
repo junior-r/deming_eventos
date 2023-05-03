@@ -71,7 +71,8 @@
                     </button>
                 </li>
                 <li class="mr-2" role="presentation">
-                    <button class="inline-block p-4 border-b-2 rounded-t-lg" id="teachers-tab" data-tabs-target="#teachers"
+                    <button class="inline-block p-4 border-b-2 rounded-t-lg" id="teachers-tab"
+                            data-tabs-target="#teachers"
                             type="button" role="tab" aria-controls="teachers" aria-selected="false">Profesores
                     </button>
                 </li>
@@ -266,7 +267,8 @@
                                 <div class="relative bg-white shadow-md dark:bg-gray-800 sm:rounded-lg">
                                     <div class="flex-row items-center justify-between p-4 space-y-3 sm:flex sm:space-y-0 sm:space-x-4">
                                         <div>
-                                            <h5 class="mr-3 text-left font-semibold dark:text-white">Profesores/Ponentes</h5>
+                                            <h5 class="mr-3 text-left font-semibold dark:text-white">
+                                                Profesores/Ponentes</h5>
                                             <p class="text-gray-500 text-left dark:text-gray-400">
                                                 Maneja todos tus profesores o ponentes existentes.
                                             </p>
@@ -716,23 +718,9 @@
                 </button>
                 <div class="px-6 py-6 lg:px-8">
                     <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Crea personal de confianza</h3>
-                    <form class="space-y-2" action="{% url 'create_user' 'staff' %}" method="post" enctype="multipart/form-data">
+                    <form class="space-y-2" action="{% url 'create_user' 'staff' %}" method="post"
+                          enctype="multipart/form-data">
                         {% csrf_token %}
-                        <div class="relative z-0 w-full mb-4 group">
-                            <div class="container-input">
-                                {{ create_users_form.profile_image }}
-                                <label for="file-5">
-                                    <figure>
-                                        <img src="{% static 'Home/images/user_profile_placeholder.jpg' %}"
-                                             alt="imagen de perfil de usuario">
-                                        <img id="imagenPrevisualizacion" alt="Imagen de perfil del usuario"
-                                             loading="lazy">
-                                    </figure>
-                                    <span class="iborrainputfile block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imagen de perfil</span>
-                                </label>
-                            </div>
-                        </div>
-
                         <div class="relative z-0 w-full mb-2">
                             <label for="{{ create_users_form.username.id_for_label }}"
                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -869,6 +857,11 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="flex justify-center">
+                            {{ create_users_form.captcha }}
+                        </div>
+
                         <button type="submit"
                                 class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                             Guardar
@@ -898,24 +891,11 @@
                     <span class="sr-only">Close modal</span>
                 </button>
                 <div class="px-6 py-6 lg:px-8">
-                    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Crea profesores para tus eventos</h3>
-                    <form class="space-y-2" action="{% url 'create_user' 'teacher' %}" method="post" enctype="multipart/form-data">
+                    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Crea profesores para tus
+                        eventos</h3>
+                    <form class="space-y-2" action="{% url 'create_user' 'teacher' %}" method="post"
+                          enctype="multipart/form-data">
                         {% csrf_token %}
-                        <div class="relative z-0 w-full mb-4 group">
-                            <div class="container-input">
-                                {{ create_users_form.profile_image }}
-                                <label for="file-5">
-                                    <figure>
-                                        <img src="{% static 'Home/images/user_profile_placeholder.jpg' %}"
-                                             alt="imagen de perfil de usuario">
-                                        <img id="imagenPrevisualizacion" alt="Imagen de perfil del usuario"
-                                             loading="lazy">
-                                    </figure>
-                                    <span class="iborrainputfile block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imagen de perfil</span>
-                                </label>
-                            </div>
-                        </div>
-
                         <div class="relative z-0 w-full mb-2">
                             <label for="{{ create_users_form.username.id_for_label }}"
                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -1052,6 +1032,11 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="flex justify-center">
+                            {{ create_users_form.captcha }}
+                        </div>
+
                         <button type="submit"
                                 class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                             Guardar
@@ -1080,24 +1065,11 @@
                     <span class="sr-only">Close modal</span>
                 </button>
                 <div class="px-6 py-6 lg:px-8">
-                    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Crea profesores para tus eventos</h3>
-                    <form class="space-y-2" action="{% url 'create_user' 'referral' %}" method="post" enctype="multipart/form-data">
+                    <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Crea profesores para tus
+                        eventos</h3>
+                    <form class="space-y-2" action="{% url 'create_user' 'referral' %}" method="post"
+                          enctype="multipart/form-data">
                         {% csrf_token %}
-                        <div class="relative z-0 w-full mb-4 group">
-                            <div class="container-input">
-                                {{ create_users_form.profile_image }}
-                                <label for="file-5">
-                                    <figure>
-                                        <img src="{% static 'Home/images/user_profile_placeholder.jpg' %}"
-                                             alt="imagen de perfil de usuario">
-                                        <img id="imagenPrevisualizacion" alt="Imagen de perfil del usuario"
-                                             loading="lazy">
-                                    </figure>
-                                    <span class="iborrainputfile block mb-2 text-sm font-medium text-gray-900 dark:text-white">Imagen de perfil</span>
-                                </label>
-                            </div>
-                        </div>
-
                         <div class="relative z-0 w-full mb-2">
                             <label for="{{ create_users_form.username.id_for_label }}"
                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -1217,6 +1189,9 @@
                             </div>
 
                             <div class="relative z-0 w-full mb-2">
+
+                                <div class="flex justify-center">
+                                </div>
                                 <label for="{{ create_users_form.profession.id_for_label }}"
                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                     Profesión</label>
@@ -1234,6 +1209,11 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="flex justify-center">
+                            {{ create_users_form.captcha }}
+                        </div>
+
                         <button type="submit"
                                 class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                             Guardar

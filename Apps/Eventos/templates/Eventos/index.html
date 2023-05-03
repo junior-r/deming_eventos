@@ -761,6 +761,7 @@
 
                                     </div>
                                 </div>
+
                                 <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="teachers">
                                     <div class="relative z-0 w-full mb-6 group">
                                         <label for="{{ form.teachers.id_for_label }}"
@@ -783,6 +784,10 @@
                                                     class="font-medium">Oh, error!</span> {{ form.teachers.errors }}
                                             </p>
                                         {% endif %}
+                                    </div>
+
+                                    <div class="flex justify-center my-4">
+                                        {{ form.captcha }}
                                     </div>
 
                                     <div class="buttons flex gap-4 justify-center">
@@ -840,6 +845,9 @@
                                     Nombre
                                 </label>
                                 {{ career_form.name }}
+                            </div>
+                            <div class="flex justify-center my-4">
+                                {{ career_form.captcha }}
                             </div>
                         </form>
                         <div class="grid gap-6 mb-4 md:grid-cols-2">

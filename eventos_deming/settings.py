@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
 from pathlib import Path
+import environ
+
+
+env = environ.Env()
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +25,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-k)j&r&8b#6tng!5v5lts67hib+n!imkr(@x)xya8$*r3le%6*q'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1']
+
+RECAPTCHA_SITE_KEY = env('RECAPTCHA_SITE_KEY')
+RECAPTCHA_SECRET_KEY = env('RECAPTCHA_SECRET_KEY')
+SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
@@ -47,6 +56,8 @@ INSTALLED_APPS = [
     'Apps.Home.apps.HomeConfig',
     'Apps.Users.apps.UsersConfig',
     'Apps.Eventos.apps.EventosConfig',
+
+    'captcha',
 
     'tailwind',
     'theme',
@@ -99,15 +110,9 @@ WSGI_APPLICATION = 'eventos_deming.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'Eventos_Deming',
-        'USER': 'postgres',
-        'PASSWORD': 'DemingPostgresql',  # In Junior´s PC, set PASSWORD to C.L.
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+    'default': env.db("DATABASE_URL", default="postgres:///Eventos_Deming"),
 }
+DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
 AUTH_USER_MODEL = 'Users.User'
 
@@ -174,6 +179,6 @@ if DEBUG:
     EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'tmp')
 EMAIL_HOST = 'smtp.googlemail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'deming.instituto2023@gmail.com'
-EMAIL_HOST_PASSWORD = 'esiuqldaimapqbce'
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
