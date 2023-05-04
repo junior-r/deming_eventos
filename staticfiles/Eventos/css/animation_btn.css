@@ -10,3 +10,9 @@
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
 }
+.animado:hover {
+  animation-name: none;
+  animation-duration: 0;
+  animation-timing-function: unset;
+  animation-iteration-count: initial;
+}

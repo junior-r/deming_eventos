@@ -82,10 +82,11 @@
 
 
     {% if perms.Eventos.add_career %}
-
-        <div class="fixed right-6 bottom-6">
-            <button type="button" data-modal-target="career-form-modal" data-modal-toggle="career-form-modal"
-                    class="flex animado items-center justify-center text-white bg-blue-700 rounded-full w-14 h-14 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:focus:ring-blue-800">
+        <div data-dial-init class="fixed right-6 group animado" style="top: 6rem">
+            <button type="button" data-dial-toggle="speed-dial-menu-top-right"
+                    aria-controls="speed-dial-menu-top-right"
+                    aria-expanded="false"
+                    class="flex items-center justify-center text-white bg-blue-700 rounded-full w-14 h-14 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:focus:ring-blue-800">
                 <svg aria-hidden="true" class="w-8 h-8 transition-transform group-hover:rotate-45" fill="none"
                      stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -93,68 +94,25 @@
                 </svg>
                 <span class="sr-only">Open actions menu</span>
             </button>
-        </div>
-
-        <!-- Default Modal -->
-        <div id="career-form-modal" tabindex="-1"
-             class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full">
-            <div class="relative w-full h-full max-w-lg md:h-auto">
-                <!-- Modal content -->
-                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                    <!-- Modal header -->
-                    <div class="flex items-center justify-between p-5 border-b rounded-t dark:border-gray-600">
-                        <h3 class="text-xl font-medium text-gray-900 dark:text-white">
-                            Regístra una carrera universitaria
-                        </h3>
-                        <button type="button"
-                                class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                                data-modal-hide="career-form-modal">
-                            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                                 xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
-                                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                      clip-rule="evenodd"></path>
-                            </svg>
-                            <span class="sr-only">Close modal</span>
-                        </button>
-                    </div>
-                    <!-- Modal body -->
-                    <div class="p-6 space-y-6">
-                        <form action="" method="post">
-                            {% csrf_token %}
-                            <div class="">
-                                <label for="{{ form.name.id_for_label }}"
-                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                    Nombre de la carrera:</label>
-                                {{ form.name }}
-                            </div>
-                            {% if form.name.errors %}
-                                <p id="filled_error_help mb-6"
-                                   class="text-xs text-red-600 dark:text-red-400">
-                                    <span class="font-medium">Oh, error!</span> {{ form.name.errors }}
-                                </p>
-                            {% endif %}
-
-                            <div class="flex justify-center my-4">
-                                {{ form.captcha }}
-                            </div>
-
-                            <div class="buttons flex gap-4 mt-4">
-                                <button type="reset"
-                                        class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
-                                    Limpiar campos
-                                </button>
-                                <button type="submit"
-                                        class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">
-                                    Guardar
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+            <div id="speed-dial-menu-top-right" class="flex flex-col items-center hidden mt-4 space-y-2">
+                <button type="button" data-tooltip-target="tooltip-career" data-tooltip-placement="left"
+                        data-modal-target="career-form-modal" data-modal-toggle="career-form-modal"
+                        class="flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-full border border-gray-200 dark:border-gray-600 shadow-sm dark:hover:text-white dark:text-gray-400 hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 focus:ring-4 focus:ring-gray-300 focus:outline-none dark:focus:ring-gray-400">
+                    <svg fill="currentColor" class="w-6 h-6" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
+                         aria-hidden="true">
+                        <path clip-rule="evenodd" fill-rule="evenodd"
+                              d="M6 3.75A2.75 2.75 0 018.75 1h2.5A2.75 2.75 0 0114 3.75v.443c.572.055 1.14.122 1.706.2C17.053 4.582 18 5.75 18 7.07v3.469c0 1.126-.694 2.191-1.83 2.54-1.952.599-4.024.921-6.17.921s-4.219-.322-6.17-.921C2.694 12.73 2 11.665 2 10.539V7.07c0-1.321.947-2.489 2.294-2.676A41.047 41.047 0 016 4.193V3.75zm6.5 0v.325a41.622 41.622 0 00-5 0V3.75c0-.69.56-1.25 1.25-1.25h2.5c.69 0 1.25.56 1.25 1.25zM10 10a1 1 0 00-1 1v.01a1 1 0 001 1h.01a1 1 0 001-1V11a1 1 0 00-1-1H10z"></path>
+                        <path d="M3 15.055v-.684c.126.053.255.1.39.142 2.092.642 4.313.987 6.61.987 2.297 0 4.518-.345 6.61-.987.135-.041.264-.089.39-.142v.684c0 1.347-.985 2.53-2.363 2.686a41.454 41.454 0 01-9.274 0C3.985 17.585 3 16.402 3 15.055z"></path>
+                    </svg>
+                    <span class="sr-only">Carrera</span>
+                </button>
+                <div id="tooltip-career" role="tooltip"
+                     class="absolute z-10 invisible inline-block w-auto px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                    Agregar Carrera
+                    <div class="tooltip-arrow" data-popper-arrow></div>
                 </div>
             </div>
         </div>
-
     {% endif %}
     {% if perms.Eventos.change_career %}
         {% for career in careers %}

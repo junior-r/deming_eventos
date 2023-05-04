@@ -41,23 +41,23 @@ class CareerForm(forms.ModelForm):
 
 
 class EventForm(forms.ModelForm):
-    captcha = ReCaptchaField()
+    captcha = ReCaptchaField(required=True)
     logo = forms.ImageField(required=False, widget=forms.FileInput(attrs={
         'accept': 'image/jpeg, image/jpg',
         'class': 'block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400',
     }))
     title = forms.CharField(max_length=150, required=True, widget=forms.TextInput(attrs={
         'placeholder': 'Seminario de...',
-        'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
+        'class': 'required-field bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
     }))
     place = forms.CharField(max_length=150, required=True, widget=forms.TextInput(attrs={
         'placeholder': 'Ecuador',
-        'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
+        'class': 'required-field bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
     }))
     addressed_to = forms.CharField(max_length=300, required=True, widget=forms.Textarea(attrs={
         'placeholder': 'Personas interesadas en aprender sobre...',
         'rows': '3',
-        'class': 'block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
+        'class': 'required-field block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
     }))
     price = forms.CharField(required=False, widget=forms.NumberInput(attrs={
         'placeholder': '123.12',
@@ -67,21 +67,21 @@ class EventForm(forms.ModelForm):
     start_date = forms.DateField(required=True, widget=forms.DateInput(attrs={
         'type': 'date',
         'min': timezone.now().date().isoformat(),
-        'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
+        'class': 'required-field bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
     }))
     final_date = forms.DateField(required=True, widget=forms.DateInput(attrs={
         'type': 'date',
         'min': timezone.now().date().isoformat(),
-        'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
+        'class': 'required-field bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
     }))
     modality = forms.ChoiceField(choices=modality_options, required=True, widget=forms.Select(attrs={
-        'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
+        'class': 'required-field bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
     }))
     country_phone = CountryField(help_text='Este país será utilizado para saber el '
                                            'código de marcación correspondiente a número de teléfono').formfield()
     phone = forms.CharField(required=True, widget=forms.NumberInput(attrs={
         'placeholder': '9999999999',
-        'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
+        'class': 'required-field bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
     }))
     alternative_phone = forms.CharField(required=False, widget=forms.NumberInput(attrs={
         'placeholder': '9999999999',
@@ -89,7 +89,7 @@ class EventForm(forms.ModelForm):
     }))
     email = forms.CharField(required=True, widget=forms.EmailInput(attrs={
         'placeholder': 'johndoe@example.com',
-        'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
+        'class': 'required-field bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
     }))
     alternative_email = forms.CharField(required=False, widget=forms.EmailInput(attrs={
         'placeholder': 'johndoe123@example.com',
@@ -108,7 +108,7 @@ class EventForm(forms.ModelForm):
     }))
     event_planning = forms.FileField(required=True, widget=forms.FileInput(attrs={
         'accept': 'application/pdf, application/vnd.ms-excel',
-        'class': 'block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400',
+        'class': 'required-field block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400',
     }))
     link_video = forms.URLField(max_length=150, required=False, widget=forms.URLInput(attrs={
         'placeholder': 'https://example.com',

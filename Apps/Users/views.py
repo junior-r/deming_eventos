@@ -15,6 +15,7 @@ from django.db.models import Q, QuerySet
 from django.db.models.fields.files import ImageFieldFile
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils.translation import to_language
 
 from Apps.Eventos.forms import ParticipantDataUpdateForm
 from Apps.Eventos.models import Event, Participant
@@ -133,6 +134,8 @@ def profile(request, username, id_user):
     events_teacher = None
     if user.is_teacher:
         events_teacher = Event.objects.filter(teachers__username=user.username)
+
+    print(to_language('hello'))
 
     data = {
         'current_profile_user': user,

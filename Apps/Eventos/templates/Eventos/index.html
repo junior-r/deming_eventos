@@ -16,150 +16,151 @@
 {% endblock %}
 
 {% block content %}
-    {% if form.errors %}
-        <div id="toast-danger"
-             class="absolute flex items-center w-full max-w-xl bottom-0 z-5 left-8 p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
-             role="alert">
-            <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
-                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                     xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd"
-                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                          clip-rule="evenodd"></path>
-                </svg>
-                <span class="sr-only">Error icon</span>
-            </div>
-            <div class="ml-3 text-sm font-normal">
-                <ul>
-                    {% for key, value in form.errors.items %}
-                        <li class="flex gap-2">
-                            <svg fill="none" class="w-5 h-5 text-gray-500 dark:text-gray-400"
-                                 stroke="currentColor"
-                                 stroke-width="1.5" viewBox="0 0 24 24"
-                                 xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                      d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"></path>
-                            </svg>
-                            {{ value }}
-                        </li>
-                    {% endfor %}
-                </ul>
+    <div class="relative">
+        {% if form.errors %}
+            <div id="toast-danger"
+                 class="absolute flex items-center w-full max-w-xl bottom-0 z-5 left-8 p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+                 role="alert">
+                <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                              clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="sr-only">Error icon</span>
+                </div>
+                <div class="ml-3 text-sm font-normal">
+                    <ul>
+                        {% for key, value in form.errors.items %}
+                            <li class="flex gap-2">
+                                <svg fill="none" class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                                     stroke="currentColor"
+                                     stroke-width="1.5" viewBox="0 0 24 24"
+                                     xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"></path>
+                                </svg>
+                                {{ value }}
+                            </li>
+                        {% endfor %}
+                    </ul>
 
+                </div>
+                <button type="button"
+                        class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+                        data-dismiss-target="#toast-danger" aria-label="Close">
+                    <span class="sr-only">Close</span>
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                              clip-rule="evenodd"></path>
+                    </svg>
+                </button>
             </div>
-            <button type="button"
-                    class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
-                    data-dismiss-target="#toast-danger" aria-label="Close">
-                <span class="sr-only">Close</span>
-                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                     xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd"
-                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                          clip-rule="evenodd"></path>
-                </svg>
-            </button>
+        {% endif %}
+
+        <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
+            <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="myEventsTab"
+                data-tabs-toggle="#EventsTabContent"
+                role="tablist">
+                <li class="mr-2" role="presentation">
+                    <button class="inline-block p-4 border-b-2 rounded-t-lg" id="table-events-tab"
+                            data-tabs-target="#events"
+                            type="button" role="tab" aria-controls="profile" aria-selected="false">Lista
+                    </button>
+                </li>
+
+                <li class="mr-2" role="presentation">
+                    <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+                            id="cards-events-tab" data-tabs-target="#card-events" type="button" role="tab"
+                            aria-controls="card-events" aria-selected="false">Items
+                    </button>
+                </li>
+            </ul>
         </div>
-    {% endif %}
+        <div id="EventsTabContent">
+            <div class="hidden rounded-lg bg-gray-50 dark:bg-gray-800" id="events" role="tabpanel"
+                 aria-labelledby="table-events-tab">
 
-    <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
-        <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="myEventsTab"
-            data-tabs-toggle="#EventsTabContent"
-            role="tablist">
-            <li class="mr-2" role="presentation">
-                <button class="inline-block p-4 border-b-2 rounded-t-lg" id="table-events-tab"
-                        data-tabs-target="#events"
-                        type="button" role="tab" aria-controls="profile" aria-selected="false">Lista
-                </button>
-            </li>
-
-            <li class="mr-2" role="presentation">
-                <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-                        id="cards-events-tab" data-tabs-target="#card-events" type="button" role="tab"
-                        aria-controls="card-events" aria-selected="false">Items
-                </button>
-            </li>
-        </ul>
-    </div>
-    <div id="EventsTabContent">
-        <div class="hidden rounded-lg bg-gray-50 dark:bg-gray-800" id="events" role="tabpanel"
-             aria-labelledby="table-events-tab">
-
-            <div class="mt-6 relative overflow-x-auto shadow-md sm:rounded-lg p-4">
-                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400" id="general_datatable">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                        <th scope="col" class="px-6 py-3">
-                            <input id="checkbox-all-search" type="checkbox"
-                                   class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Responsable
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Nombre
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Lugar
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Precio
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Fecha de Inicio
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Fecha de Cierre
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Teléfono
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Email
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Activo
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Opciones
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for event in events %}
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-
-                            <th scope="row"
-                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <div class="mt-6 relative overflow-x-auto shadow-md sm:rounded-lg p-4">
+                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400" id="general_datatable">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">
                                 <input id="checkbox-all-search" type="checkbox"
                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                             </th>
-                            <td class="px-6 py-4">
-                                <div class="flex -space-x-4">
-                                    {% for teacher in event.teachers.all %}
-                                        <a href="{{ teacher.curriculum.url }}" target="_blank">
-                                            <img class="w-10 h-10 border-2 border-white rounded-full dark:border-gray-800"
-                                                 src="{{ teacher.get_picture_profile }}"
-                                                 alt="Imagen de perfil del profesor {{ teacher.get_full_name }}">
-                                        </a>
-                                    {% endfor %}
-                                </div>
-                            </td>
-                            <td class="px-6 py-4" data-popover-target="popover-title-event-{{ event.id }}">
-                                <div data-popover id="popover-title-event-{{ event.id }}" role="tooltip"
-                                     class="absolute z-10 invisible inline-block w-64 text-sm font-light text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
-                                    <div class="px-3 py-2">
-                                        <p>{{ event.title }}</p>
+                            <th scope="col" class="px-6 py-3">
+                                Responsable
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Nombre
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Lugar
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Precio
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Fecha de Inicio
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Fecha de Cierre
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Teléfono
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Email
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Activo
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Opciones
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for event in events %}
+                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+
+                                <th scope="row"
+                                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                    <input id="checkbox-all-search" type="checkbox"
+                                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                                </th>
+                                <td class="px-6 py-4">
+                                    <div class="flex -space-x-4">
+                                        {% for teacher in event.teachers.all %}
+                                            <a href="{{ teacher.curriculum.url }}" target="_blank">
+                                                <img class="w-10 h-10 border-2 border-white rounded-full dark:border-gray-800"
+                                                     src="{{ teacher.get_picture_profile }}"
+                                                     alt="Imagen de perfil del profesor {{ teacher.get_full_name }}">
+                                            </a>
+                                        {% endfor %}
                                     </div>
-                                    <div data-popper-arrow></div>
-                                </div>
-                                {{ event.get_short_name }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ event.place }}
-                            </td>
-                            <td class="px-6 py-4">
-                                ${{ event.price.to_eng_string }}
-                            </td>
-                            <td class="px-6 py-4">
+                                </td>
+                                <td class="px-6 py-4" data-popover-target="popover-title-event-{{ event.id }}">
+                                    <div data-popover id="popover-title-event-{{ event.id }}" role="tooltip"
+                                         class="absolute z-10 invisible inline-block w-64 text-sm font-light text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
+                                        <div class="px-3 py-2">
+                                            <p>{{ event.title }}</p>
+                                        </div>
+                                        <div data-popper-arrow></div>
+                                    </div>
+                                    {{ event.get_short_name }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ event.place }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    ${{ event.price.to_eng_string }}
+                                </td>
+                                <td class="px-6 py-4">
                                 <span class="bg-blue-100 text-blue-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
                                     <svg fill="none" class="w-3 h-3 mr-1" stroke="currentColor" stroke-width="1.5"
                                          viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -168,8 +169,8 @@
                                     </svg>
                                   {{ event.start_date }}
                                 </span>
-                            </td>
-                            <td class="px-6 py-4">
+                                </td>
+                                <td class="px-6 py-4">
                                 <span class="bg-blue-100 text-blue-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
                                     <svg fill="none" class="w-3 h-3 mr-1" stroke="currentColor" stroke-width="1.5"
                                          viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -178,135 +179,136 @@
                                     </svg>
                                   {{ event.final_date }}
                                 </span>
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ event.get_full_number_phone }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ event.email }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {% if event.active %}
-                                    <span class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Activo</span>
-                                {% else %}
-                                    <span class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Inactivo</span>
-                                {% endif %}
-                            </td>
-                            <td class="px-6 py-4 flex">
-                                <a href="{% url 'view_event' event.id %}"
-                                   class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                                    <svg fill="none" class="w-5 h-5 mr-1" stroke="currentColor" stroke-width="1.5"
-                                         viewBox="0 0 24 24"
-                                         xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                              d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"></path>
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                    </svg>
-                                </a>
-                                {% if perms.Eventos.change_event %}
-                                    <a href="{% url 'update_event' event.id %}"
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ event.get_full_number_phone }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ event.email }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {% if event.active %}
+                                        <span class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Activo</span>
+                                    {% else %}
+                                        <span class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Inactivo</span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 flex">
+                                    <a href="{% url 'view_event' event.id %}"
                                        class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                                        <svg fill="none" stroke="currentColor" class="w-5 h-5 mr-1" stroke-width="1.5"
+                                        <svg fill="none" class="w-5 h-5 mr-1" stroke="currentColor" stroke-width="1.5"
                                              viewBox="0 0 24 24"
                                              xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                             <path stroke-linecap="round" stroke-linejoin="round"
-                                                  d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"></path>
+                                                  d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                         </svg>
                                     </a>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-
-        </div>
-
-        <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="card-events" role="tabpanel"
-             aria-labelledby="cards-events-tab">
-
-            <div class="content-cards flex gap-4 wrap">
-                {% if events %}
-                    {% for event in events %}
-                        <div class="w-full relative max-w-sm bg-white hover:bg-gray-200 border border-gray-700 rounded-lg shadow dark:bg-gray-900 dark:hover:bg-gray-800 dark:border-gray-700">
-                            {% if event.active %}
-                                <span class="absolute top-2 left-2 bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Activo</span>
-                            {% else %}
-                                <span class="absolute top-2 left-2 bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Inactivo</span>
-                            {% endif %}
-                            <a href="{% url 'view_event' event.id %}" class="mb-4 block">
-                                <img class="rounded w-full object-cover" loading="lazy" src="{{ event.get_logo }}"
-                                     alt="product image"/>
-                            </a>
-                            <div class="px-5 pb-5">
-                                <a href="{% url 'view_event' event.id %}"
-                                   class="mb-4 flex flex-wrap gap-4 justify-between items-center">
-                                    <h5 class="text-xl font-semibold tracking-tight text-gray-900 hover:text-blue-500 hover:underline dark:text-white dark:hover:text-blue-400">
-                                        {{ event.title.capitalize }}
-                                    </h5>
-                                    <div class="icons flex gap-2">
-                                        <div class="certify" data-popover-target="popover-certify">
-                                            <svg fill="none" class="w-5 h-5 text-blue-500 dark:text-yellow-400"
-                                                 stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
+                                    {% if perms.Eventos.change_event %}
+                                        <a href="{% url 'update_event' event.id %}"
+                                           class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                                            <svg fill="none" stroke="currentColor" class="w-5 h-5 mr-1"
+                                                 stroke-width="1.5"
+                                                 viewBox="0 0 24 24"
                                                  xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
-                                                      d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"></path>
+                                                      d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"></path>
                                             </svg>
-                                        </div>
-                                        <div class="teachers" data-popover-target="popover-teachers">
-                                            <svg fill="none" class="w-5 h-5 text-blue-500 dark:text-yellow-400"
-                                                 stroke="currentColor" stroke-width="1.5"
-                                                 viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
-                                                 aria-hidden="true">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                      d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"></path>
-                                            </svg>
-                                        </div>
-                                    </div>
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="card-events" role="tabpanel"
+                 aria-labelledby="cards-events-tab">
+
+                <div class="content-cards flex gap-4 wrap">
+                    {% if events %}
+                        {% for event in events %}
+                            <div class="w-full relative max-w-sm bg-white hover:bg-gray-200 border border-gray-700 rounded-lg shadow dark:bg-gray-900 dark:hover:bg-gray-800 dark:border-gray-700">
+                                {% if event.active %}
+                                    <span class="absolute top-2 left-2 bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Activo</span>
+                                {% else %}
+                                    <span class="absolute top-2 left-2 bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Inactivo</span>
+                                {% endif %}
+                                <a href="{% url 'view_event' event.id %}" class="mb-4 block">
+                                    <img class="rounded w-full object-cover" loading="lazy" src="{{ event.get_logo }}"
+                                         alt="product image"/>
                                 </a>
-                                <!-- Popover´s -->
-                                <div data-popover id="popover-certify" role="tooltip"
-                                     class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
-                                    <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
-                                        <h3 class="font-semibold text-gray-900 dark:text-white">¡Certificación
-                                            incluida!</h3>
-                                    </div>
-                                    <div class="px-3 py-2">
-                                        <p>Este evento incluye un certificado de finalización avalado por el
-                                            Instituto Superior Tecnológico Corporativo Edwards Deming.</p>
-                                    </div>
-                                    <div data-popper-arrow></div>
-                                </div>
-                                <div data-popover id="popover-teachers" role="tooltip"
-                                     class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
-                                    <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
-                                        <h3 class="font-semibold text-gray-900 dark:text-white">
-                                            ¡Ponentes de este eventos!
-                                        </h3>
-                                    </div>
-                                    <div class="px-3 py-2">
-                                        <div class="teachers flex flex-wrap gap-2"
-                                             style="justify-content: space-evenly">
-                                            {% for event in events %}
-                                                {% for teacher in event.teachers.all %}
-                                                    <div class="flex items-center space-x-4 flex-col">
-                                                        <img class="w-10 h-10 rounded-full"
-                                                             src="{{ teacher.get_picture_profile }}" alt="">
-                                                        <div class="font-medium dark:text-white">
-                                                            <div>{{ teacher.get_full_name }}</div>
-                                                        </div>
-                                                    </div>
-                                                {% endfor %}
-                                            {% endfor %}
+                                <div class="px-5 pb-5">
+                                    <a href="{% url 'view_event' event.id %}"
+                                       class="mb-4 flex flex-wrap gap-4 justify-between items-center">
+                                        <h5 class="text-xl font-semibold tracking-tight text-gray-900 hover:text-blue-500 hover:underline dark:text-white dark:hover:text-blue-400">
+                                            {{ event.title.capitalize }}
+                                        </h5>
+                                        <div class="icons flex gap-2">
+                                            <div class="certify" data-popover-target="popover-certify">
+                                                <svg fill="none" class="w-5 h-5 text-blue-500 dark:text-yellow-400"
+                                                     stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
+                                                     xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                          d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"></path>
+                                                </svg>
+                                            </div>
+                                            <div class="teachers" data-popover-target="popover-teachers">
+                                                <svg fill="none" class="w-5 h-5 text-blue-500 dark:text-yellow-400"
+                                                     stroke="currentColor" stroke-width="1.5"
+                                                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                                                     aria-hidden="true">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                          d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"></path>
+                                                </svg>
+                                            </div>
                                         </div>
+                                    </a>
+                                    <!-- Popover´s -->
+                                    <div data-popover id="popover-certify" role="tooltip"
+                                         class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
+                                        <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
+                                            <h3 class="font-semibold text-gray-900 dark:text-white">¡Certificación
+                                                incluida!</h3>
+                                        </div>
+                                        <div class="px-3 py-2">
+                                            <p>Este evento incluye un certificado de finalización avalado por el
+                                                Instituto Superior Tecnológico Corporativo Edwards Deming.</p>
+                                        </div>
+                                        <div data-popper-arrow></div>
                                     </div>
-                                    <div data-popper-arrow></div>
-                                </div>
-                                <div class="dates mb-4 flex gap-2 items-center">
-                                    <div class="start_date">
-                                        <p class="dark:text-white">
+                                    <div data-popover id="popover-teachers" role="tooltip"
+                                         class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
+                                        <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
+                                            <h3 class="font-semibold text-gray-900 dark:text-white">
+                                                ¡Ponentes de este eventos!
+                                            </h3>
+                                        </div>
+                                        <div class="px-3 py-2">
+                                            <div class="teachers flex flex-wrap gap-2"
+                                                 style="justify-content: space-evenly">
+                                                {% for event in events %}
+                                                    {% for teacher in event.teachers.all %}
+                                                        <div class="flex items-center space-x-4 flex-col">
+                                                            <img class="w-10 h-10 rounded-full"
+                                                                 src="{{ teacher.get_picture_profile }}" alt="">
+                                                            <div class="font-medium dark:text-white">
+                                                                <div>{{ teacher.get_full_name }}</div>
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        <div data-popper-arrow></div>
+                                    </div>
+                                    <div class="dates mb-4 flex gap-2 items-center">
+                                        <div class="start_date">
+                                            <p class="dark:text-white">
                                     <span class="bg-blue-100 text-blue-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
                                         <svg fill="none" class="w-3 h-3 mr-1" stroke="currentColor" stroke-width="1.5"
                                              viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -315,18 +317,18 @@
                                         </svg>
                                       {{ event.start_date.isoformat }}
                                     </span>
-                                        </p>
-                                    </div>
+                                            </p>
+                                        </div>
 
-                                    <svg fill="none" class="w-5 h-5 mr-1" stroke="white" stroke-width="1.5"
-                                         viewBox="0 0 24 24"
-                                         xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                              d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"></path>
-                                    </svg>
+                                        <svg fill="none" class="w-5 h-5 mr-1" stroke="white" stroke-width="1.5"
+                                             viewBox="0 0 24 24"
+                                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"></path>
+                                        </svg>
 
-                                    <div class="final_date">
-                                        <p class="dark:text-white">
+                                        <div class="final_date">
+                                            <p class="dark:text-white">
                                     <span class="bg-blue-100 text-blue-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
                                         <svg fill="none" class="w-3 h-3 mr-1" stroke="currentColor" stroke-width="1.5"
                                              viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -335,336 +337,471 @@
                                         </svg>
                                       {{ event.final_date.isoformat }}
                                     </span>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="description mb-4">
+                                        <p class="dark:text-gray-400">
+                                            {{ event.addressed_to }}
                                         </p>
                                     </div>
-                                </div>
 
-                                <div class="description mb-4">
-                                    <p class="dark:text-gray-400">
-                                        {{ event.addressed_to }}
-                                    </p>
-                                </div>
-
-                                <div class="flex items-center justify-between">
-                                    <p class="text-3md font-bold text-gray-900 dark:text-white flex items-center">
-                                        <i class="fa-brands fa-paypal" style="color: #2e75ef;"></i>
-                                        &nbsp;
-                                        <span>${{ event.price.to_eng_string }}</span>
-                                    </p>
-                                    <a href="{% url 'view_event' event.id %}"
-                                       class="text-white flex bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                        Explorar
-                                        <svg fill="none" class="w-5 h-5 mr-1" stroke="white" stroke-width="1.5"
-                                             viewBox="0 0 24 24"
-                                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                  d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"></path>
-                                        </svg>
-                                    </a>
+                                    <div class="flex items-center justify-between">
+                                        <p class="text-3md font-bold text-gray-900 dark:text-white flex items-center">
+                                            <i class="fa-brands fa-paypal" style="color: #2e75ef;"></i>
+                                            &nbsp;
+                                            <span>${{ event.price.to_eng_string }}</span>
+                                        </p>
+                                        <a href="{% url 'view_event' event.id %}"
+                                           class="text-white flex bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                            Explorar
+                                            <svg fill="none" class="w-5 h-5 mr-1" stroke="white" stroke-width="1.5"
+                                                 viewBox="0 0 24 24"
+                                                 xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                      d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"></path>
+                                            </svg>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
+                        {% endfor %}
                         </div>
-                    {% endfor %}
-                    </div>
-                {% else %}
-                    <div class="content flex justify-center items-center flex-col w-full p-4">
-                        <img src="{% static 'Eventos/images/icons/filter-circle-xmark-solid.svg' %}"
-                             style="width: 20rem" class="mb-4"
-                             alt="ícono de registros no encontrados">
-                        <h1 class="text-5xl font-extrabold dark:text-white">No hay eventos activos por ahora.</h1>
-                    </div>
-                {% endif %}
-        </div>
-    </div>
-
-
-    {% if perms.Eventos.add_event %}
-        <div class="fixed right-6 bottom-6">
-            <button type="button" data-modal-target="events-form-modal" data-modal-toggle="events-form-modal"
-                    class="flex animado items-center justify-center text-white bg-blue-700 rounded-full w-14 h-14 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:focus:ring-blue-800">
-                <svg aria-hidden="true" class="w-8 h-8 transition-transform group-hover:rotate-45" fill="none"
-                     stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                </svg>
-                <span class="sr-only">Open actions menu</span>
-            </button>
+                    {% else %}
+                        <div class="content flex justify-center items-center flex-col w-full p-4">
+                            <img src="{% static 'Eventos/images/icons/filter-circle-xmark-solid.svg' %}"
+                                 style="width: 20rem" class="mb-4"
+                                 alt="ícono de registros no encontrados">
+                            <h1 class="text-5xl font-extrabold dark:text-white">No hay eventos activos por ahora.</h1>
+                        </div>
+                    {% endif %}
+            </div>
         </div>
 
-        <!-- Extra Large Modal -->
-        <div id="events-form-modal" tabindex="-1"
-             class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full">
-            <div class="relative w-full h-full max-w-7xl md:h-auto">
-                <!-- Modal content -->
-                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                    <!-- Modal header -->
-                    <div class="flex items-center justify-between p-5 border-b rounded-t dark:border-gray-600">
-                        <h3 class="text-xl font-medium text-gray-900 dark:text-white">
-                            Regístra un Evento | Pero antes asegurate de tener <a href="{% url 'careers' %}"
-                                                                                  class="text-blue-400">carreras
-                            registradas</a>
-                        </h3>
-                        <button type="button"
-                                class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                                data-modal-hide="events-form-modal">
-                            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                                 xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
-                                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                      clip-rule="evenodd"></path>
-                            </svg>
-                            <span class="sr-only">Close modal</span>
-                        </button>
+
+        {% if perms.Eventos.add_event %}
+
+            <div data-dial-init class="fixed right-6 group animado" style="top: 6rem">
+                <button type="button" data-dial-toggle="speed-dial-menu-top-right"
+                        aria-controls="speed-dial-menu-top-right"
+                        aria-expanded="false"
+                        class="flex items-center justify-center text-white bg-blue-700 rounded-full w-14 h-14 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:focus:ring-blue-800">
+                    <svg aria-hidden="true" class="w-8 h-8 transition-transform group-hover:rotate-45" fill="none"
+                         stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    <span class="sr-only">Open actions menu</span>
+                </button>
+                <div id="speed-dial-menu-top-right" class="flex flex-col items-center hidden mt-4 space-y-2">
+                    <button type="button" data-tooltip-target="tooltip-event" data-tooltip-placement="left"
+                            data-modal-target="events-form-modal" data-modal-toggle="events-form-modal"
+                            class="flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-full border border-gray-200 dark:border-gray-600 shadow-sm dark:hover:text-white dark:text-gray-400 hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 focus:ring-4 focus:ring-gray-300 focus:outline-none dark:focus:ring-gray-400">
+                        <svg fill="currentColor" class="w-6 h-6 -ml-px " viewBox="0 0 20 20"
+                             xmlns="http://www.w3.org/2000/svg"
+                             aria-hidden="true">
+                            <path clip-rule="evenodd" fill-rule="evenodd"
+                                  d="M9.664 1.319a.75.75 0 01.672 0 41.059 41.059 0 018.198 5.424.75.75 0 01-.254 1.285 31.372 31.372 0 00-7.86 3.83.75.75 0 01-.84 0 31.508 31.508 0 00-2.08-1.287V9.394c0-.244.116-.463.302-.592a35.504 35.504 0 013.305-2.033.75.75 0 00-.714-1.319 37 37 0 00-3.446 2.12A2.216 2.216 0 006 9.393v.38a31.293 31.293 0 00-4.28-1.746.75.75 0 01-.254-1.285 41.059 41.059 0 018.198-5.424zM6 11.459a29.848 29.848 0 00-2.455-1.158 41.029 41.029 0 00-.39 3.114.75.75 0 00.419.74c.528.256 1.046.53 1.554.82-.21.324-.455.63-.739.914a.75.75 0 101.06 1.06c.37-.369.69-.77.96-1.193a26.61 26.61 0 013.095 2.348.75.75 0 00.992 0 26.547 26.547 0 015.93-3.95.75.75 0 00.42-.739 41.053 41.053 0 00-.39-3.114 29.925 29.925 0 00-5.199 2.801 2.25 2.25 0 01-2.514 0c-.41-.275-.826-.541-1.25-.797a6.985 6.985 0 01-1.084 3.45 26.503 26.503 0 00-1.281-.78A5.487 5.487 0 006 12v-.54z"></path>
+                        </svg>
+                        <span class="sr-only">Evento</span>
+                    </button>
+                    <div id="tooltip-event" role="tooltip"
+                         class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                        Agregar Evento
+                        <div class="tooltip-arrow" data-popper-arrow></div>
                     </div>
-                    <!-- Modal body -->
-                    <div class="p-4 space-y-6">
-                        <form action="" method="post" enctype="multipart/form-data">
-                            {% csrf_token %}
 
-                            <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
-                                <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="myTab"
-                                    data-tabs-toggle="#myTabContent" role="tablist">
-                                    <li class="mr-2" role="presentation">
-                                        <button class="inline-block p-4 border-b-2 rounded-t-lg" id="profile-tab"
-                                                data-tabs-target="#profile" type="button" role="tab"
-                                                aria-controls="profile"
-                                                aria-selected="false">Paso 1
-                                        </button>
-                                    </li>
+                    <button type="button" data-tooltip-target="tooltip-career" data-tooltip-placement="left"
+                            data-modal-target="careerCreationForm" data-modal-toggle="careerCreationForm"
+                            class="flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-full border border-gray-200 dark:border-gray-600 shadow-sm dark:hover:text-white dark:text-gray-400 hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 focus:ring-4 focus:ring-gray-300 focus:outline-none dark:focus:ring-gray-400">
+                        <svg fill="currentColor" class="w-6 h-6" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
+                             aria-hidden="true">
+                            <path clip-rule="evenodd" fill-rule="evenodd"
+                                  d="M6 3.75A2.75 2.75 0 018.75 1h2.5A2.75 2.75 0 0114 3.75v.443c.572.055 1.14.122 1.706.2C17.053 4.582 18 5.75 18 7.07v3.469c0 1.126-.694 2.191-1.83 2.54-1.952.599-4.024.921-6.17.921s-4.219-.322-6.17-.921C2.694 12.73 2 11.665 2 10.539V7.07c0-1.321.947-2.489 2.294-2.676A41.047 41.047 0 016 4.193V3.75zm6.5 0v.325a41.622 41.622 0 00-5 0V3.75c0-.69.56-1.25 1.25-1.25h2.5c.69 0 1.25.56 1.25 1.25zM10 10a1 1 0 00-1 1v.01a1 1 0 001 1h.01a1 1 0 001-1V11a1 1 0 00-1-1H10z"></path>
+                            <path d="M3 15.055v-.684c.126.053.255.1.39.142 2.092.642 4.313.987 6.61.987 2.297 0 4.518-.345 6.61-.987.135-.041.264-.089.39-.142v.684c0 1.347-.985 2.53-2.363 2.686a41.454 41.454 0 01-9.274 0C3.985 17.585 3 16.402 3 15.055z"></path>
+                        </svg>
+                        <span class="sr-only">Carrera</span>
+                    </button>
+                    <div id="tooltip-career" role="tooltip"
+                         class="absolute z-10 invisible inline-block w-auto px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                        Agregar Carrera
+                        <div class="tooltip-arrow" data-popper-arrow></div>
+                    </div>
+                </div>
+            </div>
 
-                                    <li class="mr-2" role="presentation">
-                                        <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-                                                id="dashboard-tab" data-tabs-target="#dashboard" type="button"
-                                                role="tab"
-                                                aria-controls="dashboard" aria-selected="false">Paso 2
-                                        </button>
-                                    </li>
+            <!-- Extra Large Modal -->
+            <div id="events-form-modal" tabindex="-1"
+                 class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full">
+                <div class="relative w-full h-full max-w-7xl md:h-auto">
+                    <!-- Modal content -->
+                    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                        <!-- Modal header -->
+                        <div class="flex items-center justify-between p-5 border-b rounded-t dark:border-gray-600">
+                            <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+                                Regístra un Evento | Pero antes asegurate de tener <a href="{% url 'careers' %}"
+                                                                                      class="text-blue-400">carreras
+                                registradas</a>
+                            </h3>
+                            <button type="button"
+                                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                                    data-modal-hide="events-form-modal">
+                                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                          clip-rule="evenodd"></path>
+                                </svg>
+                                <span class="sr-only">Close modal</span>
+                            </button>
+                        </div>
+                        <!-- Modal body -->
+                        <div class="p-4 space-y-6">
+                            <form action="" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
 
-                                    <li class="mr-2" role="presentation">
-                                        <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-                                                id="teachers-tab" data-tabs-target="#teachers" type="button" role="tab"
-                                                aria-controls="teachers" aria-selected="false">Paso 3
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div id="myTabContent">
-                                <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="profile"
-                                     role="tabpanel"
-                                     aria-labelledby="profile-tab">
-                                    <div class="relative z-0 w-full mb-6 group">
-                                        <label for="{{ form.logo.id_for_label }}"
-                                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Logo</label>
-                                        {{ form.logo }}
-                                        {% if form.logo.errors %}
-                                            <p id="filled_error_help"
-                                               class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                    class="font-medium">Oh, error!</span> {{ form.logo.errors }}
-                                            </p>
-                                        {% endif %}
-                                    </div>
+                                <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
+                                    <ul class="flex w-full text-sm font-medium mb-2" id="myTab"
+                                        data-tabs-toggle="#myTabContent" role="tablist">
+                                        <li class="hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300 rounded-lg mr-2 w-full" role="presentation">
+                                            <button class="inline-block w-full text-left p-4 border-b-2 rounded-t-lg" id="profile-tab"
+                                                    data-tabs-target="#profile" type="button" role="tab"
+                                                    aria-controls="profile"
+                                                    aria-selected="false">Paso 1
+                                            </button>
+                                        </li>
 
-                                    <div class="grid md:grid-cols-3 md:gap-6">
-                                        <div class="relative z-0 w-full mb-6 group">
-                                            <label for="{{ form.title.id_for_label }}"
-                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                                Título *</label>
-                                            {{ form.title }}
-                                            {% if form.country_of_birth.errors %}
-                                                <p id="filled_error_help"
-                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                        class="font-medium">Oh, error!</span> {{ form.country_of_birth.errors }}
-                                                </p>
-                                            {% endif %}
-                                        </div>
+                                        <li class="hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300 rounded-lg mr-2 w-full" role="presentation">
+                                            <button class="inline-block w-full text-left p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+                                                    id="contact-tab" data-tabs-target="#contact" type="button"
+                                                    role="tab"
+                                                    aria-controls="contact" aria-selected="false">Paso 2
+                                            </button>
+                                        </li>
 
-                                        <div class="relative z-0 w-full mb-6 group">
-                                            <label for="{{ form.place.id_for_label }}"
-                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                                Lugar *</label>
-                                            {{ form.place }}
-                                            {% if form.country_of_birth.errors %}
-                                                <p id="filled_error_help"
-                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                        class="font-medium">Oh, error!</span> {{ form.country_of_birth.errors }}
-                                                </p>
-                                            {% endif %}
-                                        </div>
+                                        <li class="hover:text-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 dark:hover:text-gray-300 rounded-lg mr-2 w-full" role="presentation">
+                                            <button class="inline-block w-full text-left p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+                                                    id="teachers-tab" data-tabs-target="#teachers" type="button"
+                                                    role="tab"
+                                                    aria-controls="teachers" aria-selected="false">Paso 3
+                                            </button>
+                                        </li>
+                                    </ul>
 
-                                        <div class="relative z-0 w-full mb-6 group">
-                                            <label for="{{ form.price.id_for_label }}"
-                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                                Precio</label>
-                                            {{ form.price }}
-                                            {% if form.country_of_birth.errors %}
-                                                <p id="filled_error_help"
-                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                        class="font-medium">Oh, error!</span> {{ form.country_of_birth.errors }}
-                                                </p>
-                                            {% endif %}
-                                        </div>
-                                    </div>
+                                    <ol class="flex items-center w-full">
+                                        <li class="steps flex w-full items-center after:content-[''] after:w-full after:h-1 ">
+                                        </li>
+                                        <li class="steps flex w-full items-center after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-100 after:border-4 after:inline-block dark:after:border-gray-700">
+                                        </li>
+                                        <li class="steps flex items-center w-full">
+                                        </li>
+                                    </ol>
 
-                                    <div class="addressed_to">
-                                        <div class="relative z-0 w-full mb-6 group">
-                                            <label for="{{ form.addressed_to.id_for_label }}"
-                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                                Dirigído a: *</label>
-                                            {{ form.addressed_to }}
-                                            <p id="addressed_to" class="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                                                {{ form.addressed_to.help_text }}
-                                            </p>
-                                            {% if form.addressed_to.errors %}
-                                                <p id="filled_error_help"
-                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                        class="font-medium">Oh, error!</span> {{ form.addressed_to.errors }}
-                                                </p>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-
-                                    <div class="grid md:grid-cols-3 md:gap-6">
-                                        <div class="relative z-0 w-full mb-6 group">
-                                            <label for="{{ form.start_date.id_for_label }}"
-                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                                Fecha de inicio *</label>
-                                            {{ form.start_date }}
-                                            {% if form.start_date.errors %}
-                                                <p id="filled_error_help"
-                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                        class="font-medium">Oh, error!</span> {{ form.start_date.errors }}
-                                                </p>
-                                            {% endif %}
-                                        </div>
-
-                                        <div class="relative z-0 w-full mb-6 group">
-                                            <label for="{{ form.final_date.id_for_label }}"
-                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                                Fecha de cierre *</label>
-                                            {{ form.final_date }}
-                                            {% if form.final_date.errors %}
-                                                <p id="filled_error_help"
-                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                        class="font-medium">Oh, error!</span> {{ form.final_date.errors }}
-                                                </p>
-                                            {% endif %}
-                                        </div>
-
-                                        <div class="relative z-0 w-full mb-6 group">
-                                            <label for="{{ form.modality.id_for_label }}"
-                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                                Modalidad *</label>
-                                            {{ form.modality }}
-                                            {% if form.modality.errors %}
-                                                <p id="filled_error_help"
-                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                        class="font-medium">Oh, error!</span> {{ form.modality.errors }}
-                                                </p>
-                                            {% endif %}
-                                        </div>
-
-                                    </div>
                                 </div>
-
-                                <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="dashboard"
-                                     role="tabpanel" aria-labelledby="dashboard-tab">
-
-                                    <div class="grid md:grid-cols-3 md:gap-6">
+                                <div id="myTabContent">
+                                    <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800 tabs" id="profile"
+                                         role="tabpanel"
+                                         aria-labelledby="profile-tab">
                                         <div class="relative z-0 w-full mb-6 group">
-                                            {% get_countries as countries %}
-                                            <label for="{{ form.country_phone.id_for_label }}"
+                                            <label for="{{ form.logo.id_for_label }}"
                                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                                País *</label>
-                                            <select id="{{ form.country_phone.id_for_label }}" name="country_phone"
-                                                    required
-                                                    class="bg-gray-50 border border-gray-300 text-gray-900 mb-6 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                                {% for country in countries %}
-                                                    <option value="{{ country.code }}">{{ country.name }}</option>
-                                                {% endfor %}
-                                            </select>
-                                            <p id="helper-text-explanation"
-                                               class="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                                                {{ form.country_phone.help_text }}
-                                            </p>
-                                            {% if form.country_phone.errors %}
+                                                Logo</label>
+                                            {{ form.logo }}
+                                            {% if form.logo.errors %}
                                                 <p id="filled_error_help"
                                                    class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                        class="font-medium">Oh, error!</span> {{ form.country_phone.errors }}
+                                                        class="font-medium">Oh, error!</span> {{ form.logo.errors }}
                                                 </p>
                                             {% endif %}
                                         </div>
 
+                                        <div class="grid md:grid-cols-3 md:gap-6">
+                                            <div class="relative z-0 w-full mb-6 group">
+                                                <label for="{{ form.title.id_for_label }}"
+                                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                    Título *</label>
+                                                {{ form.title }}
+                                                {% if form.country_of_birth.errors %}
+                                                    <p id="filled_error_help"
+                                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                            class="font-medium">Oh, error!</span> {{ form.country_of_birth.errors }}
+                                                    </p>
+                                                {% endif %}
+                                            </div>
 
-                                        <div class="relative z-0 w-full mb-6 group">
-                                            <label for="{{ form.phone.id_for_label }}"
-                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                                Teléfono de contacto *</label>
-                                            {{ form.phone }}
-                                            {% if form.phone.errors %}
-                                                <p id="filled_error_help"
-                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                        class="font-medium">Oh, error!</span> {{ form.phone.errors }}
-                                                </p>
-                                            {% endif %}
+                                            <div class="relative z-0 w-full mb-6 group">
+                                                <label for="{{ form.place.id_for_label }}"
+                                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                    Lugar *</label>
+                                                {{ form.place }}
+                                                {% if form.country_of_birth.errors %}
+                                                    <p id="filled_error_help"
+                                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                            class="font-medium">Oh, error!</span> {{ form.country_of_birth.errors }}
+                                                    </p>
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="relative z-0 w-full mb-6 group">
+                                                <label for="{{ form.price.id_for_label }}"
+                                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                    Precio</label>
+                                                {{ form.price }}
+                                                {% if form.country_of_birth.errors %}
+                                                    <p id="filled_error_help"
+                                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                            class="font-medium">Oh, error!</span> {{ form.country_of_birth.errors }}
+                                                    </p>
+                                                {% endif %}
+                                            </div>
                                         </div>
 
-                                        <div class="relative z-0 w-full mb-6 group">
-                                            <label for="{{ form.alternative_phone.id_for_label }}"
-                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                                Teléfono de contacto (Alternativo)</label>
-                                            {{ form.alternative_phone }}
-                                            {% if form.alternative_phone.errors %}
-                                                <p id="filled_error_help"
-                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                        class="font-medium">Oh, error!</span> {{ form.alternative_phone.errors }}
+                                        <div class="addressed_to">
+                                            <div class="relative z-0 w-full mb-6 group">
+                                                <label for="{{ form.addressed_to.id_for_label }}"
+                                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                    Dirigído a: *</label>
+                                                {{ form.addressed_to }}
+                                                <p id="addressed_to"
+                                                   class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                                    {{ form.addressed_to.help_text }}
                                                 </p>
-                                            {% endif %}
+                                                {% if form.addressed_to.errors %}
+                                                    <p id="filled_error_help"
+                                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                            class="font-medium">Oh, error!</span> {{ form.addressed_to.errors }}
+                                                    </p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <div class="grid md:grid-cols-3 md:gap-6">
+                                            <div class="relative z-0 w-full mb-6 group">
+                                                <label for="{{ form.start_date.id_for_label }}"
+                                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                    Fecha de inicio *</label>
+                                                {{ form.start_date }}
+                                                {% if form.start_date.errors %}
+                                                    <p id="filled_error_help"
+                                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                            class="font-medium">Oh, error!</span> {{ form.start_date.errors }}
+                                                    </p>
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="relative z-0 w-full mb-6 group">
+                                                <label for="{{ form.final_date.id_for_label }}"
+                                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                    Fecha de cierre *</label>
+                                                {{ form.final_date }}
+                                                {% if form.final_date.errors %}
+                                                    <p id="filled_error_help"
+                                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                            class="font-medium">Oh, error!</span> {{ form.final_date.errors }}
+                                                    </p>
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="relative z-0 w-full mb-6 group">
+                                                <label for="{{ form.modality.id_for_label }}"
+                                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                    Modalidad *</label>
+                                                {{ form.modality }}
+                                                {% if form.modality.errors %}
+                                                    <p id="filled_error_help"
+                                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                            class="font-medium">Oh, error!</span> {{ form.modality.errors }}
+                                                    </p>
+                                                {% endif %}
+                                            </div>
+
                                         </div>
                                     </div>
 
-                                    <div class="grid md:grid-cols-2 md:gap-6">
-                                        <div class="relative z-0 w-full mb-6 group">
-                                            <label for="{{ form.email.id_for_label }}"
-                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                                Email de contacto *</label>
-                                            {{ form.email }}
-                                            {% if form.email.errors %}
-                                                <p id="filled_error_help"
-                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                        class="font-medium">Oh, error!</span> {{ form.email.errors }}
+                                    <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800 tabs" id="contact"
+                                         role="tabpanel" aria-labelledby="contact-tab">
+
+                                        <div class="grid md:grid-cols-3 md:gap-6">
+                                            <div class="relative z-0 w-full mb-6 group">
+                                                {% get_countries as countries %}
+                                                <label for="{{ form.country_phone.id_for_label }}"
+                                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                    País *</label>
+                                                <select id="{{ form.country_phone.id_for_label }}" name="country_phone"
+                                                        required
+                                                        class="bg-gray-50 border border-gray-300 text-gray-900 mb-6 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                                    {% for country in countries %}
+                                                        <option value="{{ country.code }}">{{ country.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <p id="helper-text-explanation"
+                                                   class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                                    {{ form.country_phone.help_text }}
                                                 </p>
-                                            {% endif %}
+                                                {% if form.country_phone.errors %}
+                                                    <p id="filled_error_help"
+                                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                            class="font-medium">Oh, error!</span> {{ form.country_phone.errors }}
+                                                    </p>
+                                                {% endif %}
+                                            </div>
+
+
+                                            <div class="relative z-0 w-full mb-6 group">
+                                                <label for="{{ form.phone.id_for_label }}"
+                                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                    Teléfono de contacto *</label>
+                                                {{ form.phone }}
+                                                {% if form.phone.errors %}
+                                                    <p id="filled_error_help"
+                                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                            class="font-medium">Oh, error!</span> {{ form.phone.errors }}
+                                                    </p>
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="relative z-0 w-full mb-6 group">
+                                                <label for="{{ form.alternative_phone.id_for_label }}"
+                                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                    Teléfono de contacto (Alternativo)</label>
+                                                {{ form.alternative_phone }}
+                                                {% if form.alternative_phone.errors %}
+                                                    <p id="filled_error_help"
+                                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                            class="font-medium">Oh, error!</span> {{ form.alternative_phone.errors }}
+                                                    </p>
+                                                {% endif %}
+                                            </div>
                                         </div>
 
-                                        <div class="relative z-0 w-full mb-6 group">
-                                            <label for="{{ form.alternative_email.id_for_label }}"
-                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                                Email de contacto (Alternativo)</label>
-                                            {{ form.alternative_email }}
-                                            {% if form.alternative_email.errors %}
-                                                <p id="filled_error_help"
-                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                        class="font-medium">Oh, error!</span> {{ form.alternative_email.errors }}
-                                                </p>
-                                            {% endif %}
+                                        <div class="grid md:grid-cols-2 md:gap-6">
+                                            <div class="relative z-0 w-full mb-6 group">
+                                                <label for="{{ form.email.id_for_label }}"
+                                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                    Email de contacto *</label>
+                                                {{ form.email }}
+                                                {% if form.email.errors %}
+                                                    <p id="filled_error_help"
+                                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                            class="font-medium">Oh, error!</span> {{ form.email.errors }}
+                                                    </p>
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="relative z-0 w-full mb-6 group">
+                                                <label for="{{ form.alternative_email.id_for_label }}"
+                                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                    Email de contacto (Alternativo)</label>
+                                                {{ form.alternative_email }}
+                                                {% if form.alternative_email.errors %}
+                                                    <p id="filled_error_help"
+                                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                            class="font-medium">Oh, error!</span> {{ form.alternative_email.errors }}
+                                                    </p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <div class="grid md:grid-cols-2 md:gap-6">
+                                            <div class="relative z-0 w-full mb-6 group">
+                                                <label for="{{ form.link_video.id_for_label }}"
+                                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                    Video de explicación</label>
+                                                {{ form.link_video }}
+                                                {% if form.link_video.errors %}
+                                                    <p id="filled_error_help"
+                                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                            class="font-medium">Oh, error!</span> {{ form.link_video.errors }}
+                                                    </p>
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="relative z-0 w-full mb-6 group">
+                                                <label for="{{ form.career.id_for_label }}"
+                                                       class="block flex gap-2 flex-wrap mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                    Carrera vinculada
+                                                    <button data-modal-target="careerCreationForm"
+                                                            data-modal-toggle="careerCreationForm"
+                                                            class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                                            type="button">
+                                                        <svg fill="none" class="w-5 h-5" stroke="currentColor"
+                                                             stroke-width="1.5"
+                                                             viewBox="0 0 24 24"
+                                                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                  d="M12 6v12m6-6H6"></path>
+                                                        </svg>
+                                                    </button>
+                                                    <a href="{% url 'careers' %}"
+                                                       class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                                       type="button">
+                                                        <svg fill="none" class="w-5 h-5" stroke="currentColor"
+                                                             stroke-width="1.5"
+                                                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                                                             aria-hidden="true">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                  d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"></path>
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                        </svg>
+                                                    </a>
+                                                </label>
+                                                {{ form.career }}
+                                                {% if form.career.errors %}
+                                                    <p id="filled_error_help"
+                                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                            class="font-medium">Oh, error!</span> {{ form.career.errors }}
+                                                    </p>
+                                                {% endif %}
+                                            </div>
+
+                                        </div>
+
+                                        <div class="grid md:grid-cols-3 md:gap-6 link_to_classroom">
+                                            <div class="relative z-0 w-full mb-6 group">
+                                                <label for="{{ form.platform_meeting.id_for_label }}"
+                                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                    Plataforma de reunión</label>
+                                                {{ form.platform_meeting }}
+                                                {% if form.platform_meeting.errors %}
+                                                    <p id="filled_error_help"
+                                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                            class="font-medium">Oh, error!</span> {{ form.platform_meeting.errors }}
+                                                    </p>
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="relative z-0 w-full mb-6 group">
+                                                <label for="{{ form.link_to_classroom.id_for_label }}"
+                                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                    Link de reunión</label>
+                                                {{ form.link_to_classroom }}
+                                                {% if form.link_to_classroom.errors %}
+                                                    <p id="filled_error_help"
+                                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                            class="font-medium">Oh, error!</span> {{ form.link_to_classroom.errors }}
+                                                    </p>
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="relative z-0 w-full mb-6 group">
+                                                <label for="{{ form.code_meeting.id_for_label }}"
+                                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                    Código de reunión</label>
+                                                {{ form.code_meeting }}
+                                                {% if form.code_meeting.errors %}
+                                                    <p id="filled_error_help"
+                                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                            class="font-medium">Oh, error!</span> {{ form.code_meeting.errors }}
+                                                    </p>
+                                                {% endif %}
+                                            </div>
+
                                         </div>
                                     </div>
 
-                                    <div class="grid md:grid-cols-3 md:gap-6">
-                                        <div class="relative z-0 w-full mb-6 group">
-                                            <label for="{{ form.link_video.id_for_label }}"
-                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                                Video de explicación</label>
-                                            {{ form.link_video }}
-                                            {% if form.link_video.errors %}
-                                                <p id="filled_error_help"
-                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                        class="font-medium">Oh, error!</span> {{ form.link_video.errors }}
-                                                </p>
-                                            {% endif %}
-                                        </div>
-
+                                    <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800 tabs" id="teachers">
                                         <div class="relative z-0 w-full mb-6 group">
                                             <label for="{{ form.event_planning.id_for_label }}"
                                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -679,200 +816,160 @@
                                         </div>
 
                                         <div class="relative z-0 w-full mb-6 group">
-                                            <label for="{{ form.career.id_for_label }}"
-                                                   class="block flex gap-2 flex-wrap mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                                Carrera vinculada
-                                                <button data-modal-target="careerCreationForm"
-                                                        data-modal-toggle="careerCreationForm"
-                                                        class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                                                        type="button">
-                                                    <svg fill="none" class="w-5 h-5" stroke="currentColor"
-                                                         stroke-width="1.5"
-                                                         viewBox="0 0 24 24"
-                                                         xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                              d="M12 6v12m6-6H6"></path>
-                                                    </svg>
-                                                </button>
-                                                <a href="{% url 'careers' %}"
-                                                   class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                                                   type="button">
-                                                    <svg fill="none" class="w-5 h-5" stroke="currentColor"
-                                                         stroke-width="1.5"
-                                                         viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
-                                                         aria-hidden="true">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                              d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"></path>
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                                    </svg>
-                                                </a>
-                                            </label>
-                                            {{ form.career }}
-                                            {% if form.career.errors %}
-                                                <p id="filled_error_help"
-                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                        class="font-medium">Oh, error!</span> {{ form.career.errors }}
-                                                </p>
-                                            {% endif %}
-                                        </div>
-
-                                    </div>
-
-                                    <div class="grid md:grid-cols-3 md:gap-6 link_to_classroom">
-                                        <div class="relative z-0 w-full mb-6 group">
-                                            <label for="{{ form.platform_meeting.id_for_label }}"
-                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                                Plataforma de reunión</label>
-                                            {{ form.platform_meeting }}
-                                            {% if form.platform_meeting.errors %}
-                                                <p id="filled_error_help"
-                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                        class="font-medium">Oh, error!</span> {{ form.platform_meeting.errors }}
-                                                </p>
-                                            {% endif %}
-                                        </div>
-
-                                        <div class="relative z-0 w-full mb-6 group">
-                                            <label for="{{ form.link_to_classroom.id_for_label }}"
-                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                                Link de reunión</label>
-                                            {{ form.link_to_classroom }}
-                                            {% if form.link_to_classroom.errors %}
-                                                <p id="filled_error_help"
-                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                        class="font-medium">Oh, error!</span> {{ form.link_to_classroom.errors }}
-                                                </p>
-                                            {% endif %}
-                                        </div>
-
-                                        <div class="relative z-0 w-full mb-6 group">
-                                            <label for="{{ form.code_meeting.id_for_label }}"
-                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                                Código de reunión</label>
-                                            {{ form.code_meeting }}
-                                            {% if form.code_meeting.errors %}
-                                                <p id="filled_error_help"
-                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                        class="font-medium">Oh, error!</span> {{ form.code_meeting.errors }}
-                                                </p>
-                                            {% endif %}
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                                <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="teachers">
-                                    <div class="relative z-0 w-full mb-6 group">
-                                        <label for="{{ form.teachers.id_for_label }}"
-                                               class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                                            Seleccione los ponentes</label>
-                                        {{ form.teachers }}
-                                        <p class="text-gray-700 dark:text-white italic mt-4">Para seleccionar a más de
-                                            un
-                                            Profesor o deseleccionarlo, utilice
-                                            <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">
-                                                Ctrl
-                                            </kbd> +
-                                            <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">
-                                                Click
-                                            </kbd>
-                                        </p>
-                                        {% if form.teachers.errors %}
-                                            <p id="filled_error_help"
-                                               class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                    class="font-medium">Oh, error!</span> {{ form.teachers.errors }}
+                                            <label for="{{ form.teachers.id_for_label }}"
+                                                   class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                Seleccione los ponentes</label>
+                                            {{ form.teachers }}
+                                            <p class="text-gray-700 dark:text-white italic mt-4">Para seleccionar a más
+                                                de
+                                                un
+                                                Profesor o deseleccionarlo, utilice
+                                                <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">
+                                                    Ctrl
+                                                </kbd> +
+                                                <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">
+                                                    Click
+                                                </kbd>
                                             </p>
-                                        {% endif %}
-                                    </div>
+                                            {% if form.teachers.errors %}
+                                                <p id="filled_error_help"
+                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                        class="font-medium">Oh, error!</span> {{ form.teachers.errors }}
+                                                </p>
+                                            {% endif %}
+                                        </div>
 
-                                    <div class="flex justify-center my-4">
-                                        {{ form.captcha }}
-                                    </div>
+                                        <div class="flex justify-center my-4">
+                                            {{ form.captcha }}
+                                        </div>
 
-                                    <div class="buttons flex gap-4 justify-center">
-                                        <button type="reset"
-                                                class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
-                                            Limpiar campos
-                                        </button>
-                                        <button type="submit"
-                                                class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">
-                                            Guardar
-                                        </button>
+                                        <div class="buttons flex gap-4 justify-center">
+                                            <button type="reset"
+                                                    class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">
+                                                Limpiar campos
+                                            </button>
+                                            <button type="submit"
+                                                    class="text-blue-700 hover:text-white border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800">
+                                                Guardar
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </form>
-                    </div>
-                    <!-- Modal footer -->
-                    <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                            </form>
+                        </div>
+                        <!-- Modal footer -->
+                        <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
 
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Category modal -->
-        <div id="careerCreationForm" tabindex="-1" aria-hidden="true"
-             class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full">
-            <div class="relative w-full h-full max-w-2xl md:h-auto">
-                <!-- Modal content -->
-                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                    <!-- Modal header -->
-                    <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                            Crea una carrera universitaria
-                        </h3>
-                        <button type="button"
-                                class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                                data-modal-hide="careerCreationForm">
-                            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                                 xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
-                                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                      clip-rule="evenodd"></path>
-                            </svg>
-                            <span class="sr-only">Close modal</span>
-                        </button>
-                    </div>
-                    <!-- Modal body -->
-                    <div class="p-6 space-y-6">
-                        <form action="" method="post" id="createCareerForm">
-                            {% csrf_token %}
-                            <div class="mb-4">
-                                <label for="{{ career_form.name.id_for_label }}"
-                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                    Nombre
-                                </label>
-                                {{ career_form.name }}
-                            </div>
-                            <div class="flex justify-center my-4">
-                                {{ career_form.captcha }}
-                            </div>
-                        </form>
-                        <div class="grid gap-6 mb-4 md:grid-cols-2">
-                            <button type="reset"
-                                    class="w-full text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
-                                Limpiar
-                            </button>
-
-                            <button type="submit" id="submit-btn-career"
-                                    class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                Crear carrera
-                            </button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    {% endif %}
 
+            <!-- Category modal -->
+            <div id="careerCreationForm" tabindex="-1" aria-hidden="true"
+                 class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full">
+                <div class="relative w-full h-full max-w-2xl md:h-auto">
+                    <!-- Modal content -->
+                    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                        <!-- Modal header -->
+                        <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                                Crea una carrera universitaria
+                            </h3>
+                            <button type="button"
+                                    class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                                    data-modal-hide="careerCreationForm">
+                                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                          clip-rule="evenodd"></path>
+                                </svg>
+                                <span class="sr-only">Close modal</span>
+                            </button>
+                        </div>
+                        <!-- Modal body -->
+                        <div class="p-6 space-y-6">
+                            <form action="" method="post" id="createCareerForm">
+                                {% csrf_token %}
+                                <div class="mb-4">
+                                    <label for="{{ career_form.name.id_for_label }}"
+                                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                        Nombre
+                                    </label>
+                                    {{ career_form.name }}
+                                </div>
+                                <div class="flex justify-center my-4">
+                                    {{ career_form.captcha }}
+                                </div>
+                            </form>
+                            <div class="grid gap-6 mb-4 md:grid-cols-2">
+                                <button type="reset"
+                                        class="w-full text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                                    Limpiar
+                                </button>
+
+                                <button type="submit" id="submit-btn-career"
+                                        class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                    Crear carrera
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}
 
 {% block footer %}
 {% endblock %}
 
 {% block js %}
+    <script>
+        function agregarEstiloAlAfter(index, border, background) {
+            const hojaEstilo = document.createElement('style');
+
+            // Agregar una regla de estilo para el seudoelemento ::after del elemento seleccionado
+            hojaEstilo.innerHTML = `.elemento-modificar:nth-child(${index})::after {
+            border: ${border};
+            background: ${background};
+          }`;
+            document.getElementsByTagName('head')[0].appendChild(hojaEstilo);
+        }
+
+        const slides = document.querySelectorAll('.tabs');
+        const elementosModificar = document.querySelectorAll('.steps');
+
+        slides.forEach((slide, index) => {
+            const camposRequeridos = slide.querySelectorAll('.required-field[required]');
+
+            camposRequeridos.forEach(campo => {
+                campo.addEventListener('input', () => verificarEntrada(slide, index));
+            });
+        });
+
+        function verificarEntrada(slide, index) {
+            const camposRequeridos = slide.querySelectorAll('.required-field[required]');
+            const todosLlenos = Array.from(camposRequeridos).every(campo => campo.value !== '');
+
+            camposRequeridos.forEach(campo => {
+                if (campo.value === '') {
+                    elementosModificar[index].classList.remove('text-blue-600', 'dark:text-blue-500', 'after:border-b', 'after:border-blue-100', 'after:border-4', 'after:inline-block', 'dark:after:border-blue-800');
+                    elementosModificar[index].innerHTML = '<span class="flex items-center justify-center w-8 h-8 bg-red-100 rounded-full lg:h-12 lg:w-12 dark:bg-red-800 shrink-0"><svg fill="#FFFFFF" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"></path></svg></span>'
+                }
+            });
+
+            if (todosLlenos) {
+                elementosModificar[index].classList.add('text-blue-600', 'dark:text-blue-500', 'after:border-b', 'after:border-blue-100', 'after:border-4', 'after:inline-block', 'dark:after:border-blue-800');
+                elementosModificar[index].innerHTML = '<span class="flex items-center justify-center w-8 h-8 bg-blue-100 rounded-full lg:h-12 lg:w-12 dark:bg-blue-800 shrink-0"><svg aria-hidden="true" class="w-5 h-5 text-blue-600 lg:w-6 lg:h-6 dark:text-blue-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg></span>'
+            } else {
+                elementosModificar[index].classList.remove('text-blue-600', 'dark:text-blue-500', 'after:border-b', 'after:border-blue-100', 'after:border-4', 'after:inline-block', 'dark:after:border-blue-800');
+                elementosModificar[index].innerHTML = '<span class="flex items-center justify-center w-8 h-8 bg-red-100 rounded-full lg:h-12 lg:w-12 dark:bg-red-800 shrink-0"><svg fill="#FFFFFF" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z"></path></svg></span>'
+            }
+        }
+
+    </script>
     <script>
         const Toast = Swal.mixin({
             toast: true,
