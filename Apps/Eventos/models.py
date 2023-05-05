@@ -215,7 +215,7 @@ class Event(models.Model):
             logo_root = os.path.join(settings.MEDIA_URL, f'{self.logo}')
             return '{}'.format(logo_root)
         else:
-            return '{}{}'.format(settings.MEDIA_ROOT, 'event_image_placeholder.png')
+            return '{}{}'.format(settings.MEDIA_URL, 'event_image_placeholder.png')
 
     def get_planning_event(self) -> object:
         if self.event_planning:

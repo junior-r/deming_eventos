@@ -84,8 +84,7 @@ def view_events(request):
                           phone=phone, alternative_phone=alternative_phone, email=email,
                           alternative_email=alternative_email, platform_meeting=platform_meeting,
                           link_to_classroom=link_to_classroom, code_meeting=code_meeting,
-                          event_planning=event_planning, link_video=link_video, career=get_career,
-                          how_did_you_find_out=how_did_you_find_out
+                          event_planning=event_planning, link_video=link_video, career=get_career
                           )
             event.save()
             form2 = EventForm(request.POST, instance=event)

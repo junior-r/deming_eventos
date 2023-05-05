@@ -16,6 +16,7 @@ from django.db.models.fields.files import ImageFieldFile
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import to_language
+from django.core.paginator import Paginator
 
 from Apps.Eventos.forms import ParticipantDataUpdateForm
 from Apps.Eventos.models import Event, Participant
@@ -295,23 +296,74 @@ def user_events(request, username, id_user):
     current_user = get_object_or_404(User, username=username, id=id_user)
     if current_user.is_teacher:
         events_teacher = Event.objects.filter(teachers__username=current_user.username)
+        # Paginate
+        paginator_teachers = Paginator(events_teacher, 9)
+        page_number_teachers = request.GET.get('page')
+        events_teacher_data = paginator_teachers.get_page(page_number_teachers)
         try:
             participant = get_object_or_404(Participant, user_id=current_user.id)
-            events = Event.objects.filter(eventparticipant__participant__id=participant.id, eventparticipant__pay=True)
+            events = Event.objects.filter(eventparticipant__participant__id=participant.id, active=True)
+            # Paginate
+            paginator_participants = Paginator(events, 9)
+            page_number_participants = request.GET.get('page')
+            events_participant_data = paginator_participants.get_page(page_number_participants)
         except:
             participant = None
             events = None
+            events_participant_data = None
     else:
         events_teacher = None
+        events_teacher_data = None
         participant = get_object_or_404(Participant, user_id=current_user.id)
         events = Event.objects.filter(eventparticipant__participant__id=participant.id, eventparticipant__pay=True)
+        # Paginate
+        paginator_participants = Paginator(events, 9)
+        page_number_participants = request.GET.get('page')
+        events_participant_data = paginator_participants.get_page(page_number_participants)
 
     data = {
         'user': current_user,
         'participant': participant,
-        'events': events,
-        'events_teacher': events_teacher,
+        'events': events_participant_data,
+        'events_teacher': events_teacher_data,
     }
+
+    if request.method == 'POST':
+        query_participants = request.POST.get('query-events-participant')
+        query_teachers = request.POST.get('query-events-teachers')
+        # Find participant events
+        if query_participants is not None:
+            filtered_events_participant = events.filter(
+                Q(title__icontains=query_participants))
+            if filtered_events_participant:
+                # Paginate
+                paginator_participants = Paginator(filtered_events_participant, 9)
+                page_number_participants = request.GET.get('page')
+                events_participant_data = paginator_participants.get_page(page_number_participants)
+
+                data['filtered_events_participant'] = events_participant_data
+                data['filtered_events_participant_count'] = filtered_events_participant.all().count()
+                data['query_participants'] = query_participants
+            else:
+                messages.info(request, 'No se encontraron coincidencias')
+        # Find teacher events
+        elif query_teachers is not None:
+            filtered_events_teachers = events_teacher.filter(
+                Q(title__icontains=query_teachers))
+            if filtered_events_teachers:
+                # Paginate
+                paginator_teachers = Paginator(filtered_events_teachers, 9)
+                page_number_teachers = request.GET.get('page')
+                events_teacher_data = paginator_teachers.get_page(page_number_teachers)
+                data['filtered_events_teachers'] = events_teacher_data
+                data['filtered_events_teachers_count'] = filtered_events_teachers.all().count()
+                data['query_teachers'] = query_teachers
+            else:
+                messages.info(request, 'No se encontraron coincidencias')
+        else:
+            messages.info(request, 'Escríbe algo para buscar...')
+            return redirect('user_events', request.user.username, request.user.id)
+
     return render(request, 'Users/user_events.html', data)
 
 
