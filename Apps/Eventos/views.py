@@ -62,7 +62,7 @@ def view_events(request):
             link_to_classroom = request.POST.get('link_to_classroom')
             code_meeting = request.POST.get('code_meeting')
             career = request.POST.get('career')
-            teachers = request.POST.get('teachers')
+            how_did_you_find_out = request.POST.get('how_did_you_find_out')
 
             if isinstance(alternative_phone, str):
                 alternative_phone = None
@@ -85,6 +85,7 @@ def view_events(request):
                           alternative_email=alternative_email, platform_meeting=platform_meeting,
                           link_to_classroom=link_to_classroom, code_meeting=code_meeting,
                           event_planning=event_planning, link_video=link_video, career=get_career,
+                          how_did_you_find_out=how_did_you_find_out
                           )
             event.save()
             form2 = EventForm(request.POST, instance=event)

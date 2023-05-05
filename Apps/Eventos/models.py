@@ -96,6 +96,7 @@ class Participant(models.Model):
         'unique': 'Ya esxite un participante con este email alternativo',
     })
     object = models.TextField(max_length=256, blank=False, null=False)
+    how_did_you_find_out = models.TextField(max_length=256, blank=True, null=True, default='')
     referral = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True, blank=False, related_name='referral')
     date_created = models.DateTimeField(default=timezone.now)
 

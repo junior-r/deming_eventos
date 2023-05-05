@@ -1435,17 +1435,33 @@
                                         </div>
                                     </div>
 
-                                    <div class="relative z-0 w-full mb-6 group">
-                                        <label for="{{ form_participant.address.id_for_label }}"
-                                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Dirección</label>
-                                        {{ form_participant.address }}
-                                        {% if form_participant.address.errors %}
-                                            <p id="filled_error_help"
-                                               class="mt-2 text-xs text-red-600 dark:text-red-400"><span
-                                                    class="font-medium">Oh, error!</span> {{ form_participant.address.errors }}
-                                            </p>
-                                        {% endif %}
+                                    <div class="grid md:grid-cols-2 md:gap-6">
+
+                                        <div class="relative z-0 w-full mb-6 group">
+                                            <label for="{{ form_participant.how_did_you_find_out.id_for_label }}"
+                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                ¿Cómo descubríste el curso?</label>
+                                            {{ form_participant.how_did_you_find_out }}
+                                            {% if form_participant.how_did_you_find_out.errors %}
+                                                <p id="filled_error_help"
+                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                        class="font-medium">Oh, error!</span> {{ form_participant.how_did_you_find_out.errors }}
+                                                </p>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="relative z-0 w-full mb-6 group">
+                                            <label for="{{ form_participant.address.id_for_label }}"
+                                                   class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                                Dirección</label>
+                                            {{ form_participant.address }}
+                                            {% if form_participant.address.errors %}
+                                                <p id="filled_error_help"
+                                                   class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                                        class="font-medium">Oh, error!</span> {{ form_participant.address.errors }}
+                                                </p>
+                                            {% endif %}
+                                        </div>
                                     </div>
 
                                     <div class="relative z-0 w-full mb-6 group">
@@ -1544,6 +1560,22 @@
 
 {% block js %}
     <script src="https://www.paypal.com/sdk/js?client-id=AZz1x8MxPQnQJ6KYko9_9Fqjyyvc-ufqz-aCQTzR7j0rO4rA4TkyMj1YxvRHLWQvXcRfKwyQBJNe34dy"> // Required. Replace SB_CLIENT_ID with your sandbox client ID.
+    </script>
+
+    <script>
+    const select = document.getElementById('id_referral');
+    console.log(select.value)
+    const textarea = document.getElementById('id_how_did_you_find_out');
+
+    select.addEventListener('change', function() {
+      if (select.value === '') {
+        textarea.required = true;
+        textarea.readOnly = false;
+      } else {
+        textarea.required = false;
+        textarea.readOnly = true;
+      }
+    });
     </script>
 
     <script>

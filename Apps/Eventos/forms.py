@@ -211,6 +211,11 @@ class ParticipantForm(forms.ModelForm):
         'rows': 2,
         'class': 'block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
     }))
+    how_did_you_find_out = forms.CharField(max_length=200, required=False, widget=forms.Textarea(attrs={
+        'placeholder': '¿Cómo nos descubriste?',
+        'rows': 2,
+        'class': 'block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
+    }))
 
     def clean_birthdate(self):
         birthdate = self.cleaned_data.get('birthdate')
