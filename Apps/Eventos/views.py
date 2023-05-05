@@ -18,7 +18,7 @@ from django.template.loader import get_template
 from django.utils import timezone
 from paypalcheckoutsdk.core import PayPalHttpClient, SandboxEnvironment
 from paypalcheckoutsdk.orders import OrdersGetRequest, OrdersCaptureRequest
-from weasyprint import HTML
+from weasyprint import HTML, CSS
 
 from Apps.Eventos.forms import CareerForm, EventForm, ParticipantForm
 from Apps.Eventos.models import Career, Event, EventParticipant, Participant
@@ -46,7 +46,7 @@ def view_events(request):
             title = request.POST.get('title')
             place = request.POST.get('place')
             addressed_to = request.POST.get('addressed_to')
-            price = request.POST.get('price')
+            price = request.POST.get('price') if request.POST.get('price') != '' else 0
             start_date = request.POST.get('start_date')
             final_date = request.POST.get('final_date')
             modality = request.POST.get('modality')
@@ -175,6 +175,18 @@ def update_event(request, id_event):
             data['form'] = form
 
     return render(request, 'Eventos/update_event.html', data)
+
+
+@login_required
+@permission_required('Eventos.delete_event', raise_exception=True)
+def delete_event(request, id_event):
+    event = get_object_or_404(Event, id=id_event)
+    if not event.participants.all().exists():
+        event.delete()
+        return redirect('eventos')
+    else:
+        messages.error(request, 'No puedes eliminar este evento porque posee participantes inscritos')
+        return redirect('eventos')
 
 
 @login_required
@@ -501,6 +513,23 @@ class CaptureOrder(PayPalClient):
         # 4. Save the capture ID to your database. Implement logic to save capture to your database for future
         # reference.
         return response
+
+
+@login_required
+def download_invoice(request, id_event):
+    event = get_object_or_404(Event, id=id_event)
+    participant = get_object_or_404(Participant, user_id=request.user.id)
+    event_participant = event.eventparticipant_set.get(participant=participant)
+
+    template = get_template('Eventos/invoice-event.html')
+    context = {'event': event, 'participant': participant, 'event_participant': event_participant}
+    html_template = template.render(context)
+    css_url = os.path.join(settings.BASE_DIR, 'Apps/Home/static/Home/css/components/bootstrap.min.css')
+    pdf = HTML(string=html_template, base_url=request.build_absolute_uri()).write_pdf(stylesheets=[CSS(css_url)])
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename={0}_{1}{2}'.format('Comprobante de compra', event.title, '.pdf')
+    # return render(request, 'Eventos/invoice-event.html', context)
+    return response
 
 
 def send_email_event(request, id_event, template_route: str):

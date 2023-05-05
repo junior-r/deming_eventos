@@ -1,0 +1,101 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @page {
+            size: landscape;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <div class="logo text-center">
+            <figure class="figure">
+                <img src="{% static 'Home/images/logo_deming.png' %}" class="figure-img img-fluid rounded"
+                     alt="Logo deming">
+            </figure>
+        </div>
+        <div class="info-deming text-center">
+            <h1 class="fs-2 fw-bolder">Comprobante de compra</h1>
+            <p class="m-0">Instituto Superior Tecnológico Corporativo Edwards Deming</p>
+            <a href="https://goo.gl/maps/jDg4eKMXf5wHUtb69" target="_blank"
+               class="link-primary m-0">Dirección: 593, Quito 170517</a>
+            <p class="m-0">Teléfono: (02) 225-0045</p>
+            <a href="https://www.deming.edu.ec/" target="_blank"
+               class="link-primary m-0">Web: deming.edu.ec</a>
+        </div>
+        <div class="info d-flex justify-content-between">
+            <div class="client mt-4 w-100">
+                <h3 class="fs-3 fw-bolder">Datos del cliente</h3>
+                <p class="m-0"><span class="fw-bolder">Nombres:</span> {{ event_participant.client_name }}</p>
+                <p class="m-0"><span class="fw-bolder">Email:</span> {{ event_participant.client_email }}</p>
+                <p class="m-0"><span class="fw-bolder">Cédula:</span> <span
+                        class="badge bg-primary">{{ participant.country_of_birth.code }}</span> {{ participant.dni }}
+                </p>
+                <p class="m-0"><span class="fw-bolder">Dirección:</span> {{ participant.address }}</p>
+                <p class="m-0"><span class="fw-bolder">Teléfono:</span> <span
+                        class="badge bg-primary">{{ participant.get_inter_dialling_code }}</span> {{ participant.phone }}
+                </p>
+            </div>
+            <div class="invoice w-100">
+                <h3 class="fs-3 fw-bolder text-center">Estado: <span class="badge bg-success">{{ event_participant.status_buy }}</span></h3>
+                <div class="data d-flex gap-5 flex-wrap">
+                    <div class="mb-4 me-4">
+                        <h4 class="fs-4 text-primary fw-bolder">Fecha de compra.</h4>
+                        <p class="m-0">{{ event_participant.date_created.date.isoformat }} {{ event_participant.date_created.time }}</p>
+                    </div>
+                    <div class="mb-4 me-4">
+                        <h4 class="fs-4 text-primary fw-bolder">ID del comprobante</h4>
+                        <p class="m-0 user-select-all">{{ event_participant.order_id }}</p>
+                    </div>
+                    <div class="">
+                        <h4 class="fs-4 text-primary fw-bolder">Total de compra</h4>
+                        <p class="m-0">$ {{ event_participant.total_buy.to_eng_string }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table mt-4">
+        <thead>
+        <tr>
+            <th scope="col">Nombre del evento</th>
+            <th scope="col">Cantidad</th>
+            <th scope="col">Precio</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <th scope="row">{{ event_participant.event.title }}</th>
+            <td>1</td>
+            <td>$ {{ event_participant.event.price.to_eng_string }}</td>
+        </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>Total</td>
+                <td>1</td>
+                <td>$ {{ event_participant.total_buy.to_eng_string }}</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <p class="text-center mt-4 fst-italic">¡Gracias por tu compra!</p>
+    <p class="fst-italic">Copyright Instituto Deming <i class="fa-regular fa-copyright"></i> 2023</p>
+</div>
+
+</body>
+</html>
+
+
+

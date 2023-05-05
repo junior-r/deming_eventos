@@ -119,12 +119,18 @@ class Participant(models.Model):
         return age
 
     def get_full_number_phone(self):
-        phone_number_info = phonenumbers.parse(f'{self.phone}', self.current_country.__str__())
-        return '+{0}{1}'.format(phone_number_info.country_code, phone_number_info.national_number)
+        try:
+            phone_number_info = phonenumbers.parse(f'{self.phone}', self.current_country.__str__())
+            return '+{0}{1}'.format(phone_number_info.country_code, phone_number_info.national_number)
+        except phonenumbers.NumberParseException:
+            return None
 
     def get_inter_dialling_code(self):
-        phone_number_info = phonenumbers.parse(f'{self.phone}', self.current_country.__str__())
-        return '+{}'.format(phone_number_info.country_code)
+        try:
+            phone_number_info = phonenumbers.parse(f'{self.phone}', self.current_country.__str__())
+            return '+{}'.format(phone_number_info.country_code)
+        except phonenumbers.NumberParseException:
+            return None
 
     def get_full_name(self):
         return '{0} {1}'.format(self.first_name, self.last_name)
@@ -190,12 +196,18 @@ class Event(models.Model):
     teachers = models.ManyToManyField(User, related_name='teachers', blank=True)
 
     def get_full_number_phone(self):
-        phone_number_info = phonenumbers.parse(f'{self.phone}', self.country_phone.__str__())
-        return '+{0}{1}'.format(phone_number_info.country_code, phone_number_info.national_number)
+        try:
+            phone_number_info = phonenumbers.parse(f'{self.phone}', self.country_phone.__str__())
+            return '+{0}{1}'.format(phone_number_info.country_code, phone_number_info.national_number)
+        except phonenumbers.NumberParseException:
+            return None
 
     def get_inter_dialling_code(self):
-        phone_number_info = phonenumbers.parse(f'{self.phone}', self.country_phone.__str__())
-        return '+{}'.format(phone_number_info.country_code)
+        try:
+            phone_number_info = phonenumbers.parse(f'{self.phone}', self.country_phone.__str__())
+            return '+{}'.format(phone_number_info.country_code)
+        except phonenumbers.NumberParseException:
+            return None
 
     def get_logo(self) -> object:
         if self.logo:
