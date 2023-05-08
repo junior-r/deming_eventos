@@ -1,0 +1,194 @@
+{% extends "account/base.html" %}
+
+{% load i18n static widget_tweaks %}
+{% load account socialaccount %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+    {% if form.errors %}
+        <div id="toast-danger"
+             class="absolute flex items-center w-full max-w-xl top-4 left-8 p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+             role="alert">
+            <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
+                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clip-rule="evenodd"></path>
+                </svg>
+                <span class="sr-only">Error icon</span>
+            </div>
+            <div class="ml-3 text-sm font-normal">
+                <ul>
+                    {% for key, value in form.errors.items %}
+                        <li class="flex gap-2">
+                            {{ key }}
+                            <svg fill="none" class="w-5 h-5 text-gray-500 dark:text-gray-400" stroke="currentColor"
+                                 stroke-width="1.5" viewBox="0 0 24 24"
+                                 xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"></path>
+                            </svg>
+                            {{ value }}
+                        </li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+            <button type="button"
+                    class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+                    data-dismiss-target="#toast-danger" aria-label="Close">
+                <span class="sr-only">Close</span>
+                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clip-rule="evenodd"></path>
+                </svg>
+            </button>
+        </div>
+    {% endif %}
+    <div class="content grid grid-cols-1 md:grid-cols-2" style="min-height: 100vh">
+        <div class="form px-4 py-6 bg-gray-100 dark:bg-gray-800 flex flex-col justify-center">
+            <section class="">
+                <div class="flex flex-col w-full items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+                    <a href="{% url 'index' %}"
+                       class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+                        <img class="w-10 h-10 mr-2" src="{% static 'Home/images/logo_deming2.png' %}"
+                             alt="logo">
+                        Edwards Deming
+                    </a>
+                    {% get_providers as socialaccount_providers %}
+
+                    {% if socialaccount_providers %}
+                        <p class="mb-3 text-gray-500 dark:text-gray-400">
+                            {% blocktrans with site.name as site_name %}
+                                Inicie sesión con una de sus cuentas de terceros existentes. O bien,
+                                <a class="text-blue-500 hover:underline" href="{{ signup_url }}">regístrese</a>
+                                para obtener una cuenta de {{ site_name }} e inicie sesión a continuación:
+                            {% endblocktrans %}
+                        </p>
+
+                        <div class="socialaccount_ballotc w-full">
+
+                            <ul class="socialaccount_providers">
+                                {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+                            </ul>
+
+                            <div class="inline-flex relative items-center justify-center w-full">
+                                <hr class="w-full h-1 my-8 bg-gray-200 border-0 rounded dark:bg-gray-700">
+                                <span class="absolute px-3 font-medium text-gray-900 -translate-x-1/2 bg-gray-100 uppercase left-1/2 dark:text-white dark:bg-gray-800">{% trans 'or' %}</span>
+                            </div>
+
+                        </div>
+
+                        {% include "socialaccount/snippets/login_extra.html" %}
+
+                    {% else %}
+                        <p>{% blocktrans %}If you have not created an account yet, then please
+                            <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+                    {% endif %}
+                    <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+                        <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                            <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                                Ingresa a tu cuenta
+                            </h1>
+                            <form class="space-y-4 md:space-y-6" method="POST" action="{% url 'account_login' %}">
+                                {% csrf_token %}
+                                <div>
+                                    <label for="{{ form.login.id_for_label }}"
+                                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                        {{ form.login.label }}
+                                    </label>
+                                    {% render_field form.login placeholder="Email" type="email" autocomplete="email" required="True" id=form.login.id_for_label name=form.login.html_name class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" %}
+
+                                </div>
+                                <div>
+                                    <label for="{{ form.password.id_for_label }}"
+                                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                        {{ form.password.label }}
+                                    </label>
+                                    {% render_field form.password placeholder="••••••••" type="password" required="True" id=form.password.id_for_label name=form.password.html_name class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" %}
+
+                                </div>
+                                {% if redirect_field_value %}
+                                    <input type="hidden" name="{{ redirect_field_name }}"
+                                           value="{{ redirect_field_value }}"/>
+                                {% endif %}
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-start">
+                                        <div class="flex items-center h-5">
+                                            {% render_field form.remember type="checkbox" aria-describedby="remember" id=form.remember.id_for_label name=form.remember.html_name class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800" %}
+                                        </div>
+                                        <div class="ml-3 text-sm">
+                                            <label for="{{ form.remember.id_for_label }}"
+                                                   class="text-gray-500 dark:text-gray-300">
+                                                {{ form.remember.label }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <a href="{% url 'account_reset_password' %}"
+                                       class="text-sm font-medium text-primary-600 hover:underline dark:text-blue-500">
+                                        {% trans "Forgot Password?" %}
+                                    </a>
+                                </div>
+                                <button type="submit"
+                                        class="w-full text-white bg-blue-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                    {% trans 'Sign In' %}
+                                </button>
+                                <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+                                    ¿No posee una cuenta aún?
+                                    <a href="{{ signup_url }}" class="font-medium text-blue-600 hover:underline dark:text-blue-500">
+                                        {% trans 'Sign Up' %}
+                                    </a>
+                                </p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="card px-4 relative py-8 md:py-6 bg-indigo-400 flex flex-col justify-center gap-4">
+            <div class="header">
+                <a href="{% url 'index' %}"
+                   class="flex items-center mb-6 text-2xl font-semibold text-white">
+                    <img class="w-10 h-10 mr-2" src="{% static 'Home/images/logo_deming2.png' %}"
+                         alt="logo">
+                    Instituto Superior Tecnológico Corporativo Edwards Deming
+                </a>
+                <h2 class="text-5xl font-bold text-white">¡Tu aprendizaje comienza aquí!</h2>
+                <button type="button" id="theme-toggle" data-popover-target="popover-theme"
+                        class="flex absolute top-2 left-2 md:top-4 md:left-6 gap-2 text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+                    <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor"
+                         viewBox="0 0 20 20"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                    <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor"
+                         viewBox="0 0 20 20"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                              fill-rule="evenodd" clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+                <div data-popover id="popover-theme" role="tooltip"
+                     class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
+                    <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Cambiar tema</h3>
+                    </div>
+                    <div data-popper-arrow></div>
+                </div>
+            </div>
+            <div class="body">
+                <p class="text-white">Millions of designers and agencies around the world showcase their portfolio work
+                    on Flowbite - the home to the world’s best design and creative professionals.</p>
+            </div>
+            <div class="footer">
+                <p class="text-white">Copyright Edwards Deming</p>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

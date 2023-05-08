@@ -1,13 +1,13 @@
-from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from django.core.exceptions import ValidationError
+from allauth.account.forms import SignupForm
 from captcha.fields import ReCaptchaField
+from django import forms
+from django.core.exceptions import ValidationError
 
 from Apps.Eventos.models import Career
 from Apps.Users.models import User
 
 
-class UserForm(UserCreationForm):
+class UserForm(SignupForm):
     captcha = ReCaptchaField()
     profile_image = forms.ImageField(label='Imagen de perfil', required=False, widget=forms.FileInput(
         attrs={
@@ -65,6 +65,12 @@ class UserForm(UserCreationForm):
         if User.objects.filter(email=email).exists():
             raise ValidationError("Ya existe un usuario registrado con este email. Intente con otro.")
         return email
+
+    def save(self, request):
+        user = super().save(request)
+        user.profile_image_user = self.cleaned_data['profile_image']
+        user.save()
+        return user
 
     class Meta:
         model = User

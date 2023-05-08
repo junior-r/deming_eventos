@@ -32,3 +32,4 @@ django-paypal
 paypal-checkout-serversdk
 weasyprint
 qrcode
+django-widget-tweaks==1.4.12

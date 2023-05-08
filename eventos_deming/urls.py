@@ -27,10 +27,7 @@ urlpatterns = [
     path('', include('Apps.Home.urls')),
     path('users/', include('Apps.Users.urls')),
     path('eventos/', include('Apps.Eventos.urls')),
-    path('accounts/', include('django.contrib.auth.urls')),
-    path('accounts/password-reset/', password_reset, name='password_reset'),
-    path('accounts/password-reset-done/<int:user_id>/', reset_password_done, name='custom_reset_password_done'),
-    path('accounts/reset_password_form/<int:user_id>/', reset_password_form, name='custom_reset_password_form'),
+    path('accounts/', include('allauth.urls')),
 ]
 
 handler400 = page_denied_400

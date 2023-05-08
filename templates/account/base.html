@@ -1,0 +1,47 @@
+{% load i18n static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{% static 'Home/images/logo_deming2.png' %}" type="image/png"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.2/flowbite.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>{% block head_title %}{% endblock %}</title>
+
+    {% block extra_head %}
+    {% endblock %}
+    <script>
+        // On page load or when changing themes, best to add inline in `head` to avoid FOUC
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
+</head>
+<body>
+{% block body %}
+    {% block content %}
+    {% endblock %}
+{% endblock %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.2/flowbite.min.js"></script>
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{% static 'Home/js/darkMode.js' %}"></script>
+{% block extra_body %}
+{% endblock %}
+{% if messages %}
+    {% for m in messages %}
+        <script>
+            Swal.fire({
+                title: '{{ m.tags|capfirst }}',
+                text: '{{ m }}',
+                icon: '{{ m.tags }}'
+            })
+        </script>
+    {% endfor %}
+{% endif %}
+</body>
+</html>
