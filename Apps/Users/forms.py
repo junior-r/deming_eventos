@@ -69,6 +69,7 @@ class UserForm(SignupForm):
     def save(self, request):
         user = super().save(request)
         user.profile_image_user = self.cleaned_data['profile_image']
+        user.curriculum = self.cleaned_data['curriculum'] if self.cleaned_data['curriculum'] is not None else None
         user.save()
         return user
 

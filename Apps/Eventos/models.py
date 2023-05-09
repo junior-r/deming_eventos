@@ -195,6 +195,7 @@ class Event(models.Model):
     certify = models.BooleanField(default=False)
     career = models.ForeignKey(Career, on_delete=models.SET_NULL, null=True, blank=False)
     teachers = models.ManyToManyField(User, related_name='teachers', blank=True)
+    url = models.URLField(blank=False, null=False)
 
     def get_full_number_phone(self):
         try:

@@ -159,22 +159,24 @@
             </div>
 
             {% if event.link_to_classroom and event.platform_meeting %}
-                <div class="meet">
-                    <a href="{{ event.link_to_classroom }}" target="_blank"
-                       class="dark:text-gray-400 flex gap-1 items-center hover:underline">
-                        <svg fill="none" stroke="currentColor" class="w-4 h-4 mr-1" stroke-width="1.5"
-                             viewBox="0 0 24 24"
-                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                            <path stroke-linecap="round"
-                                  d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z"></path>
-                        </svg>
-                        Reunión: {{ event.platform_meeting }}
-                        {% if event.code_meeting %}
-                            Código:
-                            {{ event.code_meeting }}
-                        {% endif %}
-                    </a>
-                </div>
+                {% if participant and event_participant.pay %}
+                    <div class="meet">
+                        <a href="{{ event.link_to_classroom }}" target="_blank"
+                           class="dark:text-gray-400 flex gap-1 items-center hover:underline">
+                            <svg fill="none" stroke="currentColor" class="w-4 h-4 mr-1" stroke-width="1.5"
+                                 viewBox="0 0 24 24"
+                                 xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path stroke-linecap="round"
+                                      d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z"></path>
+                            </svg>
+                            Reunión: {{ event.platform_meeting }}
+                            {% if event.code_meeting %}
+                                Código:
+                                {{ event.code_meeting }}
+                            {% endif %}
+                        </a>
+                    </div>
+                {% endif %}
             {% endif %}
 
             <div class="flex items-center">
@@ -288,7 +290,6 @@
                                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                             ¡Regístrate Ya! Solo por ${{ event.price.to_eng_string }}
                         </button>
-
                     {% endif %}
                 </div>
             {% endif %}
@@ -308,7 +309,8 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 -ml-1" fill="currentColor"
                          viewBox="0 0 24 24">
                         <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"></path>
-                    </svg> &nbsp;
+                    </svg>
+                    &nbsp
                     WhatsApp
                 </button>
 
@@ -321,6 +323,17 @@
                     </svg>
                     Descargar Contenido
                 </a>
+
+                <button type="button" data-modal-target="shareModal" data-modal-toggle="shareModal"
+                        class="focus:outline-none flex text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">
+                    <svg class="w-5 h-5 mr-2 -ml-1"
+                         fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
+                         xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                              d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z"></path>
+                    </svg>
+                    Compratir
+                </button>
             </div>
         </div>
 
@@ -743,7 +756,6 @@
         </div>
     </div>
 
-
     <!-- drawer invoice event -->
     <div id="drawer-invoice-event"
          class="fixed w-1/2 top-0 left-0 z-40 h-screen p-4 overflow-y-auto transition-transform -translate-x-full bg-white dark:bg-gray-800"
@@ -918,7 +930,6 @@
             </a>
         </div>
     </div>
-
 
     <!-- Email modal -->
     <div id="emailFormModal" tabindex="-1" aria-hidden="true"
@@ -1095,6 +1106,57 @@
                         </div>
 
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share modal -->
+    <div id="shareModal" tabindex="-1" aria-hidden="true"
+         class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative w-full max-w-2xl max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <!-- Modal header -->
+                <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Comparte con tus amigos y familiares
+                    </h3>
+                    <button type="button"
+                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                            data-modal-hide="shareModal">
+                        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                  clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="p-6 space-y-6">
+                    <div class="buttons">
+                        <a href="https://api.whatsapp.com/send/?text={{ event.url }}" target="_blank"
+                           class="text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor"
+                                 viewBox="0 0 24 24">
+                                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"></path>
+                            </svg>
+                            <span class="sr-only">WhatsApp share button</span>
+                        </a>
+                    </div>
+                    <div class="copy">
+                        <div class="relative">
+                            <input type="search" id="url_event_text"
+                                   class="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                   value="{{ event.url }}" readonly>
+                            <button type="button" id="url_event"
+                                    class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                Copiar
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1563,40 +1625,8 @@
     <script src="https://www.paypal.com/sdk/js?client-id=AZz1x8MxPQnQJ6KYko9_9Fqjyyvc-ufqz-aCQTzR7j0rO4rA4TkyMj1YxvRHLWQvXcRfKwyQBJNe34dy"> // Required. Replace SB_CLIENT_ID with your sandbox client ID.
     </script>
 
+    <!-- Custom JS -->
     <script>
-    const select = document.getElementById('id_referral');
-    console.log(select.value)
-    const textarea = document.getElementById('id_how_did_you_find_out');
-
-    select.addEventListener('change', function() {
-      if (select.value === '') {
-        textarea.required = true;
-        textarea.readOnly = false;
-      } else {
-        textarea.required = false;
-        textarea.readOnly = true;
-      }
-    });
-    </script>
-
-    <script>
-        const form = document.querySelector('#register-participant-form');
-        const inputs = form.querySelectorAll('input, select, textarea');
-
-        inputs.forEach(input => {
-            if (input.required) {
-                const label = input.labels[0];
-                if (label) {
-                    label.textContent += '*';
-                }
-            }
-        });
-    </script>
-
-    <script>
-        const orderIdButton = document.getElementById('copy-order-id-button');
-        const orderId = document.getElementById('order-id');
-
         const Toast = Swal.mixin({
             toast: true,
             position: 'top-end',
@@ -1608,27 +1638,14 @@
                 toast.addEventListener('mouseleave', Swal.resumeTimer)
             }
         })
-
-        orderIdButton.addEventListener('click', () => {
-            const textToCopy = orderId.innerText;
-            navigator.clipboard.writeText(textToCopy)
-                .then(() => {
-                    Toast.fire({
-                        icon: 'success',
-                        title: '¡ID de orden copiado exitosamente!'
-                    })
-                    // Aquí podemos mostrar un mensaje de éxito o realizar otras acciones.
-                })
-                .catch(error => {
-                    Toast.fire({
-                        icon: 'error',
-                        title: 'Ocurrió un error. Intente de nuevo o copie con ctrl + c'
-                    })
-                    console.log(error)
-                    // Aquí podemos mostrar un mensaje de error o realizar otras acciones.
-                });
-        });
     </script>
+
+    <script src="{% static 'Eventos/js/validateReferralOption.js' %}"></script>
+    <script src="{% static 'Eventos/js/addRequiredToLabels.js' %}"></script>
+    <script src="{% static 'Eventos/js/copyOrderId.js' %}"></script>
+    <script src="{% static 'Eventos/js/copyUrlEvent.js' %}"></script>
+    <script src="{% static 'Eventos/js/cancelParticipant.js' %}"></script>
+    <script src="{% static 'Eventos/js/setItemsNavbar.js' %}"></script>
 
     {% if participant is not None %}
         <script>
@@ -1688,45 +1705,5 @@
             //This function displays Smart Payment Buttons on your web page.
         </script>
     {% endif %}
-    <script>
-        function cancel_participant(route) {
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: "¡Esperamos cambies de decisión!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Cancelar asistencia',
-                cancelButtonText: 'Si asistiré'
-            }).then((result) => {
-                if (result.value) {
-                    window.location.href = route;
-                }
-            })
-        }
-        {% if event_participant %}
-            function show_info_meeting() {
-                Swal.fire({
-                    icon: 'success',
-                    title: ''
-                })
-            }
-        {% endif %}
 
-    </script>
-
-    <script>
-        var navbarHome = document.getElementById('NavbarHome');
-        var navbarEventos = document.getElementById('NavbarEventos');
-        var navbarContactos = document.getElementById('NavbarContactos');
-        var navbarCarreras = document.getElementById('NavbarCarreras');
-
-        navbarContactos.removeAttribute('aria-current');
-        navbarCarreras.removeAttribute('aria-current');
-        navbarHome.removeAttribute('aria-current');
-        navbarEventos.setAttribute('aria-current', 'page');
-
-        navbarEventos.className = 'block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white';
-    </script>
 {% endblock %}

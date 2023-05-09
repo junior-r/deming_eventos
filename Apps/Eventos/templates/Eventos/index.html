@@ -60,215 +60,72 @@
                 </button>
             </div>
         {% endif %}
+        <div class="my-8">
+            <div class="content-cards flex mb-8 gap-4 wrap">
+                {% if events %}
+                    {% for event in events %}
+                        <div class="w-full relative max-w-sm bg-white hover:bg-gray-200 border border-gray-700 rounded-lg shadow dark:bg-gray-900 dark:hover:bg-gray-800 dark:border-gray-700">
+                            {% if event.active %}
+                                <span class="absolute top-2 left-2 bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Activo</span>
+                            {% else %}
+                                <span class="absolute top-2 left-2 bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Inactivo</span>
+                            {% endif %}
 
-        <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
-            <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="myEventsTab"
-                data-tabs-toggle="#EventsTabContent"
-                role="tablist">
-                <li class="mr-2" role="presentation">
-                    <button class="inline-block p-4 border-b-2 rounded-t-lg" id="table-events-tab"
-                            data-tabs-target="#events"
-                            type="button" role="tab" aria-controls="profile" aria-selected="false">Lista
-                    </button>
-                </li>
-
-                <li class="mr-2" role="presentation">
-                    <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-                            id="cards-events-tab" data-tabs-target="#card-events" type="button" role="tab"
-                            aria-controls="card-events" aria-selected="false">Items
-                    </button>
-                </li>
-            </ul>
-        </div>
-        <div id="EventsTabContent">
-            <div class="hidden rounded-lg bg-gray-50 dark:bg-gray-800" id="events" role="tabpanel"
-                 aria-labelledby="table-events-tab">
-
-                <div class="mt-6 relative overflow-x-auto shadow-md sm:rounded-lg p-4">
-                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400" id="general_datatable">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                            <th scope="col" class="px-6 py-3">
-                                <input id="checkbox-all-search" type="checkbox"
-                                       class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Responsable
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Nombre
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Lugar
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Precio
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Fecha de Inicio
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Fecha de Cierre
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Teléfono
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Email
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Activo
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Opciones
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for event in events %}
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-
-                                <th scope="row"
-                                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    <input id="checkbox-all-search" type="checkbox"
-                                           class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                </th>
-                                <td class="px-6 py-4">
-                                    <div class="flex -space-x-4">
-                                        {% for teacher in event.teachers.all %}
-                                            <a href="{{ teacher.curriculum.url }}" target="_blank">
-                                                <img class="w-10 h-10 border-2 border-white rounded-full dark:border-gray-800"
-                                                     src="{{ teacher.get_picture_profile }}"
-                                                     alt="Imagen de perfil del profesor {{ teacher.get_full_name }}">
-                                            </a>
-                                        {% endfor %}
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4" data-popover-target="popover-title-event-{{ event.id }}">
-                                    <div data-popover id="popover-title-event-{{ event.id }}" role="tooltip"
-                                         class="absolute z-10 invisible inline-block w-64 text-sm font-light text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
-                                        <div class="px-3 py-2">
-                                            <p>{{ event.title }}</p>
-                                        </div>
-                                        <div data-popper-arrow></div>
-                                    </div>
-                                    {{ event.get_short_name }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ event.place }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    ${{ event.price.to_eng_string }}
-                                </td>
-                                <td class="px-6 py-4">
-                                <span class="bg-blue-100 text-blue-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
-                                    <svg fill="none" class="w-3 h-3 mr-1" stroke="currentColor" stroke-width="1.5"
-                                         viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                              d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z"></path>
-                                    </svg>
-                                  {{ event.start_date }}
-                                </span>
-                                </td>
-                                <td class="px-6 py-4">
-                                <span class="bg-blue-100 text-blue-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
-                                    <svg fill="none" class="w-3 h-3 mr-1" stroke="currentColor" stroke-width="1.5"
-                                         viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                              d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z"></path>
-                                    </svg>
-                                  {{ event.final_date }}
-                                </span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ event.get_full_number_phone }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ event.email }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {% if event.active %}
-                                        <span class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Activo</span>
-                                    {% else %}
-                                        <span class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Inactivo</span>
-                                    {% endif %}
-                                </td>
-                                <td class="px-6 py-4 flex">
-                                    <a href="{% url 'view_event' event.id %}"
-                                       class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                                        <svg fill="none" class="w-5 h-5 mr-1" stroke="currentColor" stroke-width="1.5"
-                                             viewBox="0 0 24 24"
-                                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                  d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"></path>
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            {% if event.user.id == request.user.id or perms.Eventos.change_event or perms.Eventos.delete_event %}
+                                <div class="flex px-4 pt-4 absolute top-0 right-0">
+                                    <button id="dropdownButton" data-dropdown-toggle="dropdown"
+                                            class="inline-block text-gray-400 hover:text-white dark:text-gray-400 bg-gray-600 dark:hover:bg-gray-700 dark:hover:text-white focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-full text-sm p-1.5"
+                                            type="button">
+                                        <span class="sr-only">Open dropdown</span>
+                                        <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+                                             xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z"></path>
                                         </svg>
-                                    </a>
-                                    {% if perms.Eventos.change_event %}
-                                        <a href="{% url 'update_event' event.id %}"
-                                           class="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                                            <svg fill="none" stroke="currentColor" class="w-5 h-5 mr-1"
-                                                 stroke-width="1.5"
-                                                 viewBox="0 0 24 24"
+                                    </button>
+                                    <!-- Dropdown menu -->
+                                    <div id="dropdown"
+                                         class="z-10 hidden text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                                        <ul class="py-2" aria-labelledby="dropdownButton">
+                                            {% if perms.Eventos.change_event %}
+                                                <li>
+                                                    <a href="{% url 'update_event' event.id %}"
+                                                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                                                        Editar
+                                                    </a>
+                                                </li>
+                                            {% endif %}
+                                            {% if perms.Eventos.delete_event %}
+                                                <li>
+                                                    <a href="{% url 'delete_event' event.id %}"
+                                                       class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                                                        Delete
+                                                    </a>
+                                                </li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            <a href="{% url 'view_event' event.id %}" class="mb-4 block">
+                                <img class="rounded w-full object-cover" loading="lazy" src="{{ event.get_logo }}"
+                                     alt="product image"/>
+                            </a>
+                            <div class="px-5 pb-5">
+                                <a href="{% url 'view_event' event.id %}"
+                                   class="mb-4 flex flex-wrap gap-4 justify-between items-center">
+                                    <h5 class="text-xl font-semibold tracking-tight text-gray-900 hover:text-blue-500 hover:underline dark:text-white dark:hover:text-blue-400">
+                                        {{ event.title.capitalize }}
+                                    </h5>
+                                    <div class="icons flex gap-2">
+                                        <div class="certify" data-popover-target="popover-certify">
+                                            <svg fill="none" class="w-5 h-5 text-blue-500 dark:text-yellow-400"
+                                                 stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
                                                  xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
-                                                      d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"></path>
+                                                      d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"></path>
                                             </svg>
-                                        </a>
-                                    {% endif %}
-                                    {% if perms.Eventos.delete_event %}
-                                        <a href="#" onclick="delete_event('/eventos/delete_event/{{ event.id }}/')"
-                                           class="font-medium text-red-600 dark:text-red-500 hover:underline">
-                                            <svg fill="none" stroke="currentColor" stroke-width="1.5"
-                                                  class="w-5 h-5 mr-1"
-                                                 viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
-                                                 aria-hidden="true">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                      d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path>
-                                            </svg>
-                                        </a>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-
-            </div>
-
-            <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="card-events" role="tabpanel"
-                 aria-labelledby="cards-events-tab">
-
-                <div class="content-cards flex gap-4 wrap">
-                    {% if events %}
-                        {% for event in events %}
-                            <div class="w-full relative max-w-sm bg-white hover:bg-gray-200 border border-gray-700 rounded-lg shadow dark:bg-gray-900 dark:hover:bg-gray-800 dark:border-gray-700">
-                                {% if event.active %}
-                                    <span class="absolute top-2 left-2 bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">Activo</span>
-                                {% else %}
-                                    <span class="absolute top-2 left-2 bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Inactivo</span>
-                                {% endif %}
-                                <a href="{% url 'view_event' event.id %}" class="mb-4 block">
-                                    <img class="rounded w-full object-cover" loading="lazy" src="{{ event.get_logo }}"
-                                         alt="product image"/>
-                                </a>
-                                <div class="px-5 pb-5">
-                                    <a href="{% url 'view_event' event.id %}"
-                                       class="mb-4 flex flex-wrap gap-4 justify-between items-center">
-                                        <h5 class="text-xl font-semibold tracking-tight text-gray-900 hover:text-blue-500 hover:underline dark:text-white dark:hover:text-blue-400">
-                                            {{ event.title.capitalize }}
-                                        </h5>
-                                        <div class="icons flex gap-2">
-                                            <div class="certify" data-popover-target="popover-certify">
-                                                <svg fill="none" class="w-5 h-5 text-blue-500 dark:text-yellow-400"
-                                                     stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
-                                                     xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                          d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"></path>
-                                                </svg>
-                                            </div>
+                                        </div>
+                                        {% if event.teachers.all %}
                                             <div class="teachers" data-popover-target="popover-teachers">
                                                 <svg fill="none" class="w-5 h-5 text-blue-500 dark:text-yellow-400"
                                                      stroke="currentColor" stroke-width="1.5"
@@ -278,21 +135,23 @@
                                                           d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"></path>
                                                 </svg>
                                             </div>
-                                        </div>
-                                    </a>
-                                    <!-- Popover´s -->
-                                    <div data-popover id="popover-certify" role="tooltip"
-                                         class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
-                                        <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
-                                            <h3 class="font-semibold text-gray-900 dark:text-white">¡Certificación
-                                                incluida!</h3>
-                                        </div>
-                                        <div class="px-3 py-2">
-                                            <p>Este evento incluye un certificado de finalización avalado por el
-                                                Instituto Superior Tecnológico Corporativo Edwards Deming.</p>
-                                        </div>
-                                        <div data-popper-arrow></div>
+                                        {% endif %}
                                     </div>
+                                </a>
+                                <!-- Popover´s -->
+                                <div data-popover id="popover-certify" role="tooltip"
+                                     class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
+                                    <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
+                                        <h3 class="font-semibold text-gray-900 dark:text-white">¡Certificación
+                                            incluida!</h3>
+                                    </div>
+                                    <div class="px-3 py-2">
+                                        <p>Este evento incluye un certificado de finalización avalado por el
+                                            Instituto Superior Tecnológico Corporativo Edwards Deming.</p>
+                                    </div>
+                                    <div data-popper-arrow></div>
+                                </div>
+                                {% if event.teachers.all %}
                                     <div data-popover id="popover-teachers" role="tooltip"
                                          class="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
                                         <div class="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
@@ -318,9 +177,10 @@
                                         </div>
                                         <div data-popper-arrow></div>
                                     </div>
-                                    <div class="dates mb-4 flex gap-2 items-center">
-                                        <div class="start_date">
-                                            <p class="dark:text-white">
+                                {% endif %}
+                                <div class="dates mb-4 flex gap-2 items-center">
+                                    <div class="start_date">
+                                        <p class="dark:text-white">
                                     <span class="bg-blue-100 text-blue-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
                                         <svg fill="none" class="w-3 h-3 mr-1" stroke="currentColor" stroke-width="1.5"
                                              viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -329,18 +189,18 @@
                                         </svg>
                                       {{ event.start_date.isoformat }}
                                     </span>
-                                            </p>
-                                        </div>
+                                        </p>
+                                    </div>
 
-                                        <svg fill="none" class="w-5 h-5 mr-1" stroke="white" stroke-width="1.5"
-                                             viewBox="0 0 24 24"
-                                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                  d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"></path>
-                                        </svg>
+                                    <svg fill="none" class="w-5 h-5 mr-1" stroke="white" stroke-width="1.5"
+                                         viewBox="0 0 24 24"
+                                         xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"></path>
+                                    </svg>
 
-                                        <div class="final_date">
-                                            <p class="dark:text-white">
+                                    <div class="final_date">
+                                        <p class="dark:text-white">
                                     <span class="bg-blue-100 text-blue-800 text-xs font-medium inline-flex items-center px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-blue-400 border border-blue-400">
                                         <svg fill="none" class="w-3 h-3 mr-1" stroke="currentColor" stroke-width="1.5"
                                              viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -349,46 +209,83 @@
                                         </svg>
                                       {{ event.final_date.isoformat }}
                                     </span>
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <div class="description mb-4">
-                                        <p class="dark:text-gray-400">
-                                            {{ event.addressed_to }}
                                         </p>
-                                    </div>
-
-                                    <div class="flex items-center justify-between">
-                                        <p class="text-3md font-bold text-gray-900 dark:text-white flex items-center">
-                                            <i class="fa-brands fa-paypal" style="color: #2e75ef;"></i>
-                                            &nbsp;
-                                            <span>${{ event.price.to_eng_string }}</span>
-                                        </p>
-                                        <a href="{% url 'view_event' event.id %}"
-                                           class="text-white flex bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                            Explorar
-                                            <svg fill="none" class="w-5 h-5 mr-1" stroke="white" stroke-width="1.5"
-                                                 viewBox="0 0 24 24"
-                                                 xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                      d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"></path>
-                                            </svg>
-                                        </a>
                                     </div>
                                 </div>
+
+                                <div class="description mb-4">
+                                    <p class="dark:text-gray-400">
+                                        {{ event.addressed_to }}
+                                    </p>
+                                </div>
+
+                                <div class="flex items-center justify-between">
+                                    <p class="text-3md font-bold text-gray-900 dark:text-white flex items-center">
+                                        <i class="fa-brands fa-paypal" style="color: #2e75ef;"></i>
+                                        &nbsp;
+                                        <span>${{ event.price.to_eng_string }}</span>
+                                    </p>
+                                    <a href="{% url 'view_event' event.id %}"
+                                       class="text-white flex bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                        Explorar
+                                        <svg fill="none" class="w-5 h-5 mr-1" stroke="white" stroke-width="1.5"
+                                             viewBox="0 0 24 24"
+                                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"></path>
+                                        </svg>
+                                    </a>
+                                </div>
                             </div>
-                        {% endfor %}
                         </div>
-                    {% else %}
-                        <div class="content flex justify-center items-center flex-col w-full p-4">
-                            <img src="{% static 'Eventos/images/icons/filter-circle-xmark-solid.svg' %}"
-                                 style="width: 20rem" class="mb-4"
-                                 alt="ícono de registros no encontrados">
-                            <h1 class="text-5xl font-extrabold dark:text-white">No hay eventos activos por ahora.</h1>
-                        </div>
-                    {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <div class="content flex justify-center items-center flex-col w-full p-4">
+                        <img src="{% static 'Eventos/images/icons/filter-circle-xmark-solid.svg' %}"
+                             style="width: 20rem" class="mb-4"
+                             alt="ícono de registros no encontrados">
+                        <h1 class="text-5xl font-extrabold dark:text-white">No hay eventos activos por ahora.</h1>
+                    </div>
+                {% endif %}
             </div>
+
+            <!--PAGINATION-->
+            <nav>
+                <ul class="inline-flex -space-x-px">
+                    {% if events.has_previous %}
+                        <li>
+                            <a href="?page={{ events.previous_page_number }}"
+                               class="px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Previous</a>
+                        </li>
+                    {% endif %}
+
+                    {% for i in events.paginator.page_range %}
+                        {% if events.number == i %}
+                            <li>
+                                <a href="#" aria-current="page"
+                                   class="px-3 py-2 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">
+                                    {{ i }}
+                                </a>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a href="?page={{ i }}"
+                                   class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                                    {{ i }}
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if events.has_next %}
+                        <li>
+                            <a href="?page={{ events.next_page_number }}"
+                               class="px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Next</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            <!--/END PAGINATION-->
         </div>
 
 

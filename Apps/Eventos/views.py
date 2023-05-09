@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import BadRequest
 from django.core.mail import EmailMultiAlternatives
+from django.core.paginator import Paginator
 from django.forms import ValidationError
 from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
@@ -29,13 +30,18 @@ from Apps.Users.models import User
 def view_events(request):
     global get_career
     if request.user.is_superuser:
-        events = Event.objects.filter()
+        events = Event.objects.all()
     else:
         events = Event.objects.filter(active=True)
 
+    # User.objects.get(id=3).delete()
+    paginator = Paginator(events, 9)
+    page_number = request.GET.get('page')
+    paginator_data = paginator.get_page(page_number)
+
     data = {
         'form': EventForm(),
-        'events': events,
+        'events': paginator_data,
         'career_form': CareerForm(),
     }
 
@@ -62,7 +68,6 @@ def view_events(request):
             link_to_classroom = request.POST.get('link_to_classroom')
             code_meeting = request.POST.get('code_meeting')
             career = request.POST.get('career')
-            how_did_you_find_out = request.POST.get('how_did_you_find_out')
 
             if isinstance(alternative_phone, str):
                 alternative_phone = None
@@ -78,13 +83,15 @@ def view_events(request):
             if final_date < start_date:
                 raise ValidationError('La fecha final no puede ser menor a la fecha de inicio')
 
+            url = request.get_host() + request.get_full_path()
             event = Event(user_id=request.user.id, logo=logo, title=title, place=place,
                           addressed_to=addressed_to, price=price, start_date=start_date,
                           final_date=final_date, modality=modality, country_phone=country_phone,
                           phone=phone, alternative_phone=alternative_phone, email=email,
                           alternative_email=alternative_email, platform_meeting=platform_meeting,
                           link_to_classroom=link_to_classroom, code_meeting=code_meeting,
-                          event_planning=event_planning, link_video=link_video, career=get_career
+                          event_planning=event_planning, link_video=link_video, career=get_career,
+                          url=url
                           )
             event.save()
             form2 = EventForm(request.POST, instance=event)

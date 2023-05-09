@@ -5,9 +5,110 @@
 {% block head_title %}{% trans "Signup" %}{% endblock %}
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'Users/css/input_file.css' %}">
+    <style>
+        .card {
+            overflow: hidden;
+        }
+
+        .card .back {
+            background-image: url({% static 'Users/images/background.jpg' %});
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+
+            transition: all .2s ease-in;
+        }
+
+        .card .content {
+            background-color: rgba(0, 0, 0, 0.7);
+            transition: all .2s ease-in;
+        }
+
+        .card:hover .back {
+            transform: scale(1.1);
+        }
+
+        .card:hover .content {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        #id_curriculum {
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            position: absolute;
+            z-index: -1;
+        }
+
+        #id_curriculum + label {
+            font-weight: 700;
+            color: white;
+            background-color: black;
+            display: inline-flex;
+            gap: 0.5rem;
+            align-items: center;
+            cursor: pointer;
+            padding: 0.65rem 1.5rem;
+            border-radius: 10px;
+            transition: all .2s;
+            width: 100%;
+            justify-content: center;
+        }
+
+        #id_curriculum:focus + label,
+        #id_curriculum + label:hover {
+            background-color: rgb(28, 100, 242);
+        }
+
+    </style>
 {% endblock %}
 
 {% block content %}
+    {% if form.errors %}
+        <div id="toast-danger"
+             class="absolute flex items-center w-full max-w-xl top-4 left-8 p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+             role="alert">
+            <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
+                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clip-rule="evenodd"></path>
+                </svg>
+                <span class="sr-only">Error icon</span>
+            </div>
+            <div class="ml-3 text-sm font-normal">
+                <ul>
+                    {% for key, value in form.errors.items %}
+                        <li class="flex gap-2">
+                            {{ key }}
+                            <svg fill="none" class="w-5 h-5 text-gray-500 dark:text-gray-400" stroke="currentColor"
+                                 stroke-width="1.5" viewBox="0 0 24 24"
+                                 xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"></path>
+                            </svg>
+                            {{ value }}
+                        </li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+            <button type="button"
+                    class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+                    data-dismiss-target="#toast-danger" aria-label="Close">
+                <span class="sr-only">Close</span>
+                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clip-rule="evenodd"></path>
+                </svg>
+            </button>
+        </div>
+    {% endif %}
     <div class="content grid grid-cols-1 md:grid-cols-2" style="min-height: 100vh">
         <div class="form px-4 py-6 bg-gray-100 dark:bg-gray-800 flex flex-col justify-center">
             <div class="logo mx-auto">
@@ -20,7 +121,8 @@
             </div>
 
             <div class="content-form">
-                <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+                <form class="signup" id="signup_form" enctype="multipart/form-data" method="post"
+                      action="{% url 'account_signup' %}">
                     {% csrf_token %}
                     <div class="personal_data mb-6 flex gap-4 flex-wrap justify-center md:justify-start">
                         <div class="image">
@@ -37,8 +139,8 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="data flex gap-2 flex-wrap items-baseline justify-center md:justify-start">
-                            <div class="names">
+                        <div class="data w-full flex gap-2 flex-wrap items-baseline justify-center md:justify-start">
+                            <div class="names w-full md:w-auto">
                                 <label for="{{ form.first_name.id_for_label }}"
                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                     {{ form.first_name.label }}
@@ -56,7 +158,7 @@
                                     {{ form.first_name }}
                                 </div>
                             </div>
-                            <div class="surnames">
+                            <div class="surnames w-full md:w-auto">
                                 <label for="{{ form.last_name.id_for_label }}"
                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                     {{ form.last_name.label }}
@@ -74,7 +176,7 @@
                                     {{ form.last_name }}
                                 </div>
                             </div>
-                            <div class="profession">
+                            <div class="profession w-full md:w-auto">
                                 <label for="{{ form.profession.id_for_label }}"
                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                     {{ form.profession.label }}
@@ -95,7 +197,7 @@
                         </div>
                     </div>
                     <div class="account_data mb-6">
-                        <div class="data grid grid-cols-1 md:grid-cols-3 gap-2">
+                        <div class="data grid grid-cols-1 md:grid-cols-3 gap-2" style="align-items: end">
                             <div class="username">
                                 <label for="{{ form.username.id_for_label }}"
                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -117,7 +219,7 @@
                             <div class="email">
                                 <label for="{{ form.email.id_for_label }}"
                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                    {{ form.email.label }}
+                                    {{ form.email.label }}*
                                 </label>
                                 <div class="relative">
                                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -131,12 +233,27 @@
                                     {{ form.email }}
                                 </div>
                             </div>
-                            <div class="curriculum">
+                            <div class="curriculum relative">
+                                {{ form.curriculum }}
                                 <label for="{{ form.curriculum.id_for_label }}"
-                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                       class="block text-sm font-medium text-gray-900 dark:text-white">
+                                    <svg class="w-6 h-6 text-white"
+                                         fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
+                                         xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"></path>
+                                    </svg>
                                     {{ form.curriculum.label }}
                                 </label>
-                                {{ form.curriculum }}
+                                <button type="button" id="deleteFile" class="absolute p-2 bg-red-600 rounded-full"
+                                        style="top: -50%; right: -15px; display: none">
+                                    <svg fill="none" class="w-6 h-6" stroke="currentColor" stroke-width="1.5"
+                                         viewBox="0 0 24 24"
+                                         xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path>
+                                    </svg>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -145,7 +262,7 @@
                             <div class="password1">
                                 <label for="{{ form.password1.id_for_label }}"
                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                    {{ form.password1.label }}
+                                    {{ form.password1.label }}*
                                 </label>
                                 <div class="relative">
                                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -163,7 +280,7 @@
                             <div class="password2">
                                 <label for="{{ form.password2.id_for_label }}"
                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                    {{ form.password2.label }}
+                                    {{ form.password2.label }}*
                                 </label>
                                 <div class="relative">
                                     <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -195,7 +312,9 @@
                     {% endif %}
 
                     <p class="text-gray-700 dark:text-gray-400 mb-6">
-                        ¿Ya tienes una cuenta? Entonces por favor <a href="{{ login_url }}" class="text-blue-500 hover:underline">inicia sesión</a>.
+                        ¿Ya tienes una cuenta? Entonces por favor <a href="{{ login_url }}"
+                                                                     class="text-blue-500 hover:underline">inicia
+                        sesión</a>.
                     </p>
 
                     <button type="submit"
@@ -205,11 +324,97 @@
                 </form>
             </div>
         </div>
-        <div class="card px-4 relative py-8 md:py-6 bg-indigo-400 flex flex-col justify-center gap-4"></div>
+        <div class="card relative bg-indigo-400">
+            <div class="back absolute left-0 right-0 top-0 bottom-0" style="z-index: 1"></div>
+            <div class="content relative px-4 py-8 h-full grid gap-4"
+                 style="grid-template-rows: auto auto 1fr; z-index: 10">
+                <div class="header">
+                    <a href="{% url 'index' %}"
+                       class="flex flex-col items-center mb-6 text-2xl font-semibold text-white">
+                        <img class="w-96" src="{% static 'Home/images/logo_deming.png' %}"
+                             alt="logo">
+                        Instituto Superior Tecnológico Corporativo Edwards Deming
+                    </a>
+                </div>
+                <div class="body">
+                    <h1 class="mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl">
+                        Tanto conocimiento
+                        <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">En la palma de tu mano.</span>
+                    </h1>
+                </div>
+                <div class="footer">
+                    <p class="text-gray-400 mb-6">
+                        En esta plataforma, te invitamos a conocer más sobre nuestros eventos y el equipo que hay detrás
+                        de cada uno de estos. <br>
+                        En <span
+                            class="text-transparent font-semibold bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">[nombre de la empresa],</span>
+                        nos enorgullece brindar la posibilidad de aprender de forma online,
+                        presencial o las 2 a cualquier persona interesada en ello. <br>
+                        Nuestro compromiso es lograr que la mayor cantidad de personas aprendan de los
+                        diferentes eventos, congresos y/o actividades impartidas en esta plataforma.
+                    </p>
+                    <div class="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-12 md:space-y-0">
+                        <div>
+                            <div class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900">
+                                <a href="{% url 'eventos' %}">
+                                    <svg class="w-8 h-8 text-blue-600 dark:text-blue-300"
+                                         fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
+                                         xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                            <h3 class="mb-2 text-xl font-bold dark:text-white">
+                                <a href="{% url 'eventos' %}" class="hover:underline">Eventos</a>
+                            </h3>
+                            <p class="text-gray-500 dark:text-gray-400">
+                                Puedes visitar nuestra sección de eventos y asistir al que más te guste
+                            </p>
+                        </div>
+                        <div>
+                            <div class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900">
+                                <svg class="w-8 h-8 text-blue-600 dark:text-blue-300"
+                                     fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
+                                     xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="mb-2 text-xl font-bold dark:text-white">Legal</h3>
+                            <p class="text-gray-500 dark:text-gray-400">Protect your organization, devices and stay
+                                compliant with our structured workflows and custom permissions made for you.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 {% endblock %}
 
 {% block extra_body %}
     <script src="{% static 'Users/js/input_file.js' %}"></script>
+    <script>
+        const archivoInput = document.getElementById('{{ form.curriculum.id_for_label }}');
+        const label = document.querySelector('label[for="{{ form.curriculum.id_for_label }}"]');
+        const borrarArchivoBtn = document.getElementById('deleteFile');
+
+        archivoInput.addEventListener('change', function () {
+            if (archivoInput.files.length > 0) {
+                label.textContent = archivoInput.files[0].name;
+                borrarArchivoBtn.style.display = 'inline';
+            } else {
+                label.innerHTML = '<svg class="w-6 h-6"  fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"  xmlns="http://www.w3.org/2000/svg" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round"  d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"></path> </svg>{{ form.curriculum.label }}';
+                borrarArchivoBtn.style.display = 'none';
+            }
+        });
+
+        borrarArchivoBtn.addEventListener('click', function () {
+            archivoInput.value = '';
+            label.innerHTML = '<svg class="w-6 h-6"  fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"  xmlns="http://www.w3.org/2000/svg" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round"  d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"></path> </svg>{{ form.curriculum.label }}';
+            borrarArchivoBtn.style.display = 'none';
+        });
+    </script>
 {% endblock %}

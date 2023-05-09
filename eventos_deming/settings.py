@@ -41,8 +41,7 @@ CSRF_TRUSTED_ORIGINS = ['https://d54f-186-4-252-8.ngrok.io']
 if DEBUG:
     EMAIL_BACKEND = "naomi.mail.backends.naomi.NaomiBackend"
     EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'tmp')
-else:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 EMAIL_HOST = 'smtp.googlemail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')

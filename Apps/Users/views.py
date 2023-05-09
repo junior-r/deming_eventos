@@ -509,7 +509,7 @@ def create_user(request, user_type: str):
     if request.method == 'POST':
         form = UserForm(request.POST, request.FILES)
         if form.is_valid():
-            user = form.save()
+            user = form.save(request)
             user.profile_image_user = request.FILES.get('profile_image')
             user.curriculum = request.FILES.get('curriculum')
             if user_type == 'staff':
