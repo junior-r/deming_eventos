@@ -256,6 +256,7 @@ class Event(models.Model):
 
     class Meta:
         db_table = 'Events'
+        ordering = ['start_date']
 
     def __str__(self):
         return '{}_{}_to_{}'.format(self.title, self.start_date, self.final_date)

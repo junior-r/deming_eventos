@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import BadRequest
 from django.core.mail import EmailMultiAlternatives
 from django.core.paginator import Paginator
+from django.db.models import Q
 from django.forms import ValidationError
 from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
@@ -34,7 +35,6 @@ def view_events(request):
     else:
         events = Event.objects.filter(active=True)
 
-    # User.objects.get(id=3).delete()
     paginator = Paginator(events, 9)
     page_number = request.GET.get('page')
     paginator_data = paginator.get_page(page_number)
@@ -46,62 +46,85 @@ def view_events(request):
     }
 
     if request.method == 'POST':
-        form = EventForm(request.POST, request.FILES)
-        if form.is_valid():
-            logo = request.FILES.get('logo')
-            title = request.POST.get('title')
-            place = request.POST.get('place')
-            addressed_to = request.POST.get('addressed_to')
-            price = request.POST.get('price') if request.POST.get('price') != '' else 0
-            start_date = request.POST.get('start_date')
-            final_date = request.POST.get('final_date')
-            modality = request.POST.get('modality')
-            country_phone = request.POST.get('country_phone')
-            phone = request.POST.get('phone')
-            alternative_phone = request.POST.get('alternative_phone')
-            email = request.POST.get('email')
-            alternative_email = request.POST.get('alternative_email') if request.POST.get('alternative_email') != '' \
-                else None
-            event_planning = request.FILES.get('event_planning')
-            link_video = request.POST.get('link_video')
-            platform_meeting = request.POST.get('platform_meeting')
-            link_to_classroom = request.POST.get('link_to_classroom')
-            code_meeting = request.POST.get('code_meeting')
-            career = request.POST.get('career')
+        query = request.POST.get('query')
+        if not query and 'title' in request.POST.keys():
+            form = EventForm(request.POST, request.FILES)
+            if form.is_valid() and not query:
+                logo = request.FILES.get('logo')
+                title = request.POST.get('title')
+                place = request.POST.get('place')
+                addressed_to = request.POST.get('addressed_to')
+                price = request.POST.get('price') if request.POST.get('price') != '' else 0
+                start_date = request.POST.get('start_date')
+                final_date = request.POST.get('final_date')
+                modality = request.POST.get('modality')
+                country_phone = request.POST.get('country_phone')
+                phone = request.POST.get('phone')
+                alternative_phone = request.POST.get('alternative_phone')
+                email = request.POST.get('email')
+                alternative_email = request.POST.get('alternative_email') if request.POST.get('alternative_email') != '' \
+                    else None
+                event_planning = request.FILES.get('event_planning')
+                link_video = request.POST.get('link_video')
+                platform_meeting = request.POST.get('platform_meeting')
+                link_to_classroom = request.POST.get('link_to_classroom')
+                code_meeting = request.POST.get('code_meeting')
+                career = request.POST.get('career')
 
-            if isinstance(alternative_phone, str):
-                alternative_phone = None
+                if isinstance(alternative_phone, str):
+                    alternative_phone = None
 
-            get_career = None
-            try:
-                get_career = get_object_or_404(Career, id=career)
-            except Career.DoesNotExist:
-                messages.error(request, 'No se pudo encontrar la carrera seleccionada. Contacte al administrador.')
-            except ValueError:
-                messages.error(request, 'Porfavor selecciona una carrera válida')
+                get_career = None
+                try:
+                    get_career = get_object_or_404(Career, id=career)
+                except Career.DoesNotExist:
+                    messages.error(request, 'No se pudo encontrar la carrera seleccionada. Contacte al administrador.')
+                except ValueError:
+                    messages.error(request, 'Porfavor selecciona una carrera válida')
 
-            if final_date < start_date:
-                raise ValidationError('La fecha final no puede ser menor a la fecha de inicio')
+                if final_date < start_date:
+                    raise ValidationError('La fecha final no puede ser menor a la fecha de inicio')
 
-            url = request.get_host() + request.get_full_path()
-            event = Event(user_id=request.user.id, logo=logo, title=title, place=place,
-                          addressed_to=addressed_to, price=price, start_date=start_date,
-                          final_date=final_date, modality=modality, country_phone=country_phone,
-                          phone=phone, alternative_phone=alternative_phone, email=email,
-                          alternative_email=alternative_email, platform_meeting=platform_meeting,
-                          link_to_classroom=link_to_classroom, code_meeting=code_meeting,
-                          event_planning=event_planning, link_video=link_video, career=get_career,
-                          url=url
-                          )
-            event.save()
-            form2 = EventForm(request.POST, instance=event)
-            form2.save(commit=False)
-            form2.save_m2m()
-            messages.success(request, 'Evento creado exitosamente')
-            return redirect('eventos')
+                url = request.get_host() + request.get_full_path()
+                event = Event(user_id=request.user.id, logo=logo, title=title, place=place,
+                              addressed_to=addressed_to, price=price, start_date=start_date,
+                              final_date=final_date, modality=modality, country_phone=country_phone,
+                              phone=phone, alternative_phone=alternative_phone, email=email,
+                              alternative_email=alternative_email, platform_meeting=platform_meeting,
+                              link_to_classroom=link_to_classroom, code_meeting=code_meeting,
+                              event_planning=event_planning, link_video=link_video, career=get_career,
+                              url=url
+                              )
+                event.save()
+                form2 = EventForm(request.POST, instance=event)
+                form2.save(commit=False)
+                form2.save_m2m()
+                messages.success(request, 'Evento creado exitosamente')
+                return redirect('eventos')
+            else:
+                data['form'] = form
+                messages.error(request, 'Ocurrió un error. Intente de nuevo.')
         else:
-            data['form'] = form
-            messages.error(request, 'Ocurrió un error. Intente de nuevo.')
+            try:
+                filtered_events = Event.objects.filter(
+                    Q(title__icontains=query) | Q(addressed_to__icontains=query) |
+                    Q(place__icontains=query) | Q(email__icontains=query) |
+                    Q(url__icontains=query) | Q(modality__icontains=query)
+                )
+            except ValidationError:
+                filtered_events = None
+            except ValueError:
+                filtered_events = None
+
+            paginator = Paginator(filtered_events, 9)
+            page_number = request.GET.get('page')
+            paginator_data = paginator.get_page(page_number)
+
+            data['events'] = paginator_data
+            data['events_count'] = filtered_events.all().count()
+            data['query'] = query
+            if not filtered_events:
+                messages.info(request, f'No se encontraron regístros que coincidan con: {query}')
 
     return render(request, 'Eventos/index.html', data)
 
@@ -534,7 +557,8 @@ def download_invoice(request, id_event):
     css_url = os.path.join(settings.BASE_DIR, 'Apps/Home/static/Home/css/components/bootstrap.min.css')
     pdf = HTML(string=html_template, base_url=request.build_absolute_uri()).write_pdf(stylesheets=[CSS(css_url)])
     response = HttpResponse(pdf, content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename={0}_{1}{2}'.format('Comprobante de compra', event.title, '.pdf')
+    response['Content-Disposition'] = 'attachment; filename={0}_{1}{2}'.format('Comprobante de compra', event.title,
+                                                                               '.pdf')
     # return render(request, 'Eventos/invoice-event.html', context)
     return response
 
