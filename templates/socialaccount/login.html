@@ -56,9 +56,9 @@
                                   d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z"></path>
                         </svg>
                         <h1 class="text-2xl mb-4 text-gray-900 font-bold dark:text-white">
-                            {% blocktrans with provider.name as provider %}
-                                Sign In Via {{ provider }}
-                            {% endblocktrans %}
+                            {% with provider.name as provider %}
+                                {% trans 'Sign In' %} Via {{ provider }}
+                            {% endwith %}
                         </h1>
                         <p class="mb-4 text-gray-500 dark:text-gray-300">
                             {% blocktrans with provider.name as provider %}
@@ -66,7 +66,7 @@
                             {% endblocktrans %}
                         </p>
                         <div class="flex justify-center items-center space-x-4">
-                            <a href=""
+                            <a href="{% url 'account_login' %}"
                                class="py-2 px-3 text-sm font-medium text-gray-500 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
                                 No, Cancelar
                             </a>
