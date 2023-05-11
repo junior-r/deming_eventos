@@ -19,6 +19,62 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="{% static 'Users/css/input_file.css' %}">
     {% block styles %}
+        <style>
+            .sections {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+            }
+            .buttons {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+                justify-items: center;
+                align-items: center;
+            }
+
+            .content-info, .content-perms, .content-edit-info, .content-teacher {
+                grid-column: 1 / 2;
+                grid-row: span 1;
+            }
+
+            @media screen and (min-width: 680px) {
+                .buttons {
+                    grid-template-columns: 1fr 1fr;
+                }
+            }
+
+            @media screen and (min-width: 1024px) {
+                .sections {
+                    grid-template-columns: 1fr 1fr;
+                    grid-template-rows: auto;
+                }
+
+                .buttons {
+                    grid-template-columns: 1fr 1fr 1fr;
+                    grid-template-rows: auto;
+                    align-items: center;
+                }
+
+                .content-info {
+                    grid-column: 1 / 2;
+                    grid-row: span 1;
+                }
+
+                .content-perms {
+                    grid-column: 2 / 3;
+                    grid-row: span 2;
+                }
+
+                .content-edit-info {
+                    grid-column: 1 / 2;
+                    grid-row: span 1;
+                }
+
+                .content-teacher {
+                    grid-column: 1 / 3;
+                    grid-row: span 1;
+                }
+            }
+        </style>
     {% endblock %}
     <script>
         // On page load or when changing themes, best to add inline in `head` to avoid FOUC
@@ -41,7 +97,7 @@
 
 <div class="super-container" style="padding-top: 60px;">
 
-    <div class="bg-gray-100 bg-opacity-50 dark:bg-gray-800 dark:bg-opacity-80 mx-auto p-8"
+    <div class="bg-gray-100 bg-opacity-50 dark:bg-gray-800 dark:bg-opacity-80 mx-auto md:p-8"
          style="min-height: calc(100vh - 53px);">
         {% block left-sidebar %}
             {% include 'Users/components/sidebar.html' %}
@@ -93,9 +149,8 @@
                         </button>
                     </div>
                 {% endif %}
-                <div class=" grid grid-cols-2 grid-rows-3 gap-6">
-                    <div class="content-info w-full border py-4 px-6 rounded-lg bg-gray-100 dark:bg-gray-700"
-                         style="grid-column: 1 / 2; grid-row: 1 / 2">
+                <div class="sections grid gap-6">
+                    <div class="content-info w-full border py-4 px-6 rounded-lg bg-gray-100 dark:bg-gray-700">
                         <h3 class="mb-6 flex items-center gap-4 text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
                             {% if request.user.id == current_profile_user.id %}
                                 <span>Tu información</span>
@@ -178,7 +233,8 @@
                                        class="bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">Curriculum</a>
                                 {% endif %}
                                 {% if current_profile_user.id == current_user.id %}
-                                    <a href="{% url 'socialaccount_connections' %}" class="bg-yellow-100 text-yellow-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">
+                                    <a href="{% url 'socialaccount_connections' %}"
+                                       class="bg-yellow-100 text-yellow-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300">
                                         Mis cuentas
                                     </a>
                                 {% endif %}
@@ -191,8 +247,7 @@
                     </div>
                     {% if perms.auth.view_permission %}
                         {% if current_user.is_superuser %}
-                            <div class="content-info w-full border py-4 px-6 rounded-lg bg-gray-100 dark:bg-gray-700"
-                                 style="grid-column: 2 / 3; grid-row: 1 / 3">
+                            <div class="content-perms w-full border py-4 px-6 rounded-lg bg-gray-100 dark:bg-gray-700">
                                 <div class="labels flex justify-between gap-4 mb-4">
                                     <p class="font-bold text-2xl dark:text-white">Permisos
                                         ({{ current_profile_user.user_permissions.all.count }})</p>
@@ -203,7 +258,7 @@
                                     {% csrf_token %}
                                     <ul class="permissions mx-4 mb-4">
                                         {% for permission in permissions %}
-                                            <li class="perm flex justify-between gap-4 mt-2">
+                                            <li class="perm flex flex-col sm:flex-row justify-between gap-4 mt-2">
                                                 <div class="perm_info">
                                                     <p class="perm_name text-gray-600 dark:text-gray-300"
                                                        translate="yes">{{ permission.name }}</p>
@@ -240,8 +295,7 @@
                                 </form>
                             </div>
                         {% else %}
-                            <div class="content-info w-full border py-4 px-6 rounded-lg bg-gray-100 dark:bg-gray-700"
-                                 style="grid-column: 2 / 3; grid-row: 1 / 3">
+                            <div class="content-perms w-full border py-4 px-6 rounded-lg bg-gray-100 dark:bg-gray-700">
                                 <div class="labels flex justify-between gap-4 mb-4">
                                     <p class="font-bold text-2xl dark:text-white">Permisos
                                         ({{ current_profile_user.user_permissions.all.count }})</p>
@@ -272,8 +326,7 @@
                         {% endif %}
                     {% else %}
                         {% if current_user_perms %}
-                            <div class="content-info w-full border py-4 px-6 rounded-lg bg-gray-100 dark:bg-gray-700"
-                                 style="grid-column: 2 / 3; grid-row: 1 / 3">
+                            <div class="content-perms w-full border py-4 px-6 rounded-lg bg-gray-100 dark:bg-gray-700">
                                 <div class="labels flex justify-between gap-4 mb-4">
                                     <p class="font-bold text-2xl dark:text-white">Permisos
                                         ({{ current_profile_user.user_permissions.all.count }})</p>
@@ -297,7 +350,7 @@
                             </div>
                         {% else %}
                             {% if current_profile_user.id == request.user.id %}
-                                <div class="content-info w-full border py-4 px-6 rounded-lg bg-gray-100 dark:bg-gray-700">
+                                <div class="content-perms w-full border py-4 px-6 rounded-lg bg-gray-100 dark:bg-gray-700">
                                     <div class="content flex justify-center items-center flex-col w-full p-4">
                                         <img src="{% static 'Eventos/images/icons/filter-circle-xmark-solid.svg' %}"
                                              style="width: 10rem" class="mb-4"
@@ -310,8 +363,7 @@
                         {% endif %}
                     {% endif %}
                     {% if request.user.id == current_profile_user.id or request.user.is_superuser or perms.Users.change_user %}
-                        <div class="content-info border py-4 px-6 rounded-lg bg-gray-100 dark:bg-gray-700"
-                             style="grid-column: 1 / 2; grid-row: 2 / 3">
+                        <div class="content-edit-info border py-4 px-6 rounded-lg bg-gray-100 dark:bg-gray-700">
                             <h3 class="mb-6 flex items-center gap-4 text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
                                 <span>Editar información</span>
                                 <svg fill="none" class="w-8 h-8" stroke="currentColor" stroke-width="1.5"
@@ -584,21 +636,22 @@
                                             </div>
                                         </section>
                                     {% endif %}
-                                    <div class="buttons flex gap- justify-between">
+                                    <div class="buttons grid gap-4">
                                         <div class="password-btn">
-                                            <a href=""
+                                            <a href="{% url 'account_change_password' %}"
                                                class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                                                 Cambiar contraseña
                                             </a>
                                         </div>
-                                        <div class="actions-btns">
-                                            {% if request.user.id == current_profile_user.id or perms.Users.delete_user or request.user.is_superuser %}
-                                                <a href="#" onclick="delete_user({{ current_profile_user.id }})"
-                                                   class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
+                                        {% if request.user.id == current_profile_user.id or perms.Users.delete_user or request.user.is_superuser %}
+                                            <div>
+                                                <button type="button" onclick="delete_user({{ current_profile_user.id }})"
+                                                   class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">
                                                     Eliminar cuenta
-                                                </a>
-                                            {% endif %}
-
+                                                </button>
+                                            </div>
+                                        {% endif %}
+                                        <div>
                                             <button type="submit"
                                                     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
                                                 Actualizar
@@ -611,8 +664,7 @@
                     {% endif %}
 
                     {% if current_profile_user.is_teacher %}
-                        <div class="content-info border py-4 px-6 rounded-lg bg-gray-100 dark:bg-gray-700"
-                             style="grid-column: 1 / 3; grid-row: 3 / 4">
+                        <div class="content-teacher border py-4 px-6 rounded-lg bg-gray-100 dark:bg-gray-700">
                             <h3 class="mb-6 flex items-center gap-4 text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
                                 <span>Cursos impartidos ({{ events_teacher.all.count }})</span>
                                 <svg fill="none" class="w-8 h-8" stroke="currentColor" stroke-width="1.5"

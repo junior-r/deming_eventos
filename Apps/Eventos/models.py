@@ -7,6 +7,7 @@ from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.utils import timezone
 from django_countries.fields import CountryField
+from django.urls import reverse
 
 from Apps.Users.models import User
 
@@ -228,6 +229,9 @@ class Event(models.Model):
         if len(self.title) > 12:
             return self.title[:12] + '...'
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('view_event', kwargs={'id_event': self.id})
 
     def get_unicode(self):
         if len(self.title) > 8:

@@ -111,6 +111,8 @@ def view_events(request):
                     Q(place__icontains=query) | Q(email__icontains=query) |
                     Q(url__icontains=query) | Q(modality__icontains=query)
                 )
+                if not request.user.is_superuser:
+                    filtered_events.filter(active=True)
             except ValidationError:
                 filtered_events = None
             except ValueError:
@@ -124,7 +126,7 @@ def view_events(request):
             data['events_count'] = filtered_events.all().count()
             data['query'] = query
             if not filtered_events:
-                messages.info(request, f'No se encontraron regístros que coincidan con: {query}')
+                messages.info(request, f'No se encontraron regístros activos que coincidan con: {query}')
 
     return render(request, 'Eventos/index.html', data)
 

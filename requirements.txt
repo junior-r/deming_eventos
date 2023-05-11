@@ -33,3 +33,4 @@ paypal-checkout-serversdk
 weasyprint
 qrcode
 django-widget-tweaks==1.4.12
+django-social-share==2.3.0

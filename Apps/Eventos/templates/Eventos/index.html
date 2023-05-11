@@ -16,6 +16,10 @@
             grid-template-columns: 1fr !important;
         }
 
+        #dropdownOptionsCreateButton {
+            margin-inline: auto;
+        }
+
         .header-form form {
             justify-content: center;
         }
@@ -29,11 +33,19 @@
             left: 1rem !important;
         }
 
+        .form-search {
+            width: 100%;
+        }
+
         /* Desktop */
         @media screen and (min-width: 768px) {
             .content-cards {
                 justify-items: start !important;
                 grid-template-columns: repeat(2, 1fr) !important;
+            }
+
+            #dropdownOptionsCreateButton {
+                margin-left: 1rem;
             }
 
             .header-form form {
@@ -42,6 +54,10 @@
 
             .header-form form > div.relative {
                 margin-right: 1rem;
+            }
+
+            .form-search {
+                width: 20rem;
             }
         }
 
@@ -111,8 +127,40 @@
                     <h2 class="text-3xl font-extrabold dark:text-white my-4 text-center">({{ events_count }}) Regístros
                         encontrados</h2>
                 {% endif %}
-                <div class="mb-4">
-                    <form method="post" class="flex justify-end md:mr-4" enctype="multipart/form-data">
+                <div class="mb-4 flex gap-2 justify-between items-center flex-wrap">
+
+                    <button id="dropdownOptionsCreateButton" data-dropdown-toggle="createDropdown"
+                            class="mb-3 md:mb-0 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                            type="button" data-dropdown-placement="bottom">
+                        Crear
+                        <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor"
+                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <!-- Dropdown menu -->
+                    <div id="createDropdown"
+                         class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
+                            aria-labelledby="dropdownOptionsCreateButton">
+                            <li data-drawer-target="drawer-create-event" data-drawer-show="drawer-create-event"
+                                aria-controls="drawer-create-event">
+                                <a href="#"
+                                   class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                    Crear evento
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#"
+                                   class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                    Crear carrera
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <form method="post" class="flex justify-end md:mr-4 form-search" enctype="multipart/form-data">
                         {% csrf_token %}
                         <label for="default-search"
                                class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
@@ -352,7 +400,7 @@
 
             {% if events %}
                 <!--PAGINATION-->
-                <nav class="text-right">
+                <nav class="text-right pr-4">
                     <ul class="inline-flex -space-x-px">
                         {% if events.has_previous %}
                             <li>
@@ -393,53 +441,436 @@
 
 
         {% if perms.Eventos.add_event %}
-            <div data-dial-init class="fixed group animado menu-options">
-                <button type="button" data-dial-toggle="speed-dial-menu-click"
-                        aria-controls="speed-dial-menu-click"
-                        aria-expanded="false" data-dial-trigger="click"
-                        class="flex items-center justify-center text-white bg-blue-700 rounded-full w-14 h-14 hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:focus:ring-blue-800">
-                    <svg aria-hidden="true" class="w-8 h-8 transition-transform group-hover:rotate-45" fill="none"
-                         stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            <!-- drawer component -->
+            <div id="drawer-create-event"
+                 class="fixed w-full top-0 left-0 z-40 h-screen p-4 overflow-y-auto transition-transform -translate-x-full bg-white dark:bg-gray-800"
+                 tabindex="-1" aria-labelledby="drawer-label">
+                <h5 id="drawer-label"
+                    class="inline-flex items-center mb-4 text-base font-semibold text-gray-500 dark:text-gray-400">
+                    <svg class="w-5 h-5 mr-2" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                              clip-rule="evenodd"></path>
                     </svg>
-                    <span class="sr-only">Open actions menu</span>
+                    <span>Crea un evento</span>
+                    <br><br>
+                </h5>
+                <p class="text-gray-500">Los campos marcados con <span class="text-yellow-400 font-bold">*</span> son obligatorios.</p>
+                <button type="button" data-drawer-hide="drawer-create-event" aria-controls="drawer-create-event"
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 absolute top-2.5 right-2.5 inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                              clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="sr-only">Close menu</span>
                 </button>
-                <div id="speed-dial-menu-click" class="flex flex-col items-center hidden mt-4 space-y-2">
-                    <button type="button" data-tooltip-target="tooltip-event" data-tooltip-placement="left"
-                            data-modal-target="events-form-modal" data-modal-toggle="events-form-modal"
-                            class="flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-full border border-gray-200 dark:border-gray-600 shadow-sm dark:hover:text-white dark:text-gray-400 hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 focus:ring-4 focus:ring-gray-300 focus:outline-none dark:focus:ring-gray-400">
-                        <svg fill="currentColor" class="w-6 h-6 -ml-px " viewBox="0 0 20 20"
-                             xmlns="http://www.w3.org/2000/svg"
-                             aria-hidden="true">
-                            <path clip-rule="evenodd" fill-rule="evenodd"
-                                  d="M9.664 1.319a.75.75 0 01.672 0 41.059 41.059 0 018.198 5.424.75.75 0 01-.254 1.285 31.372 31.372 0 00-7.86 3.83.75.75 0 01-.84 0 31.508 31.508 0 00-2.08-1.287V9.394c0-.244.116-.463.302-.592a35.504 35.504 0 013.305-2.033.75.75 0 00-.714-1.319 37 37 0 00-3.446 2.12A2.216 2.216 0 006 9.393v.38a31.293 31.293 0 00-4.28-1.746.75.75 0 01-.254-1.285 41.059 41.059 0 018.198-5.424zM6 11.459a29.848 29.848 0 00-2.455-1.158 41.029 41.029 0 00-.39 3.114.75.75 0 00.419.74c.528.256 1.046.53 1.554.82-.21.324-.455.63-.739.914a.75.75 0 101.06 1.06c.37-.369.69-.77.96-1.193a26.61 26.61 0 013.095 2.348.75.75 0 00.992 0 26.547 26.547 0 015.93-3.95.75.75 0 00.42-.739 41.053 41.053 0 00-.39-3.114 29.925 29.925 0 00-5.199 2.801 2.25 2.25 0 01-2.514 0c-.41-.275-.826-.541-1.25-.797a6.985 6.985 0 01-1.084 3.45 26.503 26.503 0 00-1.281-.78A5.487 5.487 0 006 12v-.54z"></path>
-                        </svg>
-                        <span class="sr-only">Evento</span>
-                    </button>
-                    <div id="tooltip-event" role="tooltip"
-                         class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                        Agregar Evento
-                        <div class="tooltip-arrow" data-popper-arrow></div>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="mb-6">
+                        <figure class="max-w-lg mb-4 mx-auto flex flex-col">
+                            <div class="img dark:bg-gray-600 bg-gray-200 rounded-lg p-2">
+                                <div class="current-logo relative">
+                                    <img class="h-auto max-w-full mx-auto rounded-lg object-cover border"
+                                         id="current_logo"
+                                         src="{% static 'Eventos/images/event_image_placeholder.png' %}"
+                                         alt="image description">
+                                    <button type="button" id="reset" disabled
+                                            class="absolute bottom-0 p-2 right-0 bg-white dark:bg-gray-200 rounded-full">
+                                        <svg fill="none" stroke="#ff0000" class="w-5 h-5" stroke-width="1.5"
+                                             viewBox="0 0 24 24"
+                                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <p class="py-2 text-sm text-center text-gray-800 dark:text-gray-300" id="current_label">
+                                    Logo
+                                    actual
+                                </p>
+                            </div>
+                            <label class="block mt-4 mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                   for="{{ form.logo.id_for_label }}">
+                                Carga un logo
+                            </label>
+                            {{ form.logo }}
+                        </figure>
+                    </div>
+                    <fieldset>
+                        <legend class="text-3xl w-full flex items-center font-bold dark:text-white text-center my-8">
+                            <div class="inline-flex items-center justify-center w-full">
+                                <hr class="w-full h-1 my-8 bg-gray-200 border-0 rounded dark:bg-gray-700">
+                                <div class="absolute px-4 -translate-x-1/2 bg-white left-1/2 dark:bg-gray-800">
+                                    Información del evento
+                                </div>
+                            </div>
+                        </legend>
+
+                        <div class="grid gap-6 mb-6 md:grid-cols-3">
+                            <div>
+                                <label for="{{ form.title.id_for_label }}"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Título *
+                                </label>
+                                {{ form.title }}
+                                {% if form.title.errors %}
+                                    <p id="filled_error_help"
+                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                            class="font-medium">Oh, error!</span> {{ form.title.errors }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <label for="{{ form.place.id_for_label }}"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Lugar *
+                                </label>
+                                {{ form.place }}
+                                {% if form.place.errors %}
+                                    <p id="filled_error_help"
+                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                            class="font-medium">Oh, error!</span> {{ form.place.errors }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <label for="{{ form.price.id_for_label }}"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Precio
+                                </label>
+                                {{ form.price }}
+                                {% if form.price.errors %}
+                                    <p id="filled_error_help"
+                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                            class="font-medium">Oh, error!</span> {{ form.price.errors }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="grid gap-6 mb-6 md:grid-cols-2">
+                            <div>
+                                <label for="{{ form.addressed_to.id_for_label }}"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Dirigído a: *
+                                </label>
+                                {{ form.addressed_to }}
+                                {% if form.addressed_to.errors %}
+                                    <p id="filled_error_help"
+                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                            class="font-medium">Oh, error!</span> {{ form.addressed_to.errors }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <label for="{{ form.teachers.id_for_label }}"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Seleccione a los profesores
+                                </label>
+                                {{ form.teachers }}
+                                <p class="text-gray-700 hidden sm:block dark:text-white italic mt-4">
+                                    Para seleccionar a más de un Profesor o deseleccionarlo, utilice
+                                    <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">
+                                        Ctrl
+                                    </kbd> +
+                                    <kbd class="px-2 py-1.5 text-xs font-semibold text-gray-800 bg-gray-100 border border-gray-200 rounded-lg dark:bg-gray-600 dark:text-gray-100 dark:border-gray-500">
+                                        Click
+                                    </kbd>
+                                </p>
+                                <p class="text-gray-700 block sm:hidden dark:text-white italic mt-4">
+                                    Puede seleccionar varios
+                                </p>
+                                {% if form.teachers.errors %}
+                                    <p id="filled_error_help"
+                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                            class="font-medium">Oh, error!</span> {{ form.teachers.errors }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="grid gap-6 mb-6 md:grid-cols-3">
+                            <div>
+                                <label for="{{ form.start_date.id_for_label }}"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Fecha de inicio *
+                                </label>
+                                {{ form.start_date }}
+                                {% if form.start_date.errors %}
+                                    <p id="filled_error_help"
+                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                            class="font-medium">Oh, error!</span> {{ form.start_date.errors }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <label for="{{ form.final_date.id_for_label }}"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Fecha de cierre *
+                                </label>
+                                {{ form.final_date }}
+                                {% if form.final_date.errors %}
+                                    <p id="filled_error_help"
+                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                            class="font-medium">Oh, error!</span> {{ form.final_date.errors }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <label for="{{ form.modality.id_for_label }}"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Modalidad *
+                                </label>
+                                {{ form.modality }}
+                                {% if form.modality.errors %}
+                                    <p id="filled_error_help"
+                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                            class="font-medium">Oh, error!</span> {{ form.modality.errors }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="grid gap-6 mb-6 md:grid-cols-3">
+                            <div>
+                                <label for="{{ form.link_video.id_for_label }}"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Video de explicación
+                                </label>
+                                {{ form.link_video }}
+                                {% if form.link_video.errors %}
+                                    <p id="filled_error_help"
+                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                            class="font-medium">Oh, error!</span> {{ form.link_video.errors }}
+                                    </p>
+                                {% endif %}
+                            </div>
+
+                            <div class="relative z-0 w-full mb-6 group">
+                                <label for="{{ form.career.id_for_label }}"
+                                       class="block flex gap-2 flex-wrap mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Carrera vinculada
+
+                                    <button data-modal-target="careerCreationForm"
+                                            data-modal-toggle="careerCreationForm"
+                                            class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                            type="button">
+                                        <svg fill="none" class="w-5 h-5" stroke="currentColor"
+                                             stroke-width="1.5"
+                                             viewBox="0 0 24 24"
+                                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M12 6v12m6-6H6"></path>
+                                        </svg>
+                                    </button>
+
+                                    <a href="{% url 'careers' %}"
+                                       class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                       type="button">
+                                        <svg fill="none" class="w-5 h-5" stroke="currentColor"
+                                             stroke-width="1.5"
+                                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                                             aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        </svg>
+                                    </a>
+                                </label>
+                                {{ form.career }}
+                                {% if form.career.errors %}
+                                    <p id="filled_error_help"
+                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                            class="font-medium">Oh, error!</span> {{ form.career.errors }}
+                                    </p>
+                                {% endif %}
+                            </div>
+
+                            <div>
+                                <label for="{{ form.event_planning.id_for_label }}"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Planificación del evento (PDF) *
+                                </label>
+                                {{ form.event_planning }}
+                                {% if form.event_planning.errors %}
+                                    <p id="filled_error_help"
+                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                            class="font-medium">Oh, error!</span> {{ form.event_planning.errors }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend class="text-3xl w-full flex items-center font-bold dark:text-white text-center my-8">
+                            <div class="inline-flex items-center justify-center w-full">
+                                <hr class="w-full h-1 my-8 bg-gray-200 border-0 rounded dark:bg-gray-700">
+                                <div class="absolute px-4 -translate-x-1/2 bg-white left-1/2 dark:bg-gray-800">
+                                    Información de contacto
+                                </div>
+                            </div>
+                        </legend>
+                        <div class="grid gap-6 mb-6 md:grid-cols-3">
+                            <div>
+                                {% get_countries as countries %}
+                                <label for="{{ form.country_phone.id_for_label }}"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    País correspondiente a su teléfono *</label>
+                                <select id="{{ form.country_phone.id_for_label }}" name="country_phone"
+                                        required
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 mb-6 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                    {% for country in countries %}
+                                        <option value="{{ country.code }}">{{ country.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <p id="helper-text-explanation"
+                                   class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                    {{ form.country_phone.help_text }}
+                                </p>
+                                {% if form.country_phone.errors %}
+                                    <p id="filled_error_help"
+                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                            class="font-medium">Oh, error!</span> {{ form.country_phone.errors }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <label for="{{ form.phone.id_for_label }}"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Teléfono de contacto *
+                                </label>
+                                {{ form.phone }}
+                                {% if form.phone.errors %}
+                                    <p id="filled_error_help"
+                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                            class="font-medium">Oh, error!</span> {{ form.phone.errors }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <label for="{{ form.alternative_phone.id_for_label }}"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Teléfono de contacto (Alternativo)
+                                </label>
+                                {{ form.alternative_phone }}
+                                {% if form.alternative_phone.errors %}
+                                    <p id="filled_error_help"
+                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                            class="font-medium">Oh, error!</span> {{ form.alternative_phone.errors }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="grid gap-6 mb-6 md:grid-cols-2">
+                            <div>
+                                <label for="{{ form.email.id_for_label }}"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Email de contacto *
+                                </label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                    <p id="filled_error_help"
+                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                            class="font-medium">Oh, error!</span> {{ form.email.errors }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <label for="{{ form.alternative_email.id_for_label }}"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Email de contacto (Alternativo)
+                                </label>
+                                {{ form.alternative_email }}
+                                {% if form.alternative_email.errors %}
+                                    <p id="filled_error_help"
+                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                            class="font-medium">Oh, error!</span> {{ form.alternative_email.errors }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend class="text-3xl w-full flex items-center font-bold dark:text-white text-center my-8">
+                            <div class="inline-flex items-center justify-center w-full">
+                                <hr class="w-full h-1 my-8 bg-gray-200 border-0 rounded dark:bg-gray-700">
+                                <div class="absolute px-4 -translate-x-1/2 bg-white left-1/2 dark:bg-gray-800">
+                                    Información de reunión
+                                </div>
+                            </div>
+                        </legend>
+                        <div class="grid gap-6 mb-6 md:grid-cols-3">
+                            <div>
+                                <label for="{{ form.platform_meeting.id_for_label }}"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Plataforma de reunión
+                                </label>
+                                {{ form.platform_meeting }}
+                                {% if form.platform_meeting.errors %}
+                                    <p id="filled_error_help"
+                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                            class="font-medium">Oh, error!</span> {{ form.platform_meeting.errors }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <label for="{{ form.link_to_classroom.id_for_label }}"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Link de reunión
+                                </label>
+                                {{ form.link_to_classroom }}
+                                {% if form.link_to_classroom.errors %}
+                                    <p id="filled_error_help"
+                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                            class="font-medium">Oh, error!</span> {{ form.link_to_classroom.errors }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                            <div>
+                                <label for="{{ form.code_meeting.id_for_label }}"
+                                       class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Código de reunión
+                                </label>
+                                {{ form.code_meeting }}
+                                {% if form.code_meeting.errors %}
+                                    <p id="filled_error_help"
+                                       class="mt-2 text-xs text-red-600 dark:text-red-400"><span
+                                            class="font-medium">Oh, error!</span> {{ form.code_meeting.errors }}
+                                    </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <div class="flex justify-center">
+                        {{ form.captcha }}
                     </div>
 
-                    <button type="button" data-tooltip-target="tooltip-career" data-tooltip-placement="left"
-                            data-modal-target="careerCreationForm" data-modal-toggle="careerCreationForm"
-                            class="flex justify-center items-center w-[52px] h-[52px] text-gray-500 hover:text-gray-900 bg-white rounded-full border border-gray-200 dark:border-gray-600 shadow-sm dark:hover:text-white dark:text-gray-400 hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 focus:ring-4 focus:ring-gray-300 focus:outline-none dark:focus:ring-gray-400">
-                        <svg fill="currentColor" class="w-6 h-6" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
-                             aria-hidden="true">
-                            <path clip-rule="evenodd" fill-rule="evenodd"
-                                  d="M6 3.75A2.75 2.75 0 018.75 1h2.5A2.75 2.75 0 0114 3.75v.443c.572.055 1.14.122 1.706.2C17.053 4.582 18 5.75 18 7.07v3.469c0 1.126-.694 2.191-1.83 2.54-1.952.599-4.024.921-6.17.921s-4.219-.322-6.17-.921C2.694 12.73 2 11.665 2 10.539V7.07c0-1.321.947-2.489 2.294-2.676A41.047 41.047 0 016 4.193V3.75zm6.5 0v.325a41.622 41.622 0 00-5 0V3.75c0-.69.56-1.25 1.25-1.25h2.5c.69 0 1.25.56 1.25 1.25zM10 10a1 1 0 00-1 1v.01a1 1 0 001 1h.01a1 1 0 001-1V11a1 1 0 00-1-1H10z"></path>
-                            <path d="M3 15.055v-.684c.126.053.255.1.39.142 2.092.642 4.313.987 6.61.987 2.297 0 4.518-.345 6.61-.987.135-.041.264-.089.39-.142v.684c0 1.347-.985 2.53-2.363 2.686a41.454 41.454 0 01-9.274 0C3.985 17.585 3 16.402 3 15.055z"></path>
-                        </svg>
-                        <span class="sr-only">Carrera</span>
-                    </button>
-                    <div id="tooltip-career" role="tooltip"
-                         class="absolute z-10 invisible inline-block w-auto px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                        Agregar Carrera
-                        <div class="tooltip-arrow" data-popper-arrow></div>
+                    <div class="grid grid-cols-2 gap-4 py-8">
+                        <button type="reset"
+                                class="px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-200 rounded-lg focus:outline-none hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                            Limpiar Campos
+                        </button>
+                        <button type="submit"
+                                class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">
+                            Crear Evento
+                            <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                      d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+                                      clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
                     </div>
-                </div>
+                </form>
             </div>
 
             <!-- Extra Large Modal -->
@@ -941,6 +1372,45 @@
 {% endblock %}
 
 {% block js %}
+    <script>
+        const img = document.getElementById('current_logo');
+        const label = document.getElementById('current_label');
+        const resetButton = document.getElementById('reset');
+        const fileInput = document.getElementById('{{ form.logo.id_for_label }}');
+        // Obtener la fuente original de la imagen
+        const originalSrc = '{% static 'Eventos/images/event_image_placeholder.png' %}';
+
+        // Escuchar el evento 'change' en el input de tipo file
+        fileInput.addEventListener('change', function () {
+            // Verificar si se ha seleccionado un archivo
+            if (fileInput.files && fileInput.files[0]) {
+                // Crear un objeto FileReader para leer el archivo seleccionado
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    // Actualizar la fuente de la imagen con la nueva imagen cargada
+                    img.src = e.target.result;
+                    label.textContent = 'Nuevo logo: ' + fileInput.files[0].name;
+                    resetButton.disabled = false;
+                };
+                // Leer el archivo seleccionado como una URL de datos
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        });
+
+        // Escuchar el evento 'click' en el botón de reset
+        resetButton.addEventListener('click', function () {
+            // Establecer la fuente de la imagen de nuevo a la fuente original
+            img.src = originalSrc;
+            // Actualizar el texto de la etiqueta p con una cadena vacía
+            label.textContent = 'Logo actual';
+            // Restablecer el valor del input de tipo file a una cadena vacía
+            console.log(fileInput.value)
+            fileInput.value = '';
+            console.log(fileInput.value)
+            resetButton.disabled = true;
+        });
+    </script>
+
     <script>
         function delete_event(route) {
             Swal.fire({
