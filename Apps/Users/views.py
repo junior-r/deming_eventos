@@ -4,19 +4,18 @@ import os.path
 import openpyxl
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import authenticate
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import PermissionDenied
+from django.core.paginator import Paginator
 from django.db.models import Q, QuerySet
 from django.db.models.fields.files import ImageFieldFile
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import to_language
-from django.core.paginator import Paginator
 
 from Apps.Eventos.forms import ParticipantDataUpdateForm
 from Apps.Eventos.models import Event, Participant
@@ -402,6 +401,17 @@ def users(request):
         'create_users_form': UserForm(),
     }
 
+    if request.method == 'POST':
+        form = UserForm(request.POST, request.FILES)
+        user_type = request.POST.get('user_type')
+        response = create_user(request, user_type, form)
+        if response == 'success':
+            messages.success(request, 'Usuario creado exitosamente.')
+            return redirect('users')
+        else:
+            data['create_users_form'] = form
+            messages.error(request, f'Ocurrió un error.')
+
     return render(request, 'Users/users.html', data)
 
 
@@ -505,13 +515,10 @@ def referral_users(request, user_id):
 
 @login_required
 @permission_required('Users.add_user', raise_exception=True)
-def create_user(request, user_type: str):
+def create_user(request, user_type: str, form):
     if request.method == 'POST':
-        form = UserForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save(request)
-            user.profile_image_user = request.FILES.get('profile_image')
-            user.curriculum = request.FILES.get('curriculum')
             if user_type == 'staff':
                 if request.user.is_superuser:
                     user.is_staff = True
@@ -524,51 +531,9 @@ def create_user(request, user_type: str):
 
             user.is_active = True
             user.save()
-            messages.success(request, 'Usuario creado exitosamente.')
-
-            return redirect('users')
+            return 'success'
         else:
-            messages.error(request, 'Ocurrió un error. Revisa e intenta de nuevo')
-            return redirect('users')
-
-
-@login_required
-@permission_required('Users.add_user', raise_exception=True)
-@user_passes_test(lambda u: u.is_superuser)
-def create_user_staff(request, data):
-    if request.method == 'POST':
-        form = UserForm(request.POST, request.FILES)
-        if form.is_valid():
-            user = form.save()
-            user.profile_image_user = request.FILES.get('profile_image')
-            user.curriculum = request.FILES.get('curriculum')
-            user.is_staff = True
-            user.is_active = True
-            user.save()
-            messages.success(request, 'Usuario staff creado exitosamente.')
-            return redirect('users')
-        else:
-            messages.error(request, 'Ocurrió un error. Revisa e intenta de nuevo')
-            data['create_users_form'] = form
-
-
-@login_required
-@permission_required('Users.add_user', raise_exception=True)
-@user_passes_test(lambda u: u.is_superuser)
-def create_teachers(request):
-    if request.method == 'POST':
-        form = UserForm(request.POST, request.FILES)
-        if form.is_valid():
-            user = form.save()
-            user.profile_image_user = request.FILES.get('profile_image')
-            user.curriculum = request.FILES.get('curriculum')
-            user.is_teacher = True
-            user.is_active = True
-            user.save()
-            messages.success(request, 'Profesor creado exitosamente.')
-            return redirect('users')
-        else:
-            messages.error(request, 'Ocurrió un error. Revisa e intenta de nuevo')
+            return False
 
 
 @login_required

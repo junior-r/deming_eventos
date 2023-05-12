@@ -26,6 +26,7 @@ from Apps.Eventos.forms import CareerForm, EventForm, ParticipantForm
 from Apps.Eventos.models import Career, Event, EventParticipant, Participant
 from Apps.Home.forms import EmailContactForm, WhatsAppContactForm
 from Apps.Users.models import User
+import environ
 
 
 def view_events(request):
@@ -134,6 +135,7 @@ def view_events(request):
 @login_required
 def view_event(request, id_event):
     event = get_object_or_404(Event, id=id_event)
+    url = request.get_host() + event.get_absolute_url()
 
     participants = event.eventparticipant_set.all()
     event_participant = None
@@ -150,6 +152,7 @@ def view_event(request, id_event):
 
     data = {
         'event': event,
+        'url': url,
         'participant': participant,
         'participants': participants,
         'event_participant': event_participant,
@@ -477,8 +480,8 @@ def pago(request, id_event):
 
 class PayPalClient:
     def __init__(self):
-        self.client_id = "AZz1x8MxPQnQJ6KYko9_9Fqjyyvc-ufqz-aCQTzR7j0rO4rA4TkyMj1YxvRHLWQvXcRfKwyQBJNe34dy"
-        self.client_secret = "ENlL3ldBnYpU_PaJ2tZ5bGS0GRlhS_-mtbh7pN9EwA9b4jMc1Emr7ZwVOxM4Abr0tHxGpVQoAHKZ4VrF"
+        self.client_id = "AQtnxRvKEmZ5byHKM142LuccjgLgV6rQr3j2CmZN3ZKGGU04u4GKJqyNnzNDQOD15GirBY24IuHjdmUb"
+        self.client_secret = "ECd5PUvHB-ECd5PUvHB-md8wHyfnfenCvnSM5PJOo1OqU2fvW2vgCcu5GeFt3Rs9vkWNyGZsGk1DWHkgOnsmO3EVTQ"
 
         """Set up and return PayPal Python SDK environment with PayPal access credentials.
            This sample uses SandboxEnvironment. In production, use LiveEnvironment."""
@@ -610,6 +613,8 @@ def send_email_event(request, id_event, template_route: str):
 
 
 def send_whatsapp_event(request, id_event):
+    env = environ.Env()
+    environ.Env.read_env()
     event = get_object_or_404(Event, id=id_event)
     if request.method == 'POST':
         form = WhatsAppContactForm(request.POST)
@@ -621,17 +626,51 @@ def send_whatsapp_event(request, id_event):
             number_user = request.POST.get('phone')
             message = request.POST.get('message')
 
-            phone_number_info = phonenumbers.parse(number_user, country_phone_user)
-            full_number = '{0}{1}'.format(phone_number_info.country_code, phone_number_info.national_number)
+            try:
+                phone_number_info = phonenumbers.parse(number_user, country_phone_user)
+                full_number = '{0}{1}'.format(phone_number_info.country_code, phone_number_info.national_number)
+            except:
+                messages.error(request, 'Por favor proporcione un país y/o un número telefónico válido.')
+                return redirect('view_event', event.id)
 
-            url = "https://api.ultramsg.com/instance40328/messages/chat"
+            instance_api_ws = env('INSTANCE_API_WHATSAPP')
+            token_api_ws = env('TOKEN_API_WHATSAPP')
+            url = f"https://api.ultramsg.com/{instance_api_ws}/messages/image"
 
-            payload = "token=xlvb1wg94yvs92mu&to={0}&body=*{1}* \n\nLe escribe: *{2}* | Télefono: *{3}* | " \
-                      "Correo: {4} \n\n_{5}_ \n\nFecha: *{6} {7}:{8}*".format(
-                event.get_full_number_phone(), event.title.upper(), user_name, full_number,
-                user_email, message, timezone.now().date(), timezone.now().time().hour,
-                timezone.now().time().minute
-            )
+            payload = "token={0}&" \
+                      "to={1}&" \
+                      "image={2}&" \
+                      "caption={3}".format(
+                        token_api_ws,
+                        event.get_full_number_phone(),
+                        event.get_logo(),
+                        "*{0}* \n\n"
+                        "Le escríbe: _{1}_ \n"
+                        "Teléfono: *{2}* \n"
+                        "E-mail: *{3}* \n\n"
+                        "{4} \n\n"
+                        "Fecha: *{5}* \n"
+                        "URL del Evento: {6}".format(
+                            event.title.capitalize(),
+                            user_name,
+                            full_number,
+                            user_email,
+                            message,
+                            (timezone.now().date(), timezone.now().time().hour, timezone.now().time().minute),
+                            request.get_host() + event.get_absolute_url()
+                            )
+                        )
+
+            # payload = "token={0}&to={1}&body=*{2}* \n\nLe escribe: *{3}* | Télefono: *{4}* | " \
+            #           "Correo: {5} \n\n_{6}_ \n\nFecha: *{7} {8}:{9}*".format(token_api_ws,
+            #                                                                   event.get_full_number_phone(),
+            #                                                                   event.title.upper(), user_name,
+            #                                                                   full_number,
+            #                                                                   user_email, message,
+            #                                                                   timezone.now().date(),
+            #                                                                   timezone.now().time().hour,
+            #                                                                   timezone.now().time().minute
+            #                                                                   )
 
             payload = payload.encode('utf8').decode('iso-8859-1')
             headers = {'content-type': 'application/x-www-form-urlencoded'}
@@ -644,6 +683,7 @@ def send_whatsapp_event(request, id_event):
                 messages.success(request, 'Mensaje enviado exitosamente!')
                 return redirect('view_event', id_event)
             else:
+                print(content)
                 messages.error(request, 'No se pudo enviar el mensaje')
                 return redirect('view_event', id_event)
         else:

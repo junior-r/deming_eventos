@@ -8,6 +8,9 @@ from django.db import models
 from django.utils import timezone
 from django_countries.fields import CountryField
 from django.urls import reverse
+from django.db.models.signals import m2m_changed
+from django.dispatch import receiver
+from django.contrib import messages
 
 from Apps.Users.models import User
 
@@ -264,6 +267,18 @@ class Event(models.Model):
 
     def __str__(self):
         return '{}_{}_to_{}'.format(self.title, self.start_date, self.final_date)
+
+
+@receiver(m2m_changed, sender=Event.teachers.through)
+def prevent_duplicate_teacher(sender, instance, action, pk_set, **kwargs):
+    if action == 'pre_add':
+        # Verificar si el usuario ya está registrado como profesor en el evento
+        for user_id in pk_set:
+            if instance.teachers.filter(id=user_id).exists():
+                user = User.objects.get(id=user_id)
+                message = f"El usuario {user.nombre} ya está registrado como profesor en el evento."
+                messages.warning(None, message)
+                pk_set.remove(user_id)
 
 
 class EventParticipant(models.Model):

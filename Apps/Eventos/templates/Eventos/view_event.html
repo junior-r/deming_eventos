@@ -346,9 +346,11 @@
             </div>
         </div>
 
-        <div class="image rounded col-span-1 border w-full"
-             style="height: 400px; background-position: center; background-size: cover; background-image: url('{{ event.get_logo }}')">
-        </div>
+        <a href="{{ event.get_logo }}" target="_blank">
+            <div class="image rounded col-span-1 border w-full"
+                 style="height: 400px; background-position: center; background-size: cover; background-image: url('{{ event.get_logo }}')">
+            </div>
+        </a>
     </div>
 
     <div class="participants w-full p-4">
@@ -1150,7 +1152,7 @@
                             {% url 'event.url' as url_event %}
                             <input type="search" id="url_event_text"
                                    class="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                   value="{{ url_event }}" readonly>
+                                   value="{{ url }}" readonly>
                             <button type="button" id="url_event"
                                     class="text-white btn-social absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                 Copiar
@@ -1629,7 +1631,7 @@
 {% endblock %}
 
 {% block js %}
-    <script src="https://www.paypal.com/sdk/js?client-id=AZz1x8MxPQnQJ6KYko9_9Fqjyyvc-ufqz-aCQTzR7j0rO4rA4TkyMj1YxvRHLWQvXcRfKwyQBJNe34dy"> // Required. Replace SB_CLIENT_ID with your sandbox client ID.
+    <script src="https://www.paypal.com/sdk/js?client-id=AQtnxRvKEmZ5byHKM142LuccjgLgV6rQr3j2CmZN3ZKGGU04u4GKJqyNnzNDQOD15GirBY24IuHjdmUb"> // Required. Replace SB_CLIENT_ID with your sandbox client ID.
     </script>
 
     <!-- Custom JS -->

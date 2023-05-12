@@ -1,6 +1,6 @@
 {% extends 'Users/profile.html' %}
 {% load static %}
-{% load humanize %}
+{% load humanize widget_tweaks %}
 
 {% block title %}
     <title>
@@ -16,6 +16,50 @@
 {% endblock %}
 
 {% block content %}
+    {% if create_users_form.errors %}
+        <div id="toast-danger"
+             class="absolute flex items-center w-full max-w-xl top-4 left-8 p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+             role="alert">
+            <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
+                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clip-rule="evenodd"></path>
+                </svg>
+                <span class="sr-only">Error icon</span>
+            </div>
+            <div class="ml-3 text-sm font-normal">
+                <ul>
+                    {% for key, value in create_users_form.errors.items %}
+                        <li class="flex gap-2">
+                            {{ key }}
+                            <svg fill="none" class="w-5 h-5 text-gray-500 dark:text-gray-400" stroke="currentColor"
+                                 stroke-width="1.5" viewBox="0 0 24 24"
+                                 xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"></path>
+                            </svg>
+                            {{ value }}
+                        </li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+            <button type="button"
+                    class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+                    data-dismiss-target="#toast-danger" aria-label="Close">
+                <span class="sr-only">Close</span>
+                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                          clip-rule="evenodd"></path>
+                </svg>
+            </button>
+        </div>
+    {% endif %}
+
     <section class="bg-white dark:bg-gray-900 rounded-lg">
 
         {% if create_users_form.errors %}
@@ -718,9 +762,10 @@
                 </button>
                 <div class="px-6 py-6 lg:px-8">
                     <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Crea personal de confianza</h3>
-                    <form class="space-y-2" action="{% url 'create_user' 'staff' %}" method="post"
+                    <form class="space-y-2" action="" method="post"
                           enctype="multipart/form-data">
                         {% csrf_token %}
+                        <input type="text" class="hidden" readonly value="staff" name="user_type">
                         <div class="relative z-0 w-full mb-2">
                             <label for="{{ create_users_form.username.id_for_label }}"
                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -798,7 +843,7 @@
                                                   d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"></path>
                                         </svg>
                                     </div>
-                                    {{ create_users_form.password1 }}
+                                    {% render_field create_users_form.password1 placeholder="••••••••" type="password" required="True" id=create_users_form.password1.id_for_label name=create_users_form.password1.html_name class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" %}
                                 </div>
                             </div>
 
@@ -816,7 +861,7 @@
                                                   d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"></path>
                                         </svg>
                                     </div>
-                                    {{ create_users_form.password2 }}
+                                    {% render_field create_users_form.password2 placeholder="••••••••" type="password" required="True" id=create_users_form.password2.id_for_label name=create_users_form.password2.html_name class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" %}
                                 </div>
                             </div>
                         </div>
@@ -872,7 +917,6 @@
         </div>
     </div>
 
-
     <!-- Create Teacher modal -->
     <div id="create_teacher-modal" tabindex="-1" aria-hidden="true"
          class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full">
@@ -893,9 +937,10 @@
                 <div class="px-6 py-6 lg:px-8">
                     <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Crea profesores para tus
                         eventos</h3>
-                    <form class="space-y-2" action="{% url 'create_user' 'teacher' %}" method="post"
+                    <form class="space-y-2" method="post"
                           enctype="multipart/form-data">
                         {% csrf_token %}
+                        <input type="text" class="hidden" readonly value="teacher" name="user_type">
                         <div class="relative z-0 w-full mb-2">
                             <label for="{{ create_users_form.username.id_for_label }}"
                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -973,7 +1018,7 @@
                                                   d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"></path>
                                         </svg>
                                     </div>
-                                    {{ create_users_form.password1 }}
+                                    {% render_field create_users_form.password1 placeholder="••••••••" type="password" required="True" id=create_users_form.password1.id_for_label name=create_users_form.password1.html_name class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" %}
                                 </div>
                             </div>
 
@@ -991,7 +1036,7 @@
                                                   d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"></path>
                                         </svg>
                                     </div>
-                                    {{ create_users_form.password2 }}
+                                    {% render_field create_users_form.password2 placeholder="••••••••" type="password" required="True" id=create_users_form.password2.id_for_label name=create_users_form.password2.html_name class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" %}
                                 </div>
                             </div>
                         </div>
@@ -1067,9 +1112,10 @@
                 <div class="px-6 py-6 lg:px-8">
                     <h3 class="mb-4 text-xl font-medium text-gray-900 dark:text-white">Crea profesores para tus
                         eventos</h3>
-                    <form class="space-y-2" action="{% url 'create_user' 'referral' %}" method="post"
+                    <form class="space-y-2" action="" method="post"
                           enctype="multipart/form-data">
                         {% csrf_token %}
+                        <input type="text" class="hidden" readonly value="referral" name="user_type">
                         <div class="relative z-0 w-full mb-2">
                             <label for="{{ create_users_form.username.id_for_label }}"
                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -1147,7 +1193,7 @@
                                                   d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"></path>
                                         </svg>
                                     </div>
-                                    {{ create_users_form.password1 }}
+                                    {% render_field create_users_form.password2 placeholder="••••••••" type="password" required="True" id=create_users_form.password2.id_for_label name=create_users_form.password2.html_name class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" %}
                                 </div>
                             </div>
 
@@ -1165,7 +1211,7 @@
                                                   d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"></path>
                                         </svg>
                                     </div>
-                                    {{ create_users_form.password2 }}
+                                    {% render_field create_users_form.password2 placeholder="••••••••" type="password" required="True" id=create_users_form.password2.id_for_label name=create_users_form.password2.html_name class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" %}
                                 </div>
                             </div>
                         </div>

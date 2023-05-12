@@ -128,7 +128,7 @@
                         encontrados</h2>
                 {% endif %}
                 <div class="mb-4 flex gap-2 justify-between items-center flex-wrap">
-
+                    {% if perms.Eventos.add_event %}
                     <button id="dropdownOptionsCreateButton" data-dropdown-toggle="createDropdown"
                             class="mb-3 md:mb-0 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                             type="button" data-dropdown-placement="bottom">
@@ -146,19 +146,23 @@
                             aria-labelledby="dropdownOptionsCreateButton">
                             <li data-drawer-target="drawer-create-event" data-drawer-show="drawer-create-event"
                                 aria-controls="drawer-create-event">
-                                <a href="#"
-                                   class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                <button
+                                   class="block px-4 text-left w-full py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                     Crear evento
-                                </a>
+                                </button>
                             </li>
                             <li>
-                                <a href="#"
-                                   class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                <button type="button" data-modal-target="careerCreationForm"
+                                                            data-modal-toggle="careerCreationForm"
+                                   class="block px-4 text-left w-full py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                     Crear carrera
-                                </a>
+                                </button>
                             </li>
                         </ul>
                     </div>
+                    {% else %}
+                        <div></div>
+                    {% endif %}
 
                     <form method="post" class="flex justify-end md:mr-4 form-search" enctype="multipart/form-data">
                         {% csrf_token %}

@@ -28,14 +28,14 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', '3bd0-186-4-252-8.ngrok-free.app']
+ALLOWED_HOSTS = ['127.0.0.1', '3b6e-186-4-252-8.ngrok-free.app']
 
 RECAPTCHA_SITE_KEY = env('RECAPTCHA_SITE_KEY')
 RECAPTCHA_SECRET_KEY = env('RECAPTCHA_SECRET_KEY')
 SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
-CSRF_TRUSTED_ORIGINS = ['https://3bd0-186-4-252-8.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS = ['https://3b6e-186-4-252-8.ngrok-free.app']
 
 # Email config
 if DEBUG:
