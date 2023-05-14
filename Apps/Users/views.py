@@ -135,8 +135,6 @@ def profile(request, username, id_user):
     if user.is_teacher:
         events_teacher = Event.objects.filter(teachers__username=user.username)
 
-    print(to_language('hello'))
-
     data = {
         'current_profile_user': user,
         'events_teacher': events_teacher,

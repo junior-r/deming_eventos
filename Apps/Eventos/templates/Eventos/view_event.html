@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block styles %}
+    <script src="https://pay.payphonetodoesposible.com/api/button/js?appId=G26aIWSzUOBAZcmJHpw"></script>
     <script>
         function token(name) {
             let cookieValue = null;
@@ -1196,9 +1197,14 @@
                         </button>
                     </div>
                     <!-- Modal body -->
+                    <!-- PayPal body -->
                     <div class="p-6 space-y-6" id="modalPaypal">
                         {{ form_paypal.render }}
                         <div id="paypal-button-container"></div>
+                    </div>
+                    <!-- PayPhone body -->
+                    <div class="p-6 space-y-6 flex flex-col justify-center" id="modalPayPhone">
+                        <div id="pp-button"></div>
                     </div>
                 </div>
             </div>
@@ -1657,6 +1663,7 @@
     <script src="{% static 'Eventos/js/setItemsNavbar.js' %}"></script>
 
     {% if participant is not None %}
+        <!-- PayPal Script -->
         <script>
             paypal.Buttons({
                 createOrder: function (data, actions) {
@@ -1712,6 +1719,46 @@
                 }
             }).render('#paypal-button-container');
             //This function displays Smart Payment Buttons on your web page.
+        </script>
+
+        <!-- PayPhone Script -->
+        <script>
+            let event_price = {{ event.price.to_eng_string }};
+            window.onload = function () {
+                payphone.Button({
+
+                    //token obtenido desde la consola de developer
+                    token: "nUQ5b8RvFqIIJTaWO6yBeWEyYd3cpSM36jJckUZCVxRKrxBLBNceeGftlOF1epfdESwk6a5mBzlPPFtfPS6RnJI9y05fWp82sLFaHEjB5DpnZ6rzEiyECmGpHm-MLkoRqeu6yaXnk4sxTw3BpGTipXCzXDjJuzpOpFupksbB0yl2CQFqw2wXozvH83X7cF5P602_3_2CtG6paRXGy7vq9vViAZqY5ys6PC3XUY0ecHoLH21p_eCY9LwNAPRBAs737e5f4UCOoCvXTAVwQKJdMN7q3PGLd9kcr4s_EkrIZvphTfzqh9AoBnNnMNSeqSQXEiOIlGaRh2xmQivD-R5OswCytZA",
+
+                    //PARÁMETROS DE CONFIGURACIÓN
+                    btnHorizontal: true,
+                    btnCard: true,
+
+                    createOrder: function (actions) {
+                        //Se ingresan los datos de la transaccion ej. monto, impuestos, etc
+
+                        return actions.prepare({
+                            amount: event_price * 100,
+                            amountWithoutTax: event_price * 100,
+                            currency: "USD",
+                            clientTransactionId: "{{ unique_id_payphone }}",
+                            lang: "es"
+
+                        }).then(function (paramlog) {
+                            console.log(paramlog);
+                            return paramlog;
+                        }).catch(function (paramlog2) {
+                            console.log(paramlog2);
+                            return paramlog2;
+                        });
+                    },
+
+                    onComplete: function (model, actions) {
+                        console.log("Modelo:");
+                        console.log(model);
+                    }
+                }).render("#pp-button");
+            }
         </script>
     {% endif %}
 

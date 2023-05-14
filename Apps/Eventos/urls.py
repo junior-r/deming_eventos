@@ -2,7 +2,7 @@ from django.urls import path
 
 from Apps.Eventos.views import view_events, careers, view_event, update_event, send_whatsapp_event, send_email_event, \
     set_active_participant, pago, download_certify_event, update_career, delete_career, create_career_ajax, \
-    download_invoice, delete_event
+    download_invoice, delete_event, payphone_confirm
 
 urlpatterns = [
     path('', view_events, name='eventos'),
@@ -11,6 +11,7 @@ urlpatterns = [
     path('edit_career/<int:id_career>/', update_career, name='update_career'),
     path('delete_career/<int:id_career>/', delete_career, name='delete_career'),
     path('pago/<int:id_event>/', pago, name='pago'),
+    path('payphone_confirm/', payphone_confirm, name='payphone_confirm'),
     path('view_event/<int:id_event>/', view_event, name='view_event'),
     path('update_event/<int:id_event>/', update_event, name='update_event'),
     path('delete_event/<int:id_event>/', delete_event, name='delete_event'),

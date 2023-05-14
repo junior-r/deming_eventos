@@ -2,6 +2,8 @@ import datetime
 import json
 import os
 import sys
+from pprint import pprint
+import random
 
 import phonenumbers
 import qrcode
@@ -150,6 +152,16 @@ def view_event(request, id_event):
     except Exception:
         participant = None
 
+    minus = 'abcdefghijklmnopqrstuvwxyz'
+    capitals = minus.upper()
+    number = '0123456789'
+    symbols = '@()[]{}*,;/-_¿?.¡!$<#>&+%='
+
+    base = minus + capitals + number + symbols
+    length = 10
+    sample = random.sample(base, length)
+    unique_id_payphone = ''.join(sample)
+
     data = {
         'event': event,
         'url': url,
@@ -161,7 +173,10 @@ def view_event(request, id_event):
         'template_name_email_event': 'Eventos/contact_event_email.html',
         'form_email': EmailContactForm(),
         'form_whatsapp': WhatsAppContactForm(),
+        'unique_id_payphone': unique_id_payphone,
     }
+    request.session['event_id'] = event.id
+    if participant: request.session['participant_id'] = participant.id
 
     if request.method == 'POST':
         result = validate_participant_event(request, id_event, data)
@@ -247,7 +262,6 @@ def validate_participant_event(request, id_event, data):
             country_of_birth = request.POST.get('country_of_birth')
             dni = request.POST.get('dni')
             passport_number = request.POST.get('passport_number') if request.POST.get('passport_number') != '' else None
-            print(passport_number)
             gender = request.POST.get('gender')
             birthdate = request.POST.get('birthdate')
             current_country = request.POST.get('current_country')
@@ -550,6 +564,63 @@ class CaptureOrder(PayPalClient):
         return response
 
 
+def payphone_confirm(request):
+    env = environ.Env()
+    environ.Env.read_env()
+    event_id = request.session['event_id']
+    participant_id = request.session['participant_id']
+
+    payphone_token = env('PAYPHONE_TOKEN')
+
+    if request.method == 'GET':
+        transaccion = request.GET.get('id')
+        client = request.GET.get('clientTransactionId')
+
+        # Preparar JSON de llamada
+        data = {
+            "id": int(transaccion),
+            "clientTxId": client
+        }
+
+        data_json = json.dumps(data)
+
+        # Iniciar Llamada
+        url = "https://pay.payphonetodoesposible.com/api/button/V2/Confirm"
+        headers = {
+            "Authorization": f"Bearer {payphone_token}",
+            "Content-Type": "application/json"
+        }
+
+        response = requests.post(url, data=data_json, headers=headers)
+        response = response.json()
+        pprint(response)
+
+        if 'transactionStatus' in response.keys() and response['transactionStatus'] == 'Approved':
+            event = get_object_or_404(Event, id=event_id)
+            participant = get_object_or_404(Participant, id=participant_id)
+            event_participant = get_object_or_404(EventParticipant, participant=participant, event=event)
+            order_id = response['transactionId']
+            capture_id = response['authorizationCode']
+            client_name = response['optionalParameter4']
+            client_email = response['email']
+            total_buy = int(response['amount']) / 100
+            status_code = response['statusCode']
+            status_buy = response['transactionStatus']
+
+            event_participant.order_id, event_participant.capture_id = order_id, capture_id
+            event_participant.client_name, event_participant.client_email = client_name, client_email
+            event_participant.active, event_participant.pay, event_participant.status_code = True, True, status_code
+            event_participant.status_buy, event_participant.total_buy = status_buy, total_buy
+
+            messages.success(request, f'¡Pago realizado exitosamente! ID de transacción: {order_id}')
+            return redirect('view_event', event_id)
+        else:
+            messages.error(request, f'Ocurrió un error. Intente de nuevo más tarde. Code: {response["errorCode"]}')
+            return redirect('view_event', event_id)
+    else:
+        return HttpResponseBadRequest
+
+
 @login_required
 def download_invoice(request, id_event):
     event = get_object_or_404(Event, id=id_event)
@@ -679,7 +750,6 @@ def send_whatsapp_event(request, id_event):
             content = response.json()
 
             if content.get('sent') == 'true':
-                print(content)
                 messages.success(request, 'Mensaje enviado exitosamente!')
                 return redirect('view_event', id_event)
             else:
