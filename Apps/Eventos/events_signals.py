@@ -19,7 +19,14 @@ def update_active_signal(sender, instance, **kwargs):
             if instance.active is True:
                 instance.active = False
                 instance.save()
+                instance.refresh_from_db()
             if now > final_date:
                 if instance.certify is False:
                     instance.certify = True
                     instance.save()
+                    instance.refresh_from_db()
+        if now <= start_date:
+            if instance.active is False:
+                instance.active = True
+                instance.save()
+                instance.refresh_from_db()

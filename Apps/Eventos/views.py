@@ -30,6 +30,9 @@ from Apps.Home.forms import EmailContactForm, WhatsAppContactForm
 from Apps.Users.models import User
 import environ
 
+env = environ.Env()
+environ.Env.read_env()
+
 
 def view_events(request):
     global get_career
@@ -155,7 +158,7 @@ def view_event(request, id_event):
     minus = 'abcdefghijklmnopqrstuvwxyz'
     capitals = minus.upper()
     number = '0123456789'
-    symbols = '@()[]{}*,;/-_¿?.¡!$<#>&+%='
+    symbols = '*.-_'
 
     base = minus + capitals + number + symbols
     length = 10
@@ -565,8 +568,6 @@ class CaptureOrder(PayPalClient):
 
 
 def payphone_confirm(request):
-    env = environ.Env()
-    environ.Env.read_env()
     event_id = request.session['event_id']
     participant_id = request.session['participant_id']
 
@@ -606,16 +607,23 @@ def payphone_confirm(request):
             total_buy = int(response['amount']) / 100
             status_code = response['statusCode']
             status_buy = response['transactionStatus']
+            print(order_id)
 
             event_participant.order_id, event_participant.capture_id = order_id, capture_id
             event_participant.client_name, event_participant.client_email = client_name, client_email
             event_participant.active, event_participant.pay, event_participant.status_code = True, True, status_code
             event_participant.status_buy, event_participant.total_buy = status_buy, total_buy
+            event_participant.save()
+
+            print(event_participant)
 
             messages.success(request, f'¡Pago realizado exitosamente! ID de transacción: {order_id}')
             return redirect('view_event', event_id)
         else:
-            messages.error(request, f'Ocurrió un error. Intente de nuevo más tarde. Code: {response["errorCode"]}')
+            if response['message'] is not None and response['message'] != '':
+                messages.error(request, f'{response["message"]}')
+            else:
+                messages.error(request, 'Ocurrió un error. Consulta los datos que ingresaste e intenta de nuevo más tarde.')
             return redirect('view_event', event_id)
     else:
         return HttpResponseBadRequest
