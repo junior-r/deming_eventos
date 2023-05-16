@@ -499,14 +499,23 @@
                                 {{ active_participant.participant.get_passport_number }}
                             </td>
                             <td class="px-6 py-4">
-                                <a href="{{ active_participant.participant.user.curriculum.url }}" target="_blank">
+                                {% if active_participant.participant.user.curriculum %}
+                                    <a href="{{ active_participant.participant.user.curriculum.url }}" target="_blank">
+                                        <svg fill="none" class="w-6 h-6" stroke="currentColor" stroke-width="1.5"
+                                             viewBox="0 0 24 24"
+                                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 019 9v.375M10.125 2.25A3.375 3.375 0 0113.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 013.375 3.375M9 15l2.25 2.25L15 12"></path>
+                                        </svg>
+                                    </a>
+                                {% else %}
                                     <svg fill="none" class="w-6 h-6" stroke="currentColor" stroke-width="1.5"
                                          viewBox="0 0 24 24"
                                          xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                         <path stroke-linecap="round" stroke-linejoin="round"
-                                              d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 019 9v.375M10.125 2.25A3.375 3.375 0 0113.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 013.375 3.375M9 15l2.25 2.25L15 12"></path>
+                                              d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path>
                                     </svg>
-                                </a>
+                                {% endif %}
                             </td>
                             <td class="px-6 py-4">
                                 {{ active_participant.participant.get_full_number_phone }}
@@ -662,14 +671,22 @@
                                 {{ participant.get_passport_number }}
                             </td>
                             <td class="px-6 py-4">
-                                <a href="{{ participant.user.curriculum.url }}" target="_blank">
-                                    <svg fill="none" class="w-6 h-6" stroke="currentColor" stroke-width="1.5"
-                                         viewBox="0 0 24 24"
+                                {% if participant.user.curriculum %}
+                                    <a href="{{ participant.user.curriculum.url }}" target="_blank">
+                                        <svg fill="none" class="w-6 h-6" stroke="currentColor" stroke-width="1.5"
+                                             viewBox="0 0 24 24"
+                                             xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 019 9v.375M10.125 2.25A3.375 3.375 0 0113.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 013.375 3.375M9 15l2.25 2.25L15 12"></path>
+                                        </svg>
+                                    </a>
+                                {% else %}
+                                    <svg fill="none" class="w-6 h-6" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
                                          xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                         <path stroke-linecap="round" stroke-linejoin="round"
-                                              d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 019 9v.375M10.125 2.25A3.375 3.375 0 0113.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 013.375 3.375M9 15l2.25 2.25L15 12"></path>
+                                              d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path>
                                     </svg>
-                                </a>
+                                {% endif %}
                             </td>
                             <td class="px-6 py-4">
                                 {{ participant.get_full_number_phone }}
@@ -1299,7 +1316,9 @@
                                                 <label for="{{ form_participant.first_name.id_for_label }}"
                                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                                     Nombres</label>
-                                                <input type="text" name="{{ form_participant.first_name.html_name }}"
+                                                <input type="text" {% if request.user.first_name is not None %}
+                                                       readonly {% endif %}
+                                                       name="{{ form_participant.first_name.html_name }}"
                                                        id="{{ form_participant.first_name.id_for_label }}" required
                                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                                 {% if form_participant.first_name.errors %}
@@ -1313,7 +1332,9 @@
                                                 <label for="{{ form_participant.last_name.id_for_label }}"
                                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                                     Apellidos</label>
-                                                <input type="text" name="{{ form_participant.last_name.html_name }}"
+                                                <input type="text" {% if request.user.last_name is not None %}
+                                                       readonly {% endif %}
+                                                       name="{{ form_participant.last_name.html_name }}"
                                                        id="{{ form_participant.last_name.id_for_label }}" required
                                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                                 {% if form_participant.last_name.errors %}
@@ -1644,7 +1665,7 @@
 {% endblock %}
 
 {% block js %}
-    <script src="https://www.paypal.com/sdk/js?client-id=AQtnxRvKEmZ5byHKM142LuccjgLgV6rQr3j2CmZN3ZKGGU04u4GKJqyNnzNDQOD15GirBY24IuHjdmUb"> // Required. Replace SB_CLIENT_ID with your sandbox client ID.
+    <script src="https://www.paypal.com/sdk/js?client-id=Adpv5zYmRES9wcqKwSDctRt5D5PaQCgUjB2GH14WTwomrYlDzOCELIXDWQl2h1m5621oYmhGp1A05GLT"> // Required. Replace SB_CLIENT_ID with your sandbox client ID.
     </script>
 
     <!-- Custom JS -->

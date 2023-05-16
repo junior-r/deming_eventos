@@ -413,7 +413,7 @@ def pago(request, id_event):
             detail_price = float(detail.result.purchase_units[0].amount.value)
 
             if detail_price == float(event_price):
-                transaction = CaptureOrder().capture_order(order_id, debug=True)
+                transaction = CaptureOrder().capture_order(order_id, debug=False)
                 client_name = '{0} {1}'.format(transaction.result.payer.name.given_name,
                                                transaction.result.payer.name.surname)
 
@@ -497,8 +497,8 @@ def pago(request, id_event):
 
 class PayPalClient:
     def __init__(self):
-        self.client_id = "AQtnxRvKEmZ5byHKM142LuccjgLgV6rQr3j2CmZN3ZKGGU04u4GKJqyNnzNDQOD15GirBY24IuHjdmUb"
-        self.client_secret = "ECd5PUvHB-ECd5PUvHB-md8wHyfnfenCvnSM5PJOo1OqU2fvW2vgCcu5GeFt3Rs9vkWNyGZsGk1DWHkgOnsmO3EVTQ"
+        self.client_id = env("PAYPAL_CLIENT_ID")
+        self.client_secret = env("PAYPAL_SECRET_KEY")
 
         """Set up and return PayPal Python SDK environment with PayPal access credentials.
            This sample uses SandboxEnvironment. In production, use LiveEnvironment."""
