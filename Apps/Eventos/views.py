@@ -630,9 +630,9 @@ def payphone_confirm(request):
 
 
 @login_required
-def download_invoice(request, id_event):
+def download_invoice(request, id_event, id_participant):
     event = get_object_or_404(Event, id=id_event)
-    participant = get_object_or_404(Participant, user_id=request.user.id)
+    participant = get_object_or_404(Participant, id=id_participant)
     event_participant = event.eventparticipant_set.get(participant=participant)
 
     template = get_template('Eventos/invoice-event.html')

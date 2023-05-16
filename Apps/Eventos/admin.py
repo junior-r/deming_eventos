@@ -8,12 +8,16 @@ class EventAdmin(admin.ModelAdmin):
     form = EventForm
 
 
+class ParticipantAdmin(admin.ModelAdmin):
+    list_display = ('id', 'first_name', 'last_name', 'dni', 'gender', 'birthdate', 'phone', 'email', 'referral')
+
+
 class EventParticipantAdmin(admin.ModelAdmin):
     list_display = ('order_id', 'capture_id', 'event', 'participant', 'payer_id', 'client_name', 'client_email', 'active', 'pay', 'total_buy', 'status_buy', 'date_created')
 
 
 admin.site.register(Career)
-admin.site.register(Participant)
+admin.site.register(Participant, ParticipantAdmin)
 
 admin.site.register(Event, EventAdmin)
 admin.site.register(EventParticipant, EventParticipantAdmin)
