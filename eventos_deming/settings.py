@@ -28,7 +28,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', '0e40-2800-bf0-149-103c-e53c-3d0f-302-6500.ngrok-free.app']
+ALLOWED_HOSTS = ['*']
 
 RECAPTCHA_SITE_KEY = env('RECAPTCHA_SITE_KEY')
 RECAPTCHA_SECRET_KEY = env('RECAPTCHA_SECRET_KEY')
@@ -148,7 +148,7 @@ TAILWIND_APP_NAME = 'theme'
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
-NPM_BIN_PATH = r'C:\Program Files\nodejs\npm.cmd'
+NPM_BIN_PATH = env('NPM_BIN_PATH')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -185,7 +185,7 @@ WSGI_APPLICATION = 'eventos_deming.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    'default': env.db("DATABASE_URL", default="postgres:///Eventos_Deming"),
+    'default': env.db("DATABASE_URL", default="postgres:///eventos_deming"),
 }
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
