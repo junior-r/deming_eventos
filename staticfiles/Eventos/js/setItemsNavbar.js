@@ -1,0 +1,1 @@
+/home/junior/deming_eventos/Apps/Eventos/static/Eventos/js/setItemsNavbar.js

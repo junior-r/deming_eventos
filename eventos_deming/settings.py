@@ -35,7 +35,7 @@ RECAPTCHA_SECRET_KEY = env('RECAPTCHA_SECRET_KEY')
 SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
-CSRF_TRUSTED_ORIGINS = ['https://0e40-2800-bf0-149-103c-e53c-3d0f-302-6500.ngrok-free.app']
+CSRF_TRUSTED_ORIGINS = ['https://www.deming-events.com', 'https://deming-events.com']
 
 # Email config
 if DEBUG:

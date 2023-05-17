@@ -1,18 +1,1 @@
-@keyframes miAnimacion {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); }
-}
-
-.animado {
-  animation-name: miAnimacion;
-  animation-duration: 1s;
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-}
-.animado:hover {
-  animation-name: none;
-  animation-duration: 0;
-  animation-timing-function: unset;
-  animation-iteration-count: initial;
-}
+/home/junior/deming_eventos/Apps/Eventos/static/Eventos/css/animation_btn.css
