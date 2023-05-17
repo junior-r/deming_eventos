@@ -26,9 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['www.deming-events.com', 'deming-events.com']
 
 RECAPTCHA_SITE_KEY = env('RECAPTCHA_SITE_KEY')
 RECAPTCHA_SECRET_KEY = env('RECAPTCHA_SECRET_KEY')
