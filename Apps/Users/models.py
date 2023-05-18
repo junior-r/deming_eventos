@@ -80,7 +80,11 @@ class User(AbstractUser):
 
     def get_picture_profile(self):
         if self.profile_image_user:
-            return '{}'.format(os.path.join(settings.MEDIA_URL, self.profile_image_user.url))
+            logo = os.path.join(settings.MEDIA_URL, self.profile_image_user.url)
+            if os.path.exists(logo):
+                return '{}'.format(logo)
+            else:
+                return '{}{}'.format(settings.MEDIA_URL, 'user_profile_placeholder.jpg')
         else:
             return '{}{}'.format(settings.MEDIA_URL, 'user_profile_placeholder.jpg')
 

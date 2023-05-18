@@ -218,7 +218,10 @@ class Event(models.Model):
     def get_logo(self) -> object:
         if self.logo:
             logo_root = os.path.join(settings.MEDIA_URL, f'{self.logo}')
-            return '{}'.format(logo_root)
+            if os.path.exists(logo_root):
+                return '{}'.format(logo_root)
+            else:
+                return '{}{}'.format(settings.MEDIA_URL, 'event_image_placeholder.png')
         else:
             return '{}{}'.format(settings.MEDIA_URL, 'event_image_placeholder.png')
 

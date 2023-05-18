@@ -19,6 +19,7 @@ asgiref==3.6.0
 pytz==2023.3
 mutagen==1.46.0
 django-naomi
+gunicorn
 
 django-recaptcha==3.0.0
 

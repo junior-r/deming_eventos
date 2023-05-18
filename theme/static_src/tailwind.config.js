@@ -56,7 +56,8 @@ module.exports = {
                     "700": "#1d4ed8",
                     "800": "#1e40af",
                     "900": "#1e3a8a"
-                }
+                },
+                'payphone': '#ffac00',
             }
         },
         fontFamily: {
@@ -101,6 +102,7 @@ module.exports = {
             'dark-third': '#3A3B3C',
             'dark-txt': '#B8BBBF',
             'white': '#FFFFFF',
+            'payphone': '#ffac00'
         }
     },
     plugins: [
