@@ -14,8 +14,8 @@ rm -frv $SOCKFILE
 echo $DJANGODIR
 
 cd $DJANGODIR
-GUNICORN_DIR=/home/junior/.local/bin/gunicorn
-exec ${GUNICORN_DIR} ${DJANGO_WSGI_MODULE}:application \
+
+exec ${GUNICORN_DIR}/env/bin/gunicorn ${DJANGO_WSGI_MODULE}:application \
   --name $NAME \
   --workers $NUM_WORKERS \
   --user=$USER --group=$GROUP \
