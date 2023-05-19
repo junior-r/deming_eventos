@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 
+import environ
 import phonenumbers
 from django.conf import settings
 from django.core.validators import FileExtensionValidator
@@ -14,6 +15,9 @@ from django.contrib import messages
 from django_cleanup import cleanup
 
 from Apps.Users.models import User
+
+env = environ.Env()
+environ.Env.read_env()
 
 
 def participant_directory_image_path(instance, filename):
@@ -115,9 +119,14 @@ class Participant(models.Model):
     def get_profile_image(self) -> object:
         profile_image = self.profile_image.url
         if profile_image:
-            return '{}'.format(self.profile_image)
+            return '{}'.format(profile_image)
         else:
-            return '{}{}'.format(settings.MEDIA_URL, 'user_profile_placeholder.jpg')
+            USE_SPACES = env('USE_SPACES') == 'True'
+            if USE_SPACES:
+                profile_image = settings.MEDIA_URL + settings.PUBLIC_MEDIA_LOCATION + '/' + 'user_profile_placeholder.jpg'
+                return '{}'.format(profile_image)
+            else:
+                return '{}{}'.format(settings.MEDIA_URL, 'user_profile_placeholder.jpg')
 
     def get_age(self):
         birthdate = self.birthdate.__str__()
@@ -224,7 +233,12 @@ class Event(models.Model):
         if logo:
             return '{}'.format(logo)
         else:
-            return '{}{}'.format(settings.MEDIA_URL, 'event_image_placeholder.png')
+            USE_SPACES = env('USE_SPACES') == 'True'
+            if USE_SPACES:
+                profile_image = settings.MEDIA_URL + settings.PUBLIC_MEDIA_LOCATION + '/' + 'event_image_placeholder.png'
+                return '{}'.format(profile_image)
+            else:
+                return '{}{}'.format(settings.MEDIA_URL, 'event_image_placeholder.png')
 
     def get_planning_event(self) -> object:
         event_planning = self.event_planning.url

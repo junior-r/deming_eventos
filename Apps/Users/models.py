@@ -1,11 +1,16 @@
 import os
 
+import environ
 from django.conf import settings
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django_cleanup import cleanup
+
+
+env = environ.Env()
+environ.Env.read_env()
 
 
 def user_directory_image_path(instance, filename):
@@ -83,12 +88,14 @@ class User(AbstractUser):
     def get_picture_profile(self):
         if self.profile_image_user:
             profile_image_user = self.profile_image_user.url
-            if profile_image_user:
+            return '{}'.format(profile_image_user)
+        else:
+            USE_SPACES = env('USE_SPACES') == 'True'
+            if USE_SPACES:
+                profile_image_user = settings.MEDIA_URL + settings.PUBLIC_MEDIA_LOCATION + '/' + 'user_profile_placeholder.jpg'
                 return '{}'.format(profile_image_user)
             else:
                 return '{}{}'.format(settings.MEDIA_URL, 'user_profile_placeholder.jpg')
-        else:
-            return '{}{}'.format(settings.MEDIA_URL, 'user_profile_placeholder.jpg')
 
     def get_curriculum(self):
         return '{}'.format(self.curriculum.url)
