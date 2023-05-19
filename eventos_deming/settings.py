@@ -32,7 +32,7 @@ ALLOWED_HOSTS = ['www.deming-events.com', 'deming-events.com', '127.0.0.1', '167
 CSRF_TRUSTED_ORIGINS = ['https://www.deming-events.com', 'https://deming-events.com']
 if DEBUG:
     ALLOWED_HOSTS += '127.0.0.1'
-    CSRF_TRUSTED_ORIGINS += 'http://127.0.0.1:8000'
+    CSRF_TRUSTED_ORIGINS.append('http://127.0.0.1:8000')
 
 RECAPTCHA_SITE_KEY = env('RECAPTCHA_SITE_KEY')
 RECAPTCHA_SECRET_KEY = env('RECAPTCHA_SECRET_KEY')
@@ -188,9 +188,9 @@ WSGI_APPLICATION = 'eventos_deming.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
+DATABASE_NAME = env('DATABASE_NAME')
 DATABASES = {
-    'default': env.db("DATABASE_URL", default="postgres:///eventos_deming"),
+    'default': env.db("DATABASE_URL", default=f"postgres:///{DATABASE_NAME}"),
 }
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
 

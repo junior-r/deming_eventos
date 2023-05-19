@@ -117,9 +117,8 @@ class Participant(models.Model):
         return '{0}_{1}'.format(self.first_name, self.dni)
 
     def get_profile_image(self) -> object:
-        profile_image = self.profile_image.url
-        if profile_image:
-            return '{}'.format(profile_image)
+        if self.profile_image is not None:
+            return '{}'.format(self.profile_image)
         else:
             USE_SPACES = env('USE_SPACES') == 'True'
             if USE_SPACES:
