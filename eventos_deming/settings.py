@@ -28,14 +28,17 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG') == 'True'
 
-ALLOWED_HOSTS = ['www.deming-events.com', 'deming-events.com', '127.0.0.1']
+ALLOWED_HOSTS = ['www.deming-events.com', 'deming-events.com']
+CSRF_TRUSTED_ORIGINS = ['https://www.deming-events.com', 'https://deming-events.com']
+if DEBUG:
+    ALLOWED_HOSTS += '127.0.0.1'
+    CSRF_TRUSTED_ORIGINS += 'http://127.0.0.1:8000'
 
 RECAPTCHA_SITE_KEY = env('RECAPTCHA_SITE_KEY')
 RECAPTCHA_SECRET_KEY = env('RECAPTCHA_SECRET_KEY')
 SILENCED_SYSTEM_CHECKS = ['captcha.recaptcha_test_key_error']
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
-CSRF_TRUSTED_ORIGINS = ['https://www.deming-events.com', 'https://deming-events.com', 'http://127.0.0.1:8000']
 
 # Email config
 if DEBUG:
