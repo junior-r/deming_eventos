@@ -123,7 +123,7 @@ class Participant(models.Model):
         else:
             USE_SPACES = env('USE_SPACES') == 'True'
             if USE_SPACES:
-                profile_image = settings.MEDIA_URL + settings.PUBLIC_MEDIA_LOCATION + '/' + 'user_profile_placeholder.jpg'
+                profile_image = env('AWS_LOCATION') + '/' + settings.PUBLIC_MEDIA_LOCATION + '/' + 'user_profile_placeholder.jpg'
                 return '{}'.format(profile_image)
             else:
                 return '{}{}'.format(settings.MEDIA_URL, 'user_profile_placeholder.jpg')
@@ -235,7 +235,7 @@ class Event(models.Model):
         else:
             USE_SPACES = env('USE_SPACES') == 'True'
             if USE_SPACES:
-                profile_image = settings.MEDIA_URL + settings.PUBLIC_MEDIA_LOCATION + '/' + 'event_image_placeholder.png'
+                profile_image = env('AWS_LOCATION') + '/' + settings.PUBLIC_MEDIA_LOCATION + '/' + 'event_image_placeholder.png'
                 return '{}'.format(profile_image)
             else:
                 return '{}{}'.format(settings.MEDIA_URL, 'event_image_placeholder.png')
@@ -264,21 +264,7 @@ class Event(models.Model):
                                                 self.start_date.day)
 
     def delete(self, *args, **kwargs):
-        try:
-            if self.logo:
-                os.remove(self.logo.path)
-                self.logo.delete(False)
-
-            os.remove(self.event_planning.path)
-            self.event_planning.delete(False)
-        except ValueError:
-            pass
-        except WindowsError:
-            pass
-        except:
-            pass
-        finally:
-            super(Event, self).delete(*args, **kwargs)
+        super(Event, self).delete(*args, **kwargs)
 
     class Meta:
         db_table = 'Events'

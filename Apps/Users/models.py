@@ -43,17 +43,7 @@ class User(AbstractUser):
     interests = models.ManyToManyField('Eventos.Career', related_name='interests', blank=True)
 
     def delete(self, *args, **kwargs):
-        try:
-            os.remove(os.path.join(settings.MEDIA_ROOT, 'Users', 'Docs', self.__str__(), 'curriculum.pdf'))
-            if self.profile_image_user.name != 'user_profile_placeholder.jpg':
-                os.remove(self.profile_image_user.path)
-                self.profile_image_user.delete(False)
-        except ValueError:
-            pass
-        except WindowsError:
-            pass
-        finally:
-            super(User, self).delete(*args, **kwargs)
+        super(User, self).delete(*args, **kwargs)
 
     def get_full_name(self):
         first_name = self.first_name
@@ -92,7 +82,7 @@ class User(AbstractUser):
         else:
             USE_SPACES = env('USE_SPACES') == 'True'
             if USE_SPACES:
-                profile_image_user = settings.MEDIA_URL + settings.PUBLIC_MEDIA_LOCATION + '/' + 'user_profile_placeholder.jpg'
+                profile_image_user = env('AWS_LOCATION') + '/' + settings.PUBLIC_MEDIA_LOCATION + '/' + 'user_profile_placeholder.jpg'
                 return '{}'.format(profile_image_user)
             else:
                 return '{}{}'.format(settings.MEDIA_URL, 'user_profile_placeholder.jpg')
