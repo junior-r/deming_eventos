@@ -11,6 +11,7 @@ from django.urls import reverse
 from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
 from django.contrib import messages
+from django_cleanup import cleanup
 
 from Apps.Users.models import User
 
@@ -75,6 +76,7 @@ class Career(models.Model):
         return '{}'.format(self.name)
 
 
+@cleanup.select
 class Participant(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_image = models.ImageField(upload_to=participant_directory_image_path, blank=True, null=True,
@@ -111,8 +113,9 @@ class Participant(models.Model):
         return '{0}_{1}'.format(self.first_name, self.dni)
 
     def get_profile_image(self) -> object:
-        if self.profile_image:
-            return '{}'.format(os.path.join('/media/', self.profile_image.name))
+        profile_image = self.profile_image.url
+        if profile_image:
+            return '{}'.format(self.profile_image)
         else:
             return '{}{}'.format(settings.MEDIA_URL, 'user_profile_placeholder.jpg')
 
@@ -158,6 +161,7 @@ class Participant(models.Model):
             super(Participant, self).delete(*args, **kwargs)
 
 
+@cleanup.select
 class Event(models.Model):
     modality_options = [
         ('Presencial', 'Presencial'),
@@ -216,18 +220,16 @@ class Event(models.Model):
             return None
 
     def get_logo(self) -> object:
-        if self.logo:
-            logo_root = os.path.join(settings.MEDIA_URL, f'{self.logo}')
-            if os.path.exists(logo_root):
-                return '{}'.format(logo_root)
-            else:
-                return '{}{}'.format(settings.MEDIA_URL, 'event_image_placeholder.png')
+        logo = self.logo.url
+        if logo:
+            return '{}'.format(logo)
         else:
             return '{}{}'.format(settings.MEDIA_URL, 'event_image_placeholder.png')
 
     def get_planning_event(self) -> object:
-        if self.event_planning:
-            return '{}{}'.format(settings.MEDIA_URL, self.event_planning)
+        event_planning = self.event_planning.url
+        if event_planning:
+            return '{}'.format(event_planning)
         else:
             return None
 

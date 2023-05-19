@@ -5,6 +5,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import FileExtensionValidator
 from django.db import models
+from django_cleanup import cleanup
 
 
 def user_directory_image_path(instance, filename):
@@ -25,6 +26,7 @@ def user_directory_file_path(instance, filename):
     return file_name
 
 
+@cleanup.select
 class User(AbstractUser):
     profile_image_user = models.ImageField(upload_to=user_directory_image_path, blank=True, null=True,
                                            default="user_profile_placeholder.jpg")
@@ -80,16 +82,16 @@ class User(AbstractUser):
 
     def get_picture_profile(self):
         if self.profile_image_user:
-            logo = os.path.join(settings.MEDIA_URL, self.profile_image_user.url)
-            if os.path.exists(logo):
-                return '{}'.format(logo)
+            profile_image_user = self.profile_image_user.url
+            if profile_image_user:
+                return '{}'.format(profile_image_user)
             else:
                 return '{}{}'.format(settings.MEDIA_URL, 'user_profile_placeholder.jpg')
         else:
             return '{}{}'.format(settings.MEDIA_URL, 'user_profile_placeholder.jpg')
 
     def get_curriculum(self):
-        return '{}'.format(os.path.join(settings.MEDIA_URL, self.curriculum.url))
+        return '{}'.format(self.curriculum.url)
 
     def save(self, *args, **kwargs):
         if self.password is not None and not self.password.startswith('argon2$'):

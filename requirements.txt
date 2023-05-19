@@ -4,6 +4,8 @@ django-environ==0.10.0
 djangorestframework==3.14.0
 pillow==9.5.0
 psycopg2-binary
+boto3
+django-storages
 
 django-allauth==0.54.0
 django-rest-auth==0.9.5
@@ -20,6 +22,7 @@ pytz==2023.3
 mutagen==1.46.0
 django-naomi
 gunicorn
+django-cleanup
 
 django-recaptcha==3.0.0
 
