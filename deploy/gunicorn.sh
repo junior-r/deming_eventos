@@ -11,11 +11,9 @@ DJANGO_WSGI_MODULE=eventos_deming.wsgi
 
 rm -frv $SOCKFILE
 
-echo $DJANGODIR
-
 cd $DJANGODIR
 
-exec ${GUNICORN_DIR}/env/bin/gunicorn ${DJANGO_WSGI_MODULE}:application \
+exec gunicorn ${DJANGO_WSGI_MODULE}:application \
   --name $NAME \
   --workers $NUM_WORKERS \
   --user=$USER --group=$GROUP \
