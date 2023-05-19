@@ -4,6 +4,7 @@ import os
 import sys
 from pprint import pprint
 import random
+from urllib.parse import quote
 
 import phonenumbers
 import qrcode
@@ -14,6 +15,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import BadRequest
 from django.core.mail import EmailMultiAlternatives
 from django.core.paginator import Paginator
+from django.db import transaction
 from django.db.models import Q
 from django.forms import ValidationError
 from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
@@ -212,7 +214,8 @@ def update_event(request, id_event):
                 event_modified.event_planning = event_planning
                 form2 = EventForm(request.POST, instance=event)
                 try:
-                    event_modified.save()
+                    with transaction.atomic():
+                        event_modified.save()
                     form2.save(commit=False)
                     form2.save_m2m()
                     messages.success(request, 'Evento modificado exitosamente')
@@ -224,8 +227,8 @@ def update_event(request, id_event):
                 messages.info(request, 'Debes propocionar información nueva para actualizar los datos.')
                 return redirect('update_event', event.id)
         else:
-            messages.error(request, 'Algunos datos son inválidos. Revise e intente de nuevo.')
             data['form'] = form
+            messages.error(request, 'Algunos datos son inválidos. Revise e intente de nuevo.')
 
     return render(request, 'Eventos/update_event.html', data)
 
@@ -623,7 +626,8 @@ def payphone_confirm(request):
             if response['message'] is not None and response['message'] != '':
                 messages.error(request, f'{response["message"]}')
             else:
-                messages.error(request, 'Ocurrió un error. Consulta los datos que ingresaste e intenta de nuevo más tarde.')
+                messages.error(request,
+                               'Ocurrió un error. Consulta los datos que ingresaste e intenta de nuevo más tarde.')
             return redirect('view_event', event_id)
     else:
         return HttpResponseBadRequest
@@ -714,43 +718,20 @@ def send_whatsapp_event(request, id_event):
 
             instance_api_ws = env('INSTANCE_API_WHATSAPP')
             token_api_ws = env('TOKEN_API_WHATSAPP')
-            url = f"https://api.ultramsg.com/{instance_api_ws}/messages/image"
+            url = f"https://api.ultramsg.com/{instance_api_ws}/messages/chat"
+            now = f'{datetime.datetime.now().date()} - {datetime.datetime.now().time()}'
 
-            payload = "token={0}&" \
-                      "to={1}&" \
-                      "image={2}&" \
-                      "caption={3}".format(
-                        token_api_ws,
-                        event.get_full_number_phone(),
-                        event.get_logo(),
-                        "*{0}* \n\n"
-                        "Le escríbe: _{1}_ \n"
-                        "Teléfono: *{2}* \n"
-                        "E-mail: *{3}* \n\n"
-                        "{4} \n\n"
-                        "Fecha: *{5}* \n"
-                        "URL del Evento: {6}".format(
-                            event.title.capitalize(),
-                            user_name,
-                            full_number,
-                            user_email,
-                            message,
-                            (timezone.now().date(), timezone.now().time().hour, timezone.now().time().minute),
-                            request.get_host() + event.get_absolute_url()
-                            )
-                        )
-
-            # payload = "token={0}&to={1}&body=*{2}* \n\nLe escribe: *{3}* | Télefono: *{4}* | " \
-            #           "Correo: {5} \n\n_{6}_ \n\nFecha: *{7} {8}:{9}*".format(token_api_ws,
-            #                                                                   event.get_full_number_phone(),
-            #                                                                   event.title.upper(), user_name,
-            #                                                                   full_number,
-            #                                                                   user_email, message,
-            #                                                                   timezone.now().date(),
-            #                                                                   timezone.now().time().hour,
-            #                                                                   timezone.now().time().minute
-            #                                                                   )
-
+            payload = "token={0}&to={1}&body=*{2}*\n\nLe escríbe: _{3}_ \nTeléfono: *{4}* \nE-mail: *{5}* \n\n{6} \n\nFecha: *{7}* \nURL del Evento: *{8}*".format(
+                token_api_ws,
+                event.get_full_number_phone(),
+                event.title.capitalize(),
+                user_name,
+                full_number,
+                user_email,
+                message,
+                now,
+                request.get_host() + event.get_absolute_url()
+            )
             payload = payload.encode('utf8').decode('iso-8859-1')
             headers = {'content-type': 'application/x-www-form-urlencoded'}
 
