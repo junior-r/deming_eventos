@@ -135,7 +135,7 @@ def view_events(request):
 @login_required
 def view_event(request, id_event):
     event = get_object_or_404(Event, id=id_event)
-    url = request.get_host() + event.get_absolute_url()
+    url = f'https://{request.get_host()}{event.get_absolute_url()}'
 
     participants = event.eventparticipant_set.all()
     event_participant = None
