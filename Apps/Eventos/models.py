@@ -118,7 +118,10 @@ class Participant(models.Model):
 
     def get_profile_image(self) -> object:
         if self.profile_image is not None:
-            return '{}'.format(self.profile_image)
+            if self.profile_image != '/media/user_profile_placeholder.jpg':
+                return '{}'.format(self.profile_image.url)
+            else:
+                return '{}'.format(self.profile_image)
         else:
             USE_SPACES = env('USE_SPACES') == 'True'
             if USE_SPACES:
