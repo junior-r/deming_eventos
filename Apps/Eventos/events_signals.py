@@ -6,7 +6,6 @@ from Apps.Eventos.models import Event
 from django.utils import timezone
 
 
-@receiver(post_init, sender=Event)
 @receiver(pre_save, sender=Event)
 @receiver(post_save, sender=Event)
 def update_active_signal(sender, instance, **kwargs):
@@ -20,13 +19,17 @@ def update_active_signal(sender, instance, **kwargs):
                 instance.active = False
                 instance.save()
                 instance.refresh_from_db()
-            if now > final_date:
+            elif now > final_date:
                 if instance.certify is False:
                     instance.certify = True
                     instance.save()
                     instance.refresh_from_db()
-        if now <= start_date:
+            else:
+                return
+        elif now <= start_date:
             if instance.active is False:
                 instance.active = True
                 instance.save()
                 instance.refresh_from_db()
+        else:
+            return
