@@ -26,12 +26,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG') == 'True'
+DEBUG = True
 
-ALLOWED_HOSTS = ['www.deming-events.com', 'deming-events.com', '127.0.0.1', '167.172.158.33']
+ALLOWED_HOSTS = ['www.deming-events.com', 'deming-events.com']
 CSRF_TRUSTED_ORIGINS = ['https://www.deming-events.com', 'https://deming-events.com']
 if DEBUG:
-    ALLOWED_HOSTS += '127.0.0.1'
+    ALLOWED_HOSTS.append('127.0.0.1')
     CSRF_TRUSTED_ORIGINS.append('http://127.0.0.1:8000')
 
 RECAPTCHA_SITE_KEY = env('RECAPTCHA_SITE_KEY')
