@@ -79,7 +79,7 @@
     <div class="relative">
         {% if form.errors %}
             <div id="toast-danger"
-                 class="absolute flex items-center w-full max-w-xl bottom-0 z-5 left-8 p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+                 class="flex items-center w-full max-w-xl top-0 z-10 left-8 p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
                  role="alert">
                 <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
                     <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
@@ -121,6 +121,7 @@
                 </button>
             </div>
         {% endif %}
+
         <div class="my-8">
             <div class="header-form">
                 {% if query %}
@@ -214,7 +215,7 @@
 
                             {% if event.user.id == request.user.id or perms.Eventos.change_event or perms.Eventos.delete_event %}
                                 <div class="flex px-4 pt-4 absolute top-0 right-0">
-                                    <button id="dropdownButton" data-dropdown-toggle="dropdown"
+                                    <button id="dropdownButton{{ event.id }}" data-dropdown-toggle="dropdown{{ event.id }}"
                                             class="inline-block text-gray-400 hover:text-white dark:text-gray-400 bg-gray-600 dark:hover:bg-gray-700 dark:hover:text-white focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-full text-sm p-1.5"
                                             type="button">
                                         <span class="sr-only">Open dropdown</span>
@@ -224,9 +225,9 @@
                                         </svg>
                                     </button>
                                     <!-- Dropdown menu -->
-                                    <div id="dropdown"
+                                    <div id="dropdown{{ event.id }}"
                                          class="z-10 hidden text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                                        <ul class="py-2" aria-labelledby="dropdownButton">
+                                        <ul class="py-2" aria-labelledby="dropdownButton{{ event.id }}">
                                             {% if perms.Eventos.change_event %}
                                                 <li>
                                                     <a href="{% url 'update_event' event.id %}"

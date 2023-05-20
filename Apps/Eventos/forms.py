@@ -148,6 +148,25 @@ class EventForm(forms.ModelForm):
             alt_phone = None
         return alt_phone
 
+    def clean(self):
+        start_date = self.cleaned_data.get('start_date')
+        final_date = self.cleaned_data.get('final_date')
+        career_id = self.cleaned_data.get('career')
+
+        if start_date and final_date and final_date < start_date:
+            raise ValidationError(message={'final_date': 'La fecha de cierre no puede ser anterior a la fecha de inicio'})
+
+        if career_id:
+            try:
+                career_id = self.cleaned_data.get('career')
+                career = Career.objects.get(id=career_id.id)
+            except Career.DoesNotExist:
+                raise ValidationError(
+                    message={'career': 'No se pudo encontrar la carrera seleccionada. Contacte al administrador.'})
+            except ValueError:
+                raise ValidationError(
+                    message={'career': 'Porfavor selecciona una carrera válida'})
+
     class Meta:
         model = Event
         exclude = ['user', 'date_created', 'active', 'participants']

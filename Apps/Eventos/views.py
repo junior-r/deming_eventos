@@ -83,15 +83,8 @@ def view_events(request):
                     alternative_phone = None
 
                 get_career = None
-                try:
-                    get_career = get_object_or_404(Career, id=career)
-                except Career.DoesNotExist:
-                    messages.error(request, 'No se pudo encontrar la carrera seleccionada. Contacte al administrador.')
-                except ValueError:
-                    messages.error(request, 'Porfavor selecciona una carrera válida')
-
-                if final_date < start_date:
-                    raise ValidationError('La fecha final no puede ser menor a la fecha de inicio')
+                if career:
+                    get_career = Career.objects.get(id=career)
 
                 url = request.get_host() + request.get_full_path()
                 event = Event(user_id=request.user.id, logo=logo, title=title, place=place,
@@ -239,6 +232,7 @@ def delete_event(request, id_event):
     event = get_object_or_404(Event, id=id_event)
     if not event.participants.all().exists():
         event.delete()
+        messages.success(request, 'Evento eliminado exitosamente')
         return redirect('eventos')
     else:
         messages.error(request, 'No puedes eliminar este evento porque posee participantes inscritos')
