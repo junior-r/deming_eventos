@@ -187,7 +187,7 @@ class Event(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=False)
     participants = models.ManyToManyField(Participant, through='EventParticipant')
     logo = models.ImageField(upload_to=event_directory_logo_path, blank=True, null=True,
-                             validators=[FileExtensionValidator(['jpeg', 'jpg'])])
+                             validators=[FileExtensionValidator(['jpeg', 'jpg', 'png'])])
     title = models.CharField(max_length=150, null=False, blank=False, unique=True)
     place = models.CharField(max_length=150, null=False, blank=False)
     addressed_to = models.TextField(max_length=300, null=False, blank=False)

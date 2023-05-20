@@ -43,7 +43,7 @@ class CareerForm(forms.ModelForm):
 class EventForm(forms.ModelForm):
     captcha = ReCaptchaField(required=True)
     logo = forms.ImageField(required=False, widget=forms.FileInput(attrs={
-        'accept': 'image/jpeg, image/jpg',
+        'accept': 'image/jpeg, image/jpg, image/png',
         'class': 'block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400',
     }))
     title = forms.CharField(max_length=150, required=True, widget=forms.TextInput(attrs={
