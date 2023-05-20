@@ -11,6 +11,8 @@ DJANGO_WSGI_MODULE=eventos_deming.wsgi
 
 rm -frv $SOCKFILE
 
+echo $DJANGODIR
+
 cd $DJANGODIR
 
 exec ${DJANGODIR}/env/bin/gunicorn ${DJANGO_WSGI_MODULE}:application \
