@@ -228,9 +228,8 @@ class Event(models.Model):
             return None
 
     def get_logo(self) -> object:
-        logo = self.logo.url
-        if logo:
-            return '{}'.format(logo)
+        if self.logo:
+            return '{}'.format(self.logo.url)
         else:
             USE_SPACES = env('USE_SPACES') == 'True'
             if USE_SPACES:
