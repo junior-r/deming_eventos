@@ -25,6 +25,13 @@ def terms_and_conditions(request):
     return render(request, 'Home/terms_and_conditions.html', data)
 
 
+def contact(request):
+    data = {
+
+    }
+    return render(request, 'Home/contact.html', data)
+
+
 def page_denied_400(request, exception):
     return render(request, 'Home/page_400.html')
 
