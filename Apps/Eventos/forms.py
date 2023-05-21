@@ -196,7 +196,6 @@ class ParticipantForm(forms.ModelForm):
     }))
     passport_number = forms.CharField(required=False, widget=forms.NumberInput(attrs={
         'placeholder': ' ',
-        'value': 0,
         'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500',
     }))
     gender = forms.ChoiceField(choices=gender_options, required=True, widget=forms.Select(attrs={
@@ -246,6 +245,12 @@ class ParticipantForm(forms.ModelForm):
         if age < 15:
             raise ValidationError('Debes tener al menos 15 años de edad.')
         return birthdate
+
+    def clean_passport_number(self):
+        passport_number = self.cleaned_data.get('passport_number')
+        if not passport_number or passport_number == '':
+            return None
+        return passport_number
 
     class Meta:
         model = Participant

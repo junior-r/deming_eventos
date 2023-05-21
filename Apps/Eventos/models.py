@@ -155,7 +155,7 @@ class Participant(models.Model):
         return '{0} {1}'.format(self.first_name, self.last_name)
 
     def get_passport_number(self):
-        if self.passport_number != 0:
+        if self.passport_number != 0 and self.passport_number is not None:
             return self.passport_number
         return '-'
 
