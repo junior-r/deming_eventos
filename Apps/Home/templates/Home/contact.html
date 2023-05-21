@@ -40,22 +40,23 @@
                                 ¿Tienes un problema técnico? ¿Quiere enviar comentarios sobre una función beta? Necesito
                                 detalles sobre
                                 nuestro plan de negocios? Haznos saber.</p>
-                            <form action="#" class="space-y-8">
+                            <form action="#" class="space-y-8" method="post" id="contact-form">
+                                {% csrf_token %}
                                 <div>
                                     <label for="email"
                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                                         Tu E-mail
                                     </label>
-                                    <input type="email" id="email"
+                                    <input type="email" id="email" name="email" {% if user.is_authenticated %} value="{{ user.email }}" {% endif %}
                                            class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                                           placeholder="name@flowbite.com" required>
+                                           placeholder="name@example.com" required>
                                 </div>
                                 <div>
                                     <label for="subject"
                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                                         Asunto
                                     </label>
-                                    <input type="text" id="subject"
+                                    <input type="text" id="subject" name="subject"
                                            class="block p-3 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
                                            placeholder="Let us know how we can help you" required>
                                 </div>
@@ -64,13 +65,13 @@
                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">
                                         Tu mensaje
                                     </label>
-                                    <textarea id="message" rows="6"
+                                    <textarea id="message" name="message" rows="6"
                                               class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg shadow-sm border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                               placeholder="Leave a comment..."></textarea>
                                 </div>
-                                <button type="submit" disabled
+                                <button type="submit" id="submit-btn"
                                         class="py-3 px-5 text-sm font-medium text-center text-white rounded-lg bg-blue-700 sm:w-fit hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                    Send message
+                                    Enviar mensaje
                                 </button>
                             </form>
                         </div>
@@ -120,21 +121,97 @@
 {% block js %}
 
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    {% if 'accounts/login/' in request.META.HTTP_REFERER %}
-        <script>
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 2000,
-                timerProgressBar: true,
-            })
+    <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                Swal.showLoading()
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
+    </script>
+    <script>
+        $("#createCareerForm").on('submit', function (e) {
+            e.preventDefault();
+            const serializedData = $('#contact-form').serialize();
             Toast.fire({
-                icon: 'success',
-                title: '¡Inicio de sesión correcto, bienvenido!'
+                icon: 'info',
+                title: 'Espere un momento...',
             })
-        </script>
-    {% endif %}
+
+            $.ajax({
+                url: '/contact/',
+                type: "POST",
+                dataType: "json",
+                data: serializedData,
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                    "X-CSRFToken": getCookie("csrftoken"),
+                },
+                success: (data) => {
+                    $("#contact-form").trigger('reset');
+                    Toast.hideLoading()
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'E-mail enviado exitosamente',
+                    })
+                },
+                error: (data) => {
+                    console.log(data)
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Ocurrió un error. Revise e intente de nuevo.',
+                    })
+                }
+            });
+        })
+        $("#submit-btn").on('click', function (e) {
+            e.preventDefault();
+            const serializedData = $('#contact-form').serialize();
+            Toast.fire({
+                icon: 'info',
+                title: 'Espere un momento...',
+            })
+
+            $.ajax({
+                url: '/contact/',
+                type: "POST",
+                dataType: "json",
+                data: serializedData,
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest",
+                    "X-CSRFToken": getCookie("csrftoken"),
+                },
+                success: (data) => {
+                    if (data.success) {
+                        $("#contact-form").trigger('reset');
+                        Swal.hideLoading()
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'E-mail enviado exitosamente',
+                        })
+                    } else {
+                        Toast.fire({
+                            icon: 'error',
+                            title: `No se pudo enviar el E-mail. ${data.message}`,
+                        })
+                    }
+                },
+                error: (data) => {
+                    console.log(data)
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Ocurrió un error. Revise e intente de nuevo.',
+                    })
+                }
+            });
+        })
+    </script>
 
     <script>
         var navbarHome = document.getElementById('NavbarHome');

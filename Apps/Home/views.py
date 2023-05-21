@@ -1,4 +1,10 @@
-from django.shortcuts import render
+from django.conf import settings
+from django.contrib import messages
+from django.core.mail import EmailMultiAlternatives
+from django.http import JsonResponse, HttpResponseBadRequest
+from django.shortcuts import render, redirect
+from django.template.loader import get_template
+
 from Apps.Users.models import User
 from Apps.Eventos.models import Event
 
@@ -29,6 +35,32 @@ def contact(request):
     data = {
 
     }
+    if request.method == 'POST':
+        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+        if is_ajax:
+            email = request.POST.get('email')
+            subject = request.POST.get('subject')
+            message = request.POST.get('message')
+            context = {
+                'email': email,
+                'subject': subject,
+                'message': message,
+            }
+            template = get_template('Home/contact_email.html')
+            content_template = template.render(context)
+            email = EmailMultiAlternatives(
+                subject=subject, body=message, from_email=settings.EMAIL_HOST_USER, to=['junior31064049@gmail.com'],
+                reply_to=[email]
+            )
+            try:
+                email.attach_alternative(content_template, 'text/html')
+                email.send()
+                return JsonResponse({'success': True}, status=200)
+            except Exception as e:
+                return JsonResponse({'success': False, 'message': e}, status=400)
+        else:
+            return HttpResponseBadRequest('Invalid request')
+
     return render(request, 'Home/contact.html', data)
 
 
