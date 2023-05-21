@@ -165,7 +165,7 @@
                             </svg>
                         </h3>
                         <div class="info-user ml-4 flex flex-wrap gap-4">
-                            <img class="rounded-full w-36 h-36" src="{{ current_profile_user.get_picture_profile }}"
+                            <img class="rounded-full w-36 h-36 object-cover" src="{{ current_profile_user.get_picture_profile }}"
                                  alt="Extra large avatar">
                             <div class="info">
                                 <p class="mb-1 font-normal text-gray-700 dark:text-gray-400 flex items-center gap-2">
@@ -389,9 +389,9 @@
                                                 <label for="file-5">
                                                     <figure>
                                                         <img src="{% static 'Home/images/user_profile_placeholder.jpg' %}"
-                                                             alt="imagen de perfil de usuario">
+                                                             alt="imagen de perfil de usuario" class="object-cover">
                                                         <img id="imagenPrevisualizacion"
-                                                             alt="Imagen de perfil del usuario"
+                                                             alt="Imagen de perfil del usuario" class="object-cover"
                                                              loading="lazy"
                                                              src="{{ current_profile_user.get_picture_profile }}">
                                                     </figure>
@@ -402,9 +402,9 @@
                                                 <label for="file-5">
                                                     <figure>
                                                         <img src="{% static 'Home/images/user_profile_placeholder.jpg' %}"
-                                                             alt="imagen de perfil de usuario">
+                                                             alt="imagen de perfil de usuario" class="object-cover">
                                                         <img id="imagenPrevisualizacion"
-                                                             alt="Imagen de perfil del usuario"
+                                                             alt="Imagen de perfil del usuario" class="object-cover"
                                                              loading="lazy">
                                                     </figure>
                                                     <span class="iborrainputfile block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ form.picture_profile.label }}</span>
@@ -686,7 +686,7 @@
                                                 <span class="absolute top-2 left-2 bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300">Inactivo</span>
                                             {% endif %}
                                             <a href="{% url 'view_event' event.id %}">
-                                                <img class="p-8 rounded-t-lg mx-auto" loading="lazy"
+                                                <img class="p-8 rounded-t-lg mx-auto object-cover" loading="lazy"
                                                      src="{{ event.get_logo }}"
                                                      alt="product image"/>
                                             </a>
