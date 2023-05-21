@@ -308,16 +308,14 @@
                                         <div class="px-3 py-2">
                                             <div class="teachers flex flex-wrap gap-2"
                                                  style="justify-content: space-evenly">
-                                                {% for event in events %}
-                                                    {% for teacher in event.teachers.all %}
-                                                        <div class="flex items-center space-x-4 flex-col">
-                                                            <img class="w-10 h-10 rounded-full"
-                                                                 src="{{ teacher.get_picture_profile }}" alt="">
-                                                            <div class="font-medium dark:text-white">
-                                                                <div>{{ teacher.get_full_name }}</div>
-                                                            </div>
+                                                {% for teacher in event.teachers.all %}
+                                                    <div class="flex items-center space-x-4 flex-col">
+                                                        <img class="w-10 h-10 rounded-full"
+                                                             src="{{ teacher.get_picture_profile }}" alt="">
+                                                        <div class="font-medium dark:text-white">
+                                                            <div>{{ teacher.get_full_name }}</div>
                                                         </div>
-                                                    {% endfor %}
+                                                    </div>
                                                 {% endfor %}
                                             </div>
                                         </div>
