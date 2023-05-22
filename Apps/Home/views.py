@@ -4,6 +4,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.template.loader import get_template
+from Apps.Home.forms import EmailContactForm
 
 from Apps.Users.models import User
 from Apps.Eventos.models import Event
@@ -33,31 +34,36 @@ def terms_and_conditions(request):
 
 def contact(request):
     data = {
-
+        'form': EmailContactForm(),
     }
     if request.method == 'POST':
+        form = EmailContactForm(request.POST)
         is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
         if is_ajax:
-            email = request.POST.get('email')
-            subject = request.POST.get('subject')
-            message = request.POST.get('message')
-            context = {
-                'email': email,
-                'subject': subject,
-                'message': message,
-            }
-            template = get_template('Home/contact_email.html')
-            content_template = template.render(context)
-            email = EmailMultiAlternatives(
-                subject=subject, body=message, from_email=settings.EMAIL_HOST_USER, to=['junior31064049@gmail.com'],
-                reply_to=[email]
-            )
-            try:
-                email.attach_alternative(content_template, 'text/html')
-                email.send()
-                return JsonResponse({'success': True}, status=200)
-            except Exception as e:
-                return JsonResponse({'success': False, 'message': e}, status=400)
+            if form.is_valid():
+                email = request.POST.get('email')
+                subject = request.POST.get('subject')
+                message = request.POST.get('message')
+                context = {
+                    'email': email,
+                    'subject': subject,
+                    'message': message,
+                }
+                template = get_template('Home/contact_email.html')
+                content_template = template.render(context)
+                email = EmailMultiAlternatives(
+                    subject=subject, body=message, from_email=settings.EMAIL_HOST_USER, to=['junior31064049@gmail.com'],
+                    reply_to=[email]
+                )
+                try:
+                    email.attach_alternative(content_template, 'text/html')
+                    email.send()
+                    return JsonResponse({'success': True}, status=200)
+                except Exception as e:
+                    return JsonResponse({'success': False, 'message': e}, status=400)
+            else:
+                data['form'] = form
+                messages.error(request, 'Algunos datos son inválidos. Revise he intente de nuevo.')
         else:
             return HttpResponseBadRequest('Invalid request')
 

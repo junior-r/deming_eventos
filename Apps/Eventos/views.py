@@ -28,7 +28,7 @@ from weasyprint import HTML, CSS
 
 from Apps.Eventos.forms import CareerForm, EventForm, ParticipantForm
 from Apps.Eventos.models import Career, Event, EventParticipant, Participant
-from Apps.Home.forms import EmailContactForm, WhatsAppContactForm
+from Apps.Home.forms import EmailContactEventForm, WhatsAppContactForm
 from Apps.Users.models import User
 import environ
 
@@ -169,7 +169,7 @@ def view_event(request, id_event):
         'actives_participants': participants.filter(active=True, event=event),
         'form_participant': ParticipantForm(instance=request.user),
         'template_name_email_event': 'Eventos/contact_event_email.html',
-        'form_email': EmailContactForm(),
+        'form_email': EmailContactEventForm(),
         'form_whatsapp': WhatsAppContactForm(),
         'unique_id_payphone': unique_id_payphone,
     }
@@ -652,7 +652,7 @@ def send_email_event(request, id_event, template_route: str):
     event = get_object_or_404(Event, id=id_event)
 
     if request.method == 'POST':
-        form = EmailContactForm(request.POST)
+        form = EmailContactEventForm(request.POST)
         if form.is_valid():
             form.save()
             user_names = request.POST.get('name')
