@@ -38,10 +38,11 @@ environ.Env.read_env()
 
 def view_events(request):
     global get_career
+    current_date = timezone.now().date()
     if request.user.is_superuser:
         events = Event.objects.all()
     else:
-        events = Event.objects.filter(active=True)
+        events = Event.objects.filter(active=True, final_date__gte=current_date)
 
     paginator = Paginator(events, 9)
     page_number = request.GET.get('page')
