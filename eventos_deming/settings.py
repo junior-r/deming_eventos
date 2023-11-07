@@ -31,8 +31,8 @@ DEBUG = env('DEBUG') == 'True'
 ALLOWED_HOSTS = ['www.deming-events.com', 'deming-events.com', '127.0.0.1']
 CSRF_TRUSTED_ORIGINS = ['https://www.deming-events.com', 'https://deming-events.com', 'http://127.0.0.1:8000']
 
-RECAPTCHA_PUBLIC_KEY = env('RECAPTCHA_SITE_KEY')
-RECAPTCHA_PRIVATE_KEY = env('RECAPTCHA_SECRET_KEY')
+RECAPTCHA_PUBLIC_KEY = env('RECAPTCHA_PUBLIC_KEY')
+RECAPTCHA_PRIVATE_KEY = env('RECAPTCHA_PRIVATE_KEY')
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 
