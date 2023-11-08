@@ -139,3 +139,6 @@ dmypy.json
 cython_debug/
 
 ngrok
+
+# ignore media files
+media/
